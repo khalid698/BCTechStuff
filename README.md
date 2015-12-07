@@ -19,3 +19,9 @@ Attribute data of a DID that has not been attested to.
 
 ### Certificate Authority
 A trusted entity that attests to assertions of DIDs. Under this system, anyone with access rights to attributes of a given DID is able to make attestations about those attributes. Thus, a certificate authority is subjectively recognised as such by the party relying on the veracity of those attributes. Anyone is able to become a certificate authority to any party they can convince.
+
+### Inbound Access
+The conditions and privileges of other DIDs to access specific identity attributes of your DID.
+
+### Outbound Access
+The conditions and privileges to access attributes of other DIDs, from your DID. 
