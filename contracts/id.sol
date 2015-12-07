@@ -1,14 +1,6 @@
-contract owned {
+contract identity {
+
 	address owner;
-	function owned(){ owner = msg.sender;}
-}
-
-contract mortal is owned {
-	//enable owner to delete the object and its contents
-    function kill() { if (msg.sender == owner) suicide(owner); }
-}
-
-contract identity is owned, mortal {
 	mapping (address => mapping (string => bool)) permissionsRegister;
 	mapping (string => bool) publicRegister;
 	string[] attributeList;
@@ -16,6 +8,13 @@ contract identity is owned, mortal {
 	mapping (string => bytes32) keyRegister;
 	mapping (string => address[]) attestationRegister;
 
+	//constructor
+	function identity() { owner = msg.sender }
+
+	//delete an identity and its contents
+	function delete() { if (msg.sender == owner) suicide(owner); }
+
+	//create new identity attribute data
 	function assert (string index, string hash, bytes32 key, bool isPublic) 
 	returns (bool success){
 		//check if attribute has already been asserted
@@ -30,7 +29,8 @@ contract identity is owned, mortal {
 		}
 		return false;
 	}
-
+	
+	//create new attribute meta-data
 	function attest (string hash) returns (bool success) {
 		//check if public or attestor has permission to attest
 		if(publicRegister[hash] || permissionsRegister[msg.sender][hash]){
@@ -40,12 +40,14 @@ contract identity is owned, mortal {
 		return false;
 	}
 
+	//return the attestations of a particular assertion
 	function getAttestations (string hash) returns (address[] attestations){
 		//only people who know the hash, can view the attestations
 		//or do we want anyone to be able to see this?
 		return attestationRegister[hash];
 	}
 
+	//return the known attributes of an identity
 	function getAttributes() returns (string[] attributes){
 		if(msg.sender == owner){
 			return attributeList;
@@ -53,6 +55,7 @@ contract identity is owned, mortal {
 		return string[];
 	}
 
+	//get the assertion of a particular index value
 	function getAssertion (string index) returns (string ipfsHash, bytes32 key) {
 		//get the relevant ipfsHash
 		string ipfsHash = indexRegister[index];
@@ -65,6 +68,7 @@ contract identity is owned, mortal {
 		}
 	}
 
+	//set permissions for inbound assertion access
 	function setPermission (string index, address permittedUser, bool permitted)
 	 returns (bool success) {
 		//only the owner can add Permissions
