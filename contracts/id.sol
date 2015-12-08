@@ -14,12 +14,27 @@ contract identity {
 	mapping (string => bytes32) keyRegister;
 	//mapping the ipfs hash to attestations
 	mapping (string => address[]) attestationRegister;
+	//access struct
+	struct Access {
+		string accessType;
+		string hash;
+		address accessor;
+		uint time;
+	}
+	//list of all the access events (its much cheaper to use events)
+	//however, for privacy, on chain event logging is preferrable
+	Access[] accessList;
 
 	//constructor
 	function identity() { owner = msg.sender; }
 
 	//delete an identity and its contents
 	function kill() { if (msg.sender == owner) suicide(owner); }
+
+	//log access event
+	function logAccess (string accessType, string hash, address accessor) {
+		accessList.push(Access(accessType, hash, accessor, now));
+	}
 
 	//create new identity attribute data
 	function assert (string index, string hash, bytes32 key, bool isPublic) 
@@ -33,6 +48,7 @@ contract identity {
 			publicRegister[hash] = isPublic;
 			permissionsRegister[msg.sender][hash] = true;
 			attributeList.push(index);
+			logAccess("new assertion", hash, msg.sender);
 			return true;
 		}
 		return false;
@@ -43,6 +59,7 @@ contract identity {
 		//check if public or attestor has permission to attest
 		if(publicRegister[hash] || permissionsRegister[msg.sender][hash]){
 			attestationRegister[hash].push(msg.sender);
+			logAccess("new attestation", hash, msg.sender);
 			return true;
 		}
 		return false;
@@ -55,6 +72,7 @@ contract identity {
 
 		//check if the msg.sender is permitted to read
 		if(publicRegister[ipfsHash] || permissionsRegister[msg.sender][ipfsHash]){
+			logAccess("access assertion", ipfsHash, msg.sender);
 			return (ipfsHash, keyRegister[ipfsHash]);
 		} else {
 			return ("permission denied", 0x0);
@@ -65,6 +83,7 @@ contract identity {
 	function getAttestations (string hash) returns (address[] attestations){
 		//only people who know the hash, can view the attestations
 		//or do we want anyone to be able to see this?
+		logAccess("access attestations", hash, msg.sender);
 		return attestationRegister[hash];
 	}
 
@@ -74,6 +93,7 @@ contract identity {
 		//only the owner can add Permissions
 		if(msg.sender == owner){
 			permissionsRegister[permittedUser][index] = permitted;
+			logAccess("set permission", index, msg.sender);
 			return true;
 		}
 		return false;
@@ -93,6 +113,22 @@ contract identity {
 			return attributeList[index];
 		}
 		return "";
+	}
+
+	//get length of accessList
+	function getAccessLength () returns (uint length){
+		if(msg.sender == owner){
+			return accessList.length;
+		}
+		return 0;
+	}
+
+	//return an access event from the access log
+	function getAccessEvent (uint index) returns (string a, string h, address o, uint t){
+		if(msg.sender == owner && accessList.length < index){
+			Access e = accessList[index];
+			return (e.accessType, e.hash, e.accessor, e.time);
+		}
 	}
 
 }
