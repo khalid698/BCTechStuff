@@ -1,25 +1,32 @@
 contract identity {
 
+	//the ethereum account who owns the identity
 	address owner;
+	//a register of permissions to access assertions
 	mapping (address => mapping (string => bool)) permissionsRegister;
+	//a register of publicly visible assertions
 	mapping (string => bool) publicRegister;
+	//a list of the attributes belonging to the identity
 	string[] attributeList;
+	//mapping the index string to the ipfs hash
 	mapping (string => string) indexRegister;
+	//mapping the ipfs hash to the decryption key
 	mapping (string => bytes32) keyRegister;
+	//mapping the ipfs hash to attestations
 	mapping (string => address[]) attestationRegister;
 
 	//constructor
-	function identity() { owner = msg.sender }
+	function identity() { owner = msg.sender; }
 
 	//delete an identity and its contents
-	function delete() { if (msg.sender == owner) suicide(owner); }
+	function kill() { if (msg.sender == owner) suicide(owner); }
 
 	//create new identity attribute data
 	function assert (string index, string hash, bytes32 key, bool isPublic) 
 	returns (bool success){
 		//check if attribute has already been asserted
 		//only identity owner can overwrite attributes
-		if(indexRegister[index] == 0x0 || msg.sender == owner){
+		if(bytes(indexRegister[index]).length == 0 || msg.sender == owner){
 			indexRegister[index] = hash;
 			keyRegister[hash] = key;
 			publicRegister[hash] = isPublic;
@@ -47,21 +54,29 @@ contract identity {
 		return attestationRegister[hash];
 	}
 
-	//return the known attributes of an identity
-	function getAttributes() returns (string[] attributes){
+	//return the number of attributes of an identity
+	function getAttributesLength () returns (uint length){
 		if(msg.sender == owner){
-			return attributeList;
+			return attributeList.length;
 		}
-		return string[];
+		return 0;
+	}
+
+	//return attribute of an identity (will need to run a loop on the client side)
+	function getAttribute (uint index) returns (string attribute){
+		if(msg.sender == owner && attributeList.length < index){
+			return attributeList[index];
+		}
+		return "";
 	}
 
 	//get the assertion of a particular index value
-	function getAssertion (string index) returns (string ipfsHash, bytes32 key) {
+	function getAssertion (string index) returns (string _ipfsHash, bytes32 key) {
 		//get the relevant ipfsHash
 		string ipfsHash = indexRegister[index];
 
 		//check if the msg.sender is permitted to read
-		if(publicRegister[hash] || permissionsRegister[msg.sender][ipfsHash]){
+		if(publicRegister[ipfsHash] || permissionsRegister[msg.sender][ipfsHash]){
 			return (ipfsHash, keyRegister[ipfsHash]);
 		} else {
 			return ("permission denied", 0x0);
