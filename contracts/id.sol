@@ -24,6 +24,7 @@ contract identity {
 	//create new identity attribute data
 	function assert (string index, string hash, bytes32 key, bool isPublic) 
 	returns (bool success){
+		//anyone with access to the contract, can make assertions
 		//check if attribute has already been asserted
 		//only identity owner can overwrite attributes
 		if(bytes(indexRegister[index]).length == 0 || msg.sender == owner){
@@ -47,29 +48,6 @@ contract identity {
 		return false;
 	}
 
-	//return the attestations of a particular assertion
-	function getAttestations (string hash) returns (address[] attestations){
-		//only people who know the hash, can view the attestations
-		//or do we want anyone to be able to see this?
-		return attestationRegister[hash];
-	}
-
-	//return the number of attributes of an identity
-	function getAttributesLength () returns (uint length){
-		if(msg.sender == owner){
-			return attributeList.length;
-		}
-		return 0;
-	}
-
-	//return attribute of an identity (will need to run a loop on the client side)
-	function getAttribute (uint index) returns (string attribute){
-		if(msg.sender == owner && attributeList.length < index){
-			return attributeList[index];
-		}
-		return "";
-	}
-
 	//get the assertion of a particular index value
 	function getAssertion (string index) returns (string _ipfsHash, bytes32 key) {
 		//get the relevant ipfsHash
@@ -83,6 +61,13 @@ contract identity {
 		}
 	}
 
+	//return the attestations of a particular assertion
+	function getAttestations (string hash) returns (address[] attestations){
+		//only people who know the hash, can view the attestations
+		//or do we want anyone to be able to see this?
+		return attestationRegister[hash];
+	}
+
 	//set permissions for inbound assertion access
 	function setPermission (string index, address permittedUser, bool permitted)
 	 returns (bool success) {
@@ -92,6 +77,22 @@ contract identity {
 			return true;
 		}
 		return false;
+	}
+
+	//return the number of attributes of an identity
+	function getAttributesLength () returns (uint length){
+		if(msg.sender == owner){
+			return attributeList.length;
+		}
+		return 0;
+	}
+
+	//return attribute index of an identity (will need to run a loop on the client side)
+	function getAttribute (uint index) returns (string attribute){
+		if(msg.sender == owner && attributeList.length < index){
+			return attributeList[index];
+		}
+		return "";
 	}
 
 }
