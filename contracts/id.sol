@@ -2,8 +2,13 @@ contract Identity {
 
 	//the ethereum account who owns the identity
 	address owner;
-	//a register of permissions to access assertions
-	mapping (address => mapping (string => bool)) permissionsRegister;
+	//a condition struct
+	struct Condition {
+		bool access;
+		uint cost;
+	}
+	//a register of permissions to access assertions, on what condition
+	mapping (address => mapping (string => Condition)) permissionsRegister;
 	//a register of publicly visible assertions
 	mapping (string => bool) publicRegister;
 	//a list of the attributes belonging to the identity
@@ -49,7 +54,7 @@ contract Identity {
 			indexRegister[index] = hash;
 			keyRegister[hash] = key;
 			publicRegister[hash] = isPublic;
-			permissionsRegister[msg.sender][hash] = true;
+			permissionsRegister[msg.sender][hash] = Condition(true, 0);
 			attributeList.push(index);
 			logAccess("new assertion", hash, msg.sender);
 			return true;
@@ -60,7 +65,7 @@ contract Identity {
 	//create new attribute meta-data
 	function attest (string hash) returns (bool success) {
 		//check if public or attestor has permission to attest
-		if(publicRegister[hash] || permissionsRegister[msg.sender][hash]){
+		if(publicRegister[hash] || permissionsRegister[msg.sender][hash].access){
 			attestationRegister[hash].push(msg.sender);
 			logAccess("new attestation", hash, msg.sender);
 			return true;
@@ -72,9 +77,9 @@ contract Identity {
 	function getAssertion (string index) returns (string _ipfsHash, bytes32 key) {
 		//get the relevant ipfsHash
 		string ipfsHash = indexRegister[index];
-
+		Condition c = permissionsRegister[msg.sender][ipfsHash];
 		//check if the msg.sender is permitted to read
-		if(publicRegister[ipfsHash] || permissionsRegister[msg.sender][ipfsHash]){
+		if(publicRegister[ipfsHash] || (c.access && msg.value > c.cost)){
 			logAccess("access assertion", ipfsHash, msg.sender);
 			return (ipfsHash, keyRegister[ipfsHash]);
 		} else {
@@ -91,11 +96,11 @@ contract Identity {
 	}
 
 	//set permissions for inbound assertion access
-	function setPermission (string index, address permittedUser, bool permitted)
+	function setPermission (string index, address permittedUser, uint cost, bool permitted)
 	 returns (bool success) {
 		//only the owner can add Permissions
 		if(msg.sender == owner){
-			permissionsRegister[permittedUser][index] = permitted;
+			permissionsRegister[permittedUser][index] = Condition(permitted, cost);
 			logAccess("set permission", index, msg.sender);
 			return true;
 		}
@@ -131,6 +136,14 @@ contract Identity {
 		if(msg.sender == owner && accessEvents.length < index){
 			Access e = accessEvents[index];
 			return (e.accessType, e.hash, e.accessor, e.time);
+		}
+	}
+
+	//clear out the balance of the contract
+	//this is where the ID service provider would add their conditions
+	function sweepFunds() {
+		if(msg.sender == owner){
+			owner.send(this.balance);
 		}
 	}
 
