@@ -1,4 +1,4 @@
-contract identity {
+contract Identity {
 
 	//the ethereum account who owns the identity
 	address owner;
@@ -23,17 +23,20 @@ contract identity {
 	}
 	//list of all the access events (its much cheaper to use events)
 	//however, for privacy, on chain event logging is preferrable
-	Access[] accessList;
+	Access[] accessEvents;
 
 	//constructor
-	function identity() { owner = msg.sender; }
+	function Identity() { 
+		owner = msg.sender;
+		logAccess("new identity", "genesis", msg.sender);
+		}
 
 	//delete an identity and its contents
 	function kill() { if (msg.sender == owner) suicide(owner); }
 
 	//log access event
 	function logAccess (string accessType, string hash, address accessor) {
-		accessList.push(Access(accessType, hash, accessor, now));
+		accessEvents.push(Access(accessType, hash, accessor, now));
 	}
 
 	//create new identity attribute data
@@ -115,18 +118,18 @@ contract identity {
 		return "";
 	}
 
-	//get length of accessList
+	//get length of accessEvents
 	function getAccessLength () returns (uint length){
 		if(msg.sender == owner){
-			return accessList.length;
+			return accessEvents.length;
 		}
 		return 0;
 	}
 
 	//return an access event from the access log
 	function getAccessEvent (uint index) returns (string a, string h, address o, uint t){
-		if(msg.sender == owner && accessList.length < index){
-			Access e = accessList[index];
+		if(msg.sender == owner && accessEvents.length < index){
+			Access e = accessEvents[index];
 			return (e.accessType, e.hash, e.accessor, e.time);
 		}
 	}
