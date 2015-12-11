@@ -1,0 +1,6 @@
+.DS_Store
+geth/chaindata
+geth/dapp
+geth/history
+geth/nodes
+geth/nodekey
