@@ -26,7 +26,7 @@ The conditions and privileges of other DIDs to access specific identity attribut
 ### Outbound Access
 The conditions and privileges to access attributes of other DIDs, from your DID. 
 
-# Woring Privacy Assumptions
+# Working Privacy Assumptions
 
 Our approach to identity will require a number of trade-offs betweeen privacy and accountability. These are our current  assumptions;
 
