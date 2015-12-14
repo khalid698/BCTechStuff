@@ -25,3 +25,13 @@ The conditions and privileges of other DIDs to access specific identity attribut
 
 ### Outbound Access
 The conditions and privileges to access attributes of other DIDs, from your DID. 
+
+# Woring Privacy Assumptions
+
+Our approach to identity will require a number of trade-offs betweeen privacy and accountability. These are our current  assumptions;
+
+- Assertions: Assertions can be private or public. Only parties who have been granted access to a private assertion should be able to view it.
+- Assertion Grantees: Parties who have access to a user's private assertions should not be visible to the public. For example, your bank should not be able to know that you have shared identity data with Ashley Madison.
+- Attestations: Attestations can be private or public. Only parties who have been granted access to private attestations should be able to view those attestations.
+- Attestation Grantees: Parties who have access to a user's private attestations should not be visible to the public.
+It is acceptable for the number of Assertion Grantees and the number of Attestation Grantees to be public.
