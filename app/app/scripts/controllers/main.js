@@ -8,13 +8,13 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($log, Identity, Ethereum, LocalUser) {
+  .controller('MainCtrl', function ($log, Identity, Ethereum) {
     var self=this;
 
-    self.localUser = LocalUser;
+    self.identity = Identity;
 
     self.generateKey = function() {
-      Identity.GenerateKey();
+      self.identity.GenerateKey();
     };
 
     self.balance = function() {

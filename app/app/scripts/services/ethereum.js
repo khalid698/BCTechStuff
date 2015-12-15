@@ -8,11 +8,11 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Ethereum', function (LocalUser, web3) {
+  .service('Ethereum', function (Identity, web3) {
     var self = this;
 
     self.getBalance = function() {
-        var address = LocalUser.getAddress();
+        var address = Identity.getAddress();
         return web3.eth.getBalance(address);
     };
 

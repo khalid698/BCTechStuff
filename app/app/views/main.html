@@ -1,19 +1,26 @@
 <div class="jumbotron" >
   <h1>Welcome to ObjectChain</h1>
   <label for="email">Email</label>
-  <input id="email" type="text" ng-model="main.localUser.email"/>
+  <input id="email" type="text" ng-model="main.identity.email"/>
   <label for="passphrase">Passphrase</label>
-  <input id="passphrase" type="text" ng-model="main.localUser.privateKeyPassphrase"/>
+  <input id="passphrase" type="text" ng-model="main.identity.privateKeyPassphrase"/>
 
   <p><a class="btn btn-lg btn-success" ng-click="main.generateKey()">Generate key!</a></p>
 </div>
 
 <div class="container">
-<!--   <div class="col-lg-6">
-      <h4>Private key</h4>
-     {{main.localUser.privateKey}}
+   <div class="col-lg-6">
+      <h4>PGP key</h4>
+      <ul>
+        <li>UserId : {{main.identity.privateKey.getPrimaryUser().user.userId.userid}}</li>
+        <li>Fingerprint : {{main.identity.privateKey.primaryKey.fingerprint}}</li>
+      </ul>
+      <h4>Ethereum</h4>
+      <ul>
+        <li>Key hash: {{main.identity.keyStore.keyHash}}</li>
+        <li>Address: {{main.identity.getAddress()}}
+      </ul>
   </div>
- -->
  <div class="col-lg-6">
     <h4>Your balance</h4>
     {{main.balance()}}
