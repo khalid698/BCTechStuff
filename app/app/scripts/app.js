@@ -8,10 +8,12 @@
  *
  * Main module of the application.
  */
+
 angular
   .module('angularApp', [
     'ngRoute'
   ])
+  .constant('kbpgp', window.kbpgp )
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
