@@ -4,3 +4,9 @@ geth/dapp
 geth/history
 geth/nodes
 geth/nodekey
+
+app/node_modules
+app/dist
+app/.tmp
+app/.sass-cache
+app/bower_components
