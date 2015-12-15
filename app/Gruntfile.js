@@ -202,6 +202,11 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
+        overrides: {
+           'openpgp': {
+              main: ['dist/openpgp.js']
+           }
+        },
         ignorePath:  /\.\.\//
       },
       test: {
@@ -220,7 +225,7 @@ module.exports = function (grunt) {
             }
           }
       }
-    }, 
+    },
 
     // Renames files for browser caching purposes
     filerev: {

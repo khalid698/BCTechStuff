@@ -11,7 +11,6 @@
 
 var Web3 = require('web3');
 var web3 = new Web3();
-web3.setProvider();
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
 angular
@@ -19,8 +18,12 @@ angular
     'ngRoute',
     'LocalStorageModule'
   ])
-  .constant('kbpgp', window.kbpgp )
+  .constant('Config', {
+
+  })
+  .constant('moment', window.moment)
   .constant('web3', web3)
+  .constant('pgp', window.openpgp)
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
