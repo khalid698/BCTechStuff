@@ -8,8 +8,10 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function (Identity) {
+  .controller('MainCtrl', function (Identity, LocalUser) {
     var self=this;
+
+    self.localUser = LocalUser;
 
     self.generateKey = function() {
       Identity.GenerateKey();
