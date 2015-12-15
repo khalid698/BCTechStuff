@@ -1,7 +1,20 @@
-<div class="jumbotron">
+<div class="jumbotron" ng-if="!main.localUser.privateKey">
   <h1>Welcome to ObjectChain</h1>
-
-  <input type="text" ng-model="main.localUser.email"/>
+  <label for="email">Email</label>
+  <input id="email" type="text" ng-model="main.localUser.email"/>
+  <label for="passphrase">Passphrase</label>
+  <input id="passphrase" type="text" ng-model="main.localUser.privateKeyPassphrase"/>
 
   <p><a class="btn btn-lg btn-success" ng-click="main.generateKey()">Generate key!</a></p>
+</div>
+
+<div class="container">
+<!--   <div class="col-lg-6">
+      <h4>Private key</h4>
+     {{main.localUser.privateKey}}
+  </div>
+ -->
+ <div class="col-lg-6">
+    <h4>Your balance</h4>
+    {{main.balance()}}
 </div>

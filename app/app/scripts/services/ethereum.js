@@ -8,12 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Ethereum', function (LocalUser) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-
-    var Web3 = require('web3');
-    var web3 = new Web3();
-
+  .service('Ethereum', function (LocalUser, web3) {
     var self = this;
 
     self.getBalance = function() {

@@ -17,11 +17,14 @@ angular.module('angularApp')
       kbpgp.KeyManager.generate_ecc({ userid : LocalUser.email }, function(_, Charlie) {
         // console.log(Charlie);
         Charlie.sign({}, function() {
-           console.log('done!');
+           console.log('Generating private key with passphrase : '+LocalUser.privateKeyPassphrase);
            Charlie.export_pgp_private ({
-              passphrase: 'booyeah!'
-          }, function(err, pgp_private) {
-              console.log('private key: ', pgp_private);
+              passphrase: LocalUser.privateKeyPassphrase
+            }, function(err, pgp_private) {
+              //console.log('private key: ', pgp_private);
+              console.log('Update privateKey');
+              LocalUser.privateKey = pgp_private;
+              LocalUser.storeKey();
           });
         });
       });
