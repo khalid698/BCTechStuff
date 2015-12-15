@@ -8,13 +8,36 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Identity', function (pgp, LocalUser) {
+  .service('Identity', function ($log, pgp, LocalUser, LightWallet) {
 
     var self = this;
 
     self.GenerateKey = function() {
-      console.log('Generating keyset for '+LocalUser.email);
-      console.log(pgp);
+      // $log.info('Generating key for : '+LocalUser.email);
+      // console.log(CryptoJS);
+
+      var options = {
+        numBits: 2048,
+        userId: LocalUser.email,
+        passphrase: LocalUser.privateKeyPassphrase
+      };
+      $log.info('Generating key with options :');
+      $log.info(options);
+      pgp.generateKeyPair(options).then(function(keypair) {
+          // success
+          $log.info('Created PGP key');
+          var secretSeed = LightWallet.keystore.generateRandomSeed();
+          var generatedKey = keypair;
+          console.log(secretSeed);
+          console.log(generatedKey);
+          //LocalUser.privateKey = keypair.privateKeyArmored;
+          //var privkey = keypair.privateKeyArmored;
+          //var pubkey = keypair.publicKeyArmored;
+          //LocalUser.storeKey();
+      }).catch(function(error) {
+          console.log(error);
+      });
+
       // kbpgp.KeyManager.generate_ecc({ userid : LocalUser.email }, function(_, Charlie) {
       //   // console.log(Charlie);
       //   Charlie.sign({}, function() {

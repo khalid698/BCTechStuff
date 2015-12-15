@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function (Identity, Ethereum, LocalUser) {
+  .controller('MainCtrl', function ($log, Identity, Ethereum, LocalUser) {
     var self=this;
 
     self.localUser = LocalUser;

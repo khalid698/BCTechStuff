@@ -205,6 +205,15 @@ module.exports = function (grunt) {
         overrides: {
            'openpgp': {
               main: ['dist/openpgp.js']
+           },
+           'crypto-js': {
+              main: ['crypto-js.js']
+           },
+           'eth-lightwallet':{
+              main: ['dist/lightwallet.min.js']
+           },
+           'web3': {
+              main: ['dist/web3.js']
            }
         },
         ignorePath:  /\.\.\//

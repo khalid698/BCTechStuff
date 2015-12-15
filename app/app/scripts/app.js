@@ -13,6 +13,8 @@ var Web3 = require('web3');
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
+//var CryptoJS = require('crypto-js');
+
 angular
   .module('angularApp', [
     'ngRoute',
@@ -24,6 +26,8 @@ angular
   .constant('moment', window.moment)
   .constant('web3', web3)
   .constant('pgp', window.openpgp)
+  .constant('CryptoJS', window.crypto)
+  .constant('LightWallet', window.lightwallet)
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
