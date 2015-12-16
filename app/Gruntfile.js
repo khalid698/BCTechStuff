@@ -214,6 +214,9 @@ module.exports = function (grunt) {
            },
            'web3': {
               main: ['dist/web3.js']
+           },
+           'hooked-web3-provider': {
+              main: ['build/hooked-web3-provider.min.js']
            }
         },
         ignorePath:  /\.\.\//
