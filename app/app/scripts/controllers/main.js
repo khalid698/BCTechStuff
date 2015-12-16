@@ -28,14 +28,13 @@ angular.module('angularApp')
     self.createIdentity = function() {
       var callback = function(e, contract){
         console.log(e, contract);
-        if (typeof contract.address !== 'undefined') {
+        if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
              console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
              Identity.contractAddress = contract.address;
              Identity.storeContractAddress();
         }
       };
-
-      Ethereum.createContract(Identity.keyStore, Identity.getAddress, callback);
+      Ethereum.createContract(Identity.keyStore, Identity.getAddress(), callback);
     };
 
     self.deleteIdentity = function() {

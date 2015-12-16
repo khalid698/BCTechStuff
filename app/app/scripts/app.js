@@ -21,7 +21,7 @@ angular
   .constant('moment', window.moment)
 //  .constant('web3', web3)
   .constant('pgp', window.openpgp)
-  .constant('CryptoJS', window.crypto)
+  .constant('CryptoJS', window.CryptoJS)
   .constant('LightWallet', window.lightwallet)
   .constant('Config', {gethEndpoint: 'http://localhost:8545'})
   .config(function ($routeProvider) {

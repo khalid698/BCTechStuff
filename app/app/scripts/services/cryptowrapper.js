@@ -8,20 +8,48 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('CryptoWrapper', function () {
+  .service('CryptoWrapper', function (CryptoJS) {
 
     var self = this;
 
+    // var JsonFormatter = {
+    //     stringify: function (cipherParams) {
+    //         var ct = cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
+    //         var iv = cipherParams.iv.toString();
+    //         var salt = cipherParams.salt.toString();
+    //         return [ct,iv,salt].join('.');
+    //     },
+
+    //     parse: function (formatted) {
+    //         var formattedValue = formatted.split('.');
+    //         // extract ciphertext from json object, and create cipher params object
+    //         var cipherParams = CryptoJS.lib.CipherParams.create({
+    //             ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
+    //         });
+
+    //         // optionally extract iv and salt
+    //         cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+    //         if (jsonObj.s) {
+    //         cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+    //         }
+
+    //         return cipherParams;
+    //     }
+    // };
+
+
     self.randomKey = function(){
-      return window.CryptoJS.lib.WordArray.random(128/8).toString();
+      return CryptoJS.lib.WordArray.random(128/8).toString();
     };
 
     self.encryptValue = function(value, key){
-      return window.CryptoJS.AES.encrypt(value,key);
+      var opensslFormatted = CryptoJS.AES.encrypt(value,key).toString();
+      return asciiToHex(opensslFormatted);
     };
 
     self.decryptStringValue = function(encrypted, key){
-      return window.CryptoJS.AES.decrypt(encrypted, key).toString(window.CryptoJS.enc.Utf8);
+      var opensslFormatted = hexToAscii(encrypted);
+      return CryptoJS.AES.decrypt(opensslFormatted, key).toString(CryptoJS.enc.Utf8);
     };
   //   /**
   //   *

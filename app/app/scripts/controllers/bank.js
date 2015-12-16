@@ -13,7 +13,7 @@ angular.module('angularApp')
     $scope.progressbar = ngProgressFactory.createInstance();
 
     self.signUp = function() {
-      $log.info("doing things!");
+      // $log.info("doing things!");
       $scope.progressbar.start();
     };
 

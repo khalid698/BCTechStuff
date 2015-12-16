@@ -25,6 +25,7 @@ angular.module('angularApp')
       self.privateKey = undefined;
       self.keyStore = undefined;
       self.contractAddress = undefined;
+      localStorageService.clear();
     };
 
     self.generateKey = function() {
@@ -59,7 +60,16 @@ angular.module('angularApp')
     };
 
     self.deleteContract = function(){
-      Ethereum.deleteContract(self.keyStore, self.contractAddress);
+      var callback = function(e,res){
+        if ( e === undefined){
+          $log.info('Deleted contract at : '+self.contractAddress);
+          self.contractAddress = undefined;
+          self.storeContractAddress();
+        }
+        $log.debug(res);
+      };
+      $log.info('Deleting contract at : '+self.contractAddress);
+      Ethereum.deleteContract(self.keyStore, self.contractAddress, callback);
     };
 
     /**
