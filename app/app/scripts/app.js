@@ -30,6 +30,11 @@ angular
   .constant('LightWallet', window.lightwallet)
   .config(function ($routeProvider) {
     $routeProvider
+      .when('/assert', {
+        templateUrl: 'views/assert.html',
+        controller: 'AssertCtrl',
+        controllerAs: 'assert'
+      })
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',

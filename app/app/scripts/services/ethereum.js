@@ -13,7 +13,14 @@ angular.module('angularApp')
 
     self.getBalance = function() {
         var address = Identity.getAddress();
+        if (!address) {
+          return undefined;
+        }
         return web3.eth.getBalance(address);
+    };
+
+    self.storeAssertion = function(){
+
     };
 
   });

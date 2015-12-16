@@ -19,22 +19,20 @@ angular.module('angularApp')
     self.privateKey = undefined;
     self.keyStore = undefined;
 
-    self.GenerateKey = function() {
+
+    // Key deletion and generation
+    self.deleteKey = function() {
+      self.privateKey = undefined;
+      self.keyStore = undefined;
+    };
+
+    self.generateKey = function() {
       // Generate BIP32 seed
       var secretSeed = LightWallet.keystore.generateRandomSeed();
       // console.log(secretSeed);
       // Create keystore and add 5 addresses
-      var keyStore = new LightWallet.keystore(secretSeed, "")
-      keyStore.generateNewAddress("",5);
-
-      // Store in PGP key literal
-      // var literal = new pgp.packet.UserAttribute();
-      // literal.setText(keyStore.serialize());
-      // literal.setFilename('lightwallet.json');
-
-      // var symmetricallyEncrypted = new pgp.packet.SymmetricallyEncrypted();
-      // symmetricallyEncrypted.packets = new pgp.packet.List();
-      // symmetricallyEncrypted.packets.push(literal);
+      var keyStore = new LightWallet.keystore(secretSeed, self.privateKeyPassphrase);
+      keyStore.generateNewAddress(self.privateKeyPassphrase,5);
 
       var options = {
         numBits: 4096,
@@ -65,14 +63,14 @@ angular.module('angularApp')
 
     self.storeKeyStore = function(){
       localStorageService.set('keyStore', self.keyStore.serialize());
-    }
+    };
 
     self.readKeyStore = function() {
       var serializedKeyStore = localStorageService.get('keyStore');
       if(serializedKeyStore){
-        self.keyStore = lightwallet.keystore.deserialize(serializedKeyStore,"");
-      };
-    }
+        self.keyStore = LightWallet.keystore.deserialize(serializedKeyStore,self.privateKeyPassphrase);
+      }
+    };
 
     self.readKey = function() {
       var privateKeyString = localStorageService.get('privateKey');
@@ -90,11 +88,26 @@ angular.module('angularApp')
       } else {
         return undefined;
       }
-    }
+    };
+
+    // Assertions
+    self.assertionTypes = {
+      name: 1
+    };
+
+    self.generateAssertion = function(assertionType, assertionValue) {
+       // Create assertion key
+      //var sessionKey = pgp.util.hexstrdump(pgp.crypto.random.getRandomBytes(32))
+      pgp.encryptMessage(self.privateKey, {t:assertionType, v:assertionValue}.toString())
+      .then(function (encrypted){
+          $log.info(encrypted);
+      });
+    };
 
     self.readKey();
     self.readKeyStore();
-
+    console.log('Initialized Identity');
+    console.log(self);
 
 
 });

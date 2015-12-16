@@ -14,7 +14,11 @@ angular.module('angularApp')
     self.identity = Identity;
 
     self.generateKey = function() {
-      self.identity.GenerateKey();
+      self.identity.generateKey();
+    };
+
+    self.deleteKey = function() {
+      self.identity.deleteKey();
     };
 
     self.balance = function() {

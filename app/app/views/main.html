@@ -1,11 +1,15 @@
-<div class="jumbotron" >
+<div class="jumbotron" ng-if="!main.identity.privateKey">
   <h1>Welcome to ObjectChain</h1>
-  <label for="email">Email</label>
-  <input id="email" type="text" ng-model="main.identity.email"/>
-  <label for="passphrase">Passphrase</label>
-  <input id="passphrase" type="text" ng-model="main.identity.privateKeyPassphrase"/>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input class="form-control" id="email" type="text" ng-model="main.identity.email"/>
+  </div>
+  <div class="form-group">
+    <label for="passphrase">Passphrase</label>
+    <input class="form-control" id="passphrase" type="text" ng-model="main.identity.privateKeyPassphrase"/>
+  </div>
 
-  <p><a class="btn btn-lg btn-success" ng-click="main.generateKey()">Generate key!</a></p>
+  <button type="submit" class="btn btn-lg btn-success" ng-click="main.generateKey()">Generate key!</button>
 </div>
 
 <div class="container">
@@ -20,6 +24,7 @@
         <li>Key hash: {{main.identity.keyStore.keyHash}}</li>
         <li>Address: {{main.identity.getAddress()}}
       </ul>
+      <button class="btn btn-sm btn-danger" ng-click="main.deleteKey()" ng-if="main.identity.privateKey">Delete</button>
   </div>
  <div class="col-lg-6">
     <h4>Your balance</h4>
