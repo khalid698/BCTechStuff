@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService) {
+  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService, CryptoWrapper) {
 
     var self = this;
 
@@ -18,12 +18,13 @@ angular.module('angularApp')
     //PGP and Eth key holders
     self.privateKey = undefined;
     self.keyStore = undefined;
-
+    self.contractAddress = undefined;
 
     // Key deletion and generation
     self.deleteKey = function() {
       self.privateKey = undefined;
       self.keyStore = undefined;
+      self.contractAddress = undefined;
     };
 
     self.generateKey = function() {
@@ -57,22 +58,46 @@ angular.module('angularApp')
       });
     };
 
-    self.storeKey = function() {
-      localStorageService.set('privateKey', self.privateKey.armor());
+    self.deleteContract = function(){
+      Ethereum.deleteContract(self.keyStore, self.contractAddress);
     };
 
-    self.storeKeyStore = function(){
-      localStorageService.set('keyStore', self.keyStore.serialize());
-    };
-
-    self.readKeyStore = function() {
-      var serializedKeyStore = localStorageService.get('keyStore');
-      if(serializedKeyStore){
-        self.keyStore = LightWallet.keystore.deserialize(serializedKeyStore,self.privateKeyPassphrase);
-
+    /**
+    * Returns the 'wallet' address
+    */
+    self.getAddress = function(){
+      if (self.keyStore && self.keyStore.getAddresses().length > 0){
+        return self.keyStore.getAddresses()[0];
+      } else {
+        return undefined;
       }
     };
 
+    // Assertions
+    self.assertionTypes = {
+      name: 1
+    };
+
+    self.generateAssertion = function(assertionType, assertionValue) {
+      // Generate unique enryption key for this assertion
+      var sessionKey = CryptoWrapper.randomKey();
+      // Encrypt assertion with generated random key
+      var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
+      // Encrypt session key to self
+      pgp.encryptMessage(self.privateKey, sessionKey).then(function (encrypted){
+          $log.info(encrypted);
+          return Ethereum.assert(self.keyStore, self.contractAddress, self.assertionTypes[assertionType], encrypted, encryptedAssertion);
+      }).then(function(result){
+        $log.info(result);
+      });
+    };
+
+    self.readAssertion = function(assertionType){
+      var assertion = Ethereum.get(self.keyStore, self.contractAddress, self.assertionTypes[assertionType]);
+      $log.info(assertion);
+    };
+
+    // Local storage
     self.readKey = function() {
       var privateKeyString = localStorageService.get('privateKey');
       self.privateKey = pgp.key.readArmored(privateKeyString).keys[0];
@@ -82,47 +107,34 @@ angular.module('angularApp')
       }
       $log.info(self.privateKey);
     };
+    self.readKeyStore = function() {
+      var serializedKeyStore = localStorageService.get('keyStore');
+      if(serializedKeyStore){
+        self.keyStore = LightWallet.keystore.deserialize(serializedKeyStore,self.privateKeyPassphrase);
 
-    /**
-    * Returns the 'wallet' address
-    */
-    self.getAddress = function(){
-      if (self.keyStore && self.keyStore.getAddresses().length > 0){
-        return '0x'+self.keyStore.getAddresses()[0];
-      } else {
-        return undefined;
       }
     };
-    /**
-    * Returns the contract address
-    */
-    self.getContractAddress = function(){
-      if (self.keyStore && self.keyStore.getAddresses().length > 0){
-        return '0x'+self.keyStore.getAddresses()[1];
-      } else {
-        return undefined;
-      }
+    self.readContractAddress = function() {
+      self.contractAddress = localStorageService.get('contractAddress');
+      $log.debug('Read contract address : '+self.contractAddress);
     };
 
-
-    // Assertions
-    self.assertionTypes = {
-      name: 1
+    self.storeKey = function() {
+      localStorageService.set('privateKey', self.privateKey.armor());
     };
 
-    self.generateAssertion = function(assertionType, assertionValue) {
-      // Wrap the assertion in a self addressed pgp message
-      pgp.encryptMessage(self.privateKey, assertionValue)
-      .then(function (encrypted){
-          $log.info(encrypted);
-          return Ethereum.storeAssertion(self.keyStore, self.assertionTypes[assertionType], encrypted);
-      }).then(function(result){
-        $log.info(result);
-      });
+    self.storeKeyStore = function(){
+      localStorageService.set('keyStore', self.keyStore.serialize());
+    };
+    self.storeContractAddress = function(){
+      $log.debug('Storing contract address : '+self.contractAddress);
+      localStorageService.set('contractAddress', self.contractAddress);
     };
 
+    // Startup
     self.readKey();
     self.readKeyStore();
+    self.readContractAddress();
     console.log('Initialized Identity');
     console.log(self);
 

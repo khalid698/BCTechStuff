@@ -7,10 +7,12 @@ contract Identity {
     
 	mapping(uint => Assertion) assertions;
 	mapping(uint => address[]) attestations;
+	
 	struct Assertion {
 	    string key;
 	    string value;
 	}
+	
     /**
      * this represents : encrypt(key=grantee.publicKey, value=)
      * the grantee can use this in combination with his private key to unlock the key to unlock the actual value.
@@ -24,7 +26,7 @@ contract Identity {
      */
 	function assert(uint assertionType, string key, string  value) onlyowner {
 		// Clear out attestations when values changes ?
-		assertions[assertionType] = Assertion(value, key);
+		assertions[assertionType] = Assertion(key, value);
 	}
 
 	function attest(uint assertionType) {

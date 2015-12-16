@@ -19,4 +19,9 @@ angular.module('angularApp')
         Identity.generateAssertion(self.assertionType, self.assertionValue);
       };
 
+      self.read = function() {
+        $log.info('Reading '+self.assertionType+' from contract');
+        Identity.readAssertion(self.assertionType);
+      };
+
   });
