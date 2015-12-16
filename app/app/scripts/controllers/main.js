@@ -22,7 +22,11 @@ angular.module('angularApp')
     };
 
     self.balance = function() {
-      return Ethereum.getBalance().toString(10);
+      return Ethereum.getBalance(Identity.getAddress()).toString(10);
+    };
+
+    self.createIdentity = function() {
+      Ethereum.createContract(Identity.keyStore);
     };
 
   });

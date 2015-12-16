@@ -15,7 +15,7 @@ angular.module('angularApp')
       self.assertionValue = undefined;
 
       self.assert = function() {
-        $log.info("Asserting "+self.assertionType+" : "+self.assertionValue);
+        $log.info('Asserting '+self.assertionType+' : '+self.assertionValue);
         Identity.generateAssertion(self.assertionType, self.assertionValue);
       };
 

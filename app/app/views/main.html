@@ -22,9 +22,11 @@
       <h4>Ethereum</h4>
       <ul>
         <li>Key hash: {{main.identity.keyStore.keyHash}}</li>
-        <li>Address: {{main.identity.getAddress()}}
+        <li>Address: {{main.identity.getAddress()}}</li>
+        <li>Contract: {{main.identity.getContractAddress()}}</li>
       </ul>
       <button class="btn btn-sm btn-danger" ng-click="main.deleteKey()" ng-if="main.identity.privateKey">Delete</button>
+      <button class="btn btn-sm btn-primary" ng-click="main.createIdentity()">Create identity</button>
   </div>
  <div class="col-lg-6">
     <h4>Your balance</h4>

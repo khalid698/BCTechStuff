@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Identity', function ($log, pgp, LightWallet, localStorageService) {
+  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService) {
 
     var self = this;
 
@@ -69,6 +69,7 @@ angular.module('angularApp')
       var serializedKeyStore = localStorageService.get('keyStore');
       if(serializedKeyStore){
         self.keyStore = LightWallet.keystore.deserialize(serializedKeyStore,self.privateKeyPassphrase);
+
       }
     };
 
@@ -82,13 +83,27 @@ angular.module('angularApp')
       $log.info(self.privateKey);
     };
 
+    /**
+    * Returns the 'wallet' address
+    */
     self.getAddress = function(){
       if (self.keyStore && self.keyStore.getAddresses().length > 0){
-        return self.keyStore.getAddresses()[0];
+        return '0x'+self.keyStore.getAddresses()[0];
       } else {
         return undefined;
       }
     };
+    /**
+    * Returns the contract address
+    */
+    self.getContractAddress = function(){
+      if (self.keyStore && self.keyStore.getAddresses().length > 0){
+        return '0x'+self.keyStore.getAddresses()[1];
+      } else {
+        return undefined;
+      }
+    };
+
 
     // Assertions
     self.assertionTypes = {
@@ -96,11 +111,13 @@ angular.module('angularApp')
     };
 
     self.generateAssertion = function(assertionType, assertionValue) {
-       // Create assertion key
-      //var sessionKey = pgp.util.hexstrdump(pgp.crypto.random.getRandomBytes(32))
-      pgp.encryptMessage(self.privateKey, {t:assertionType, v:assertionValue}.toString())
+      // Wrap the assertion in a self addressed pgp message
+      pgp.encryptMessage(self.privateKey, assertionValue)
       .then(function (encrypted){
           $log.info(encrypted);
+          return Ethereum.storeAssertion(self.keyStore, self.assertionTypes[assertionType], encrypted);
+      }).then(function(result){
+        $log.info(result);
       });
     };
 
