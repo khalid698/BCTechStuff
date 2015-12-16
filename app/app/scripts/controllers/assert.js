@@ -8,20 +8,25 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AssertCtrl', function ($log, Identity) {
+  .controller('AssertCtrl', function ($log, $scope, Identity) {
       var self = this;
 
-      self.assertionType = 'name';
-      self.assertionValue = undefined;
+      $scope.assertionType = 'name';
+      $scope.assertionValue = '...';
 
       self.assert = function() {
-        $log.info('Asserting '+self.assertionType+' : '+self.assertionValue);
-        Identity.generateAssertion(self.assertionType, self.assertionValue);
+        $log.info('Asserting '+$scope.assertionType+' : '+$scope.assertionValue);
+        Identity.generateAssertion($scope.assertionType, $scope.assertionValue);
       };
 
       self.read = function() {
-        $log.info('Reading '+self.assertionType+' from contract');
-        Identity.readAssertion(self.assertionType);
+        var callback = function(value){
+          $log.info('Got assertion value : '+value);
+          $scope.assertionValue = value;
+          $scope.$apply();
+        }
+        $log.info('Reading '+$scope.assertionType+' from contract');
+        Identity.readAssertion($scope.assertionType, callback);
       };
 
   });
