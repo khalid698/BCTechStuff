@@ -73,8 +73,7 @@ angular.module('angularApp')
 
     self.get = function(keyStore, address, assertionType){
       $log.info('Querying '+assertionType+' on contract at '+address);
-      var res = self.createIdentityClient(keyStore, address).get.call(assertionType);
-      $log.info(res);
+      return self.createIdentityClient(keyStore, address).get.call(assertionType);
     };
 
     $log.info(this);

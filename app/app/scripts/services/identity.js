@@ -103,9 +103,18 @@ angular.module('angularApp')
       });
     };
 
-    self.readAssertion = function(assertionType){
-      var assertion = Ethereum.get(self.keyStore, self.contractAddress, self.assertionTypes[assertionType]);
-      $log.info(assertion);
+    self.readAssertion = function(assertionType, callback){
+      // var resultHandler = function(error, result){
+      //   $log.info(assertion);
+      //   var sessionKey = pgp.decryptMessage(self.privateKey, assertion[0]);
+      //   var decryptedAssertion = CryptoWrapper.decryptStringValue(assertion[1], sessionKey);
+      //   callback(decryptedAssertion);
+      // };
+      var result = Ethereum.get(self.keyStore, self.contractAddress, self.assertionTypes[assertionType]);
+      var sessionKey = pgp.decryptMessage(self.privateKey, openpgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
+         var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
+         callback(decryptedAssertion);
+      })
     };
 
     // Local storage
