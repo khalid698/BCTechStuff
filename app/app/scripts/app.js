@@ -12,7 +12,8 @@
 angular
   .module('angularApp', [
     'ngRoute',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ngProgress'
   ])
   .constant('Config', {
 
@@ -34,6 +35,11 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
+      })
+      .when('/bank', {
+        templateUrl: 'views/bank.html',
+        controller: 'BankCtrl',
+        controllerAs: 'bank'
       })
       .otherwise({
         redirectTo: '/'
