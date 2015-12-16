@@ -34,7 +34,6 @@ angular.module('angularApp')
              Identity.storeContractAddress();
         }
       };
-
       Ethereum.createContract(Identity.keyStore, Identity.getAddress(), callback);
     };
 

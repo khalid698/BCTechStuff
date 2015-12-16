@@ -15,21 +15,17 @@ angular.module('angularApp')
     var JsonFormatter = {
         stringify: function (cipherParams) {
             // create json object with ciphertext
-
-            var jsonObj = {
-                ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
-            };
+            var ct = cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
 
             // optionally add iv and salt
+            var iv,salt = undefined;
             if (cipherParams.iv) {
-                jsonObj.iv = cipherParams.iv.toString();
+                iv = cipherParams.iv.toString();
             }
             if (cipherParams.salt) {
-                jsonObj.s = cipherParams.salt.toString();
+                salt = cipherParams.salt.toString();
             }
-
-            // stringify json object
-            return JSON.stringify(jsonObj);
+            return ct+'.'+iv+'.'+salt;
         },
 
         parse: function (jsonStr) {
