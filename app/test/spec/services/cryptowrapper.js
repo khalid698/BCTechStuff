@@ -11,8 +11,16 @@ describe('Service: CryptoWrapper', function () {
     CryptoWrapper = _CryptoWrapper_;
   }));
 
-  it('should do something', function () {
-    expect(!!CryptoWrapper).toBe(true);
+  it('should encrypt and decrypt values', function () {
+    var encryptionKey = CryptoWrapper.randomKey();
+    console.log("encrypting using key "+encryptionKey);
+    var encryptionValue = "top secret!";
+    var encrypted = CryptoWrapper.encryptValue(encryptionValue, encryptionKey);
+    console.log("encrypted into "+encrypted);
+    var decryptedValue = CryptoWrapper.decryptStringValue(encrypted, encryptionKey);
+    console.log("decrypted into "+decryptedValue);
+
+    expect(decryptedValue).toBe(encryptionValue);
   });
 
 });

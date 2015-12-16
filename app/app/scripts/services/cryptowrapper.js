@@ -8,20 +8,62 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('CryptoWrapper', function () {
+  .service('CryptoWrapper', function (CryptoJS) {
 
     var self = this;
 
+    var JsonFormatter = {
+        stringify: function (cipherParams) {
+            // create json object with ciphertext
+
+            var jsonObj = {
+                ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
+            };
+
+            // optionally add iv and salt
+            if (cipherParams.iv) {
+                jsonObj.iv = cipherParams.iv.toString();
+            }
+            if (cipherParams.salt) {
+                jsonObj.s = cipherParams.salt.toString();
+            }
+
+            // stringify json object
+            return JSON.stringify(jsonObj);
+        },
+
+        parse: function (jsonStr) {
+            // parse json string
+            var jsonObj = JSON.parse(jsonStr);
+
+            // extract ciphertext from json object, and create cipher params object
+            var cipherParams = CryptoJS.lib.CipherParams.create({
+                ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
+            });
+
+            // optionally extract iv and salt
+            if (jsonObj.iv) {
+                cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+            }
+            if (jsonObj.s) {
+                cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+            }
+
+            return cipherParams;
+        }
+    };
+
+
     self.randomKey = function(){
-      return window.CryptoJS.lib.WordArray.random(128/8).toString();
+      return CryptoJS.lib.WordArray.random(128/8).toString();
     };
 
     self.encryptValue = function(value, key){
-      return window.CryptoJS.AES.encrypt(value,key);
+      return CryptoJS.AES.encrypt(value,key, {format: JsonFormatter});
     };
 
     self.decryptStringValue = function(encrypted, key){
-      return window.CryptoJS.AES.decrypt(encrypted, key).toString(window.CryptoJS.enc.Utf8);
+      return CryptoJS.AES.decrypt(encrypted, key, {format: JsonFormatter}).toString(CryptoJS.enc.Utf8);
     };
   //   /**
   //   *

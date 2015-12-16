@@ -207,7 +207,11 @@ module.exports = function (grunt) {
               main: ['dist/openpgp.js']
            },
            'crypto-js': {
-              main: ['crypto-js.js']
+              main: [
+              'crypto-js.js',
+              'aes.js',
+              'enc-base64.js'
+              ]
            },
            'eth-lightwallet':{
               main: ['dist/lightwallet.min.js']
