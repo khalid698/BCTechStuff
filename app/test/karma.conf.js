@@ -32,6 +32,7 @@ module.exports = function(config) {
       'bower_components/angular-local-storage/dist/angular-local-storage.js',
       'bower_components/openpgp/dist/openpgp.js',
       'bower_components/ngprogress/build/ngProgress.js',
+      'bower_components/hex-strings/hex-strings.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/crypto-js/crypto-js.js',

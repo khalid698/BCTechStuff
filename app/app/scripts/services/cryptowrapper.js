@@ -12,42 +12,30 @@ angular.module('angularApp')
 
     var self = this;
 
-    var JsonFormatter = {
-        stringify: function (cipherParams) {
-            // create json object with ciphertext
-            var ct = cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
+    // var JsonFormatter = {
+    //     stringify: function (cipherParams) {
+    //         var ct = cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
+    //         var iv = cipherParams.iv.toString();
+    //         var salt = cipherParams.salt.toString();
+    //         return [ct,iv,salt].join('.');
+    //     },
 
-            // optionally add iv and salt
-            var iv,salt = undefined;
-            if (cipherParams.iv) {
-                iv = cipherParams.iv.toString();
-            }
-            if (cipherParams.salt) {
-                salt = cipherParams.salt.toString();
-            }
-            return ct+'.'+iv+'.'+salt;
-        },
+    //     parse: function (formatted) {
+    //         var formattedValue = formatted.split('.');
+    //         // extract ciphertext from json object, and create cipher params object
+    //         var cipherParams = CryptoJS.lib.CipherParams.create({
+    //             ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
+    //         });
 
-        parse: function (jsonStr) {
-            // parse json string
-            var jsonObj = JSON.parse(jsonStr);
+    //         // optionally extract iv and salt
+    //         cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+    //         if (jsonObj.s) {
+    //         cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+    //         }
 
-            // extract ciphertext from json object, and create cipher params object
-            var cipherParams = CryptoJS.lib.CipherParams.create({
-                ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
-            });
-
-            // optionally extract iv and salt
-            if (jsonObj.iv) {
-                cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
-            }
-            if (jsonObj.s) {
-                cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
-            }
-
-            return cipherParams;
-        }
-    };
+    //         return cipherParams;
+    //     }
+    // };
 
 
     self.randomKey = function(){
@@ -55,11 +43,13 @@ angular.module('angularApp')
     };
 
     self.encryptValue = function(value, key){
-      return CryptoJS.AES.encrypt(value,key, {format: JsonFormatter});
+      var opensslFormatted = CryptoJS.AES.encrypt(value,key).toString();
+      return asciiToHex(opensslFormatted);
     };
 
     self.decryptStringValue = function(encrypted, key){
-      return CryptoJS.AES.decrypt(encrypted, key, {format: JsonFormatter}).toString(CryptoJS.enc.Utf8);
+      var opensslFormatted = hexToAscii(encrypted);
+      return CryptoJS.AES.decrypt(opensslFormatted, key).toString(CryptoJS.enc.Utf8);
     };
   //   /**
   //   *

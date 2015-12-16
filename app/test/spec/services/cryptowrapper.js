@@ -15,12 +15,14 @@ describe('Service: CryptoWrapper', function () {
     var encryptionKey = CryptoWrapper.randomKey();
     console.log("encrypting using key "+encryptionKey);
     var encryptionValue = "top secret!";
-    var encrypted = CryptoWrapper.encryptValue(encryptionValue, encryptionKey);
-    console.log("encrypted into "+encrypted);
-    var decryptedValue = CryptoWrapper.decryptStringValue(encrypted, encryptionKey);
-    console.log("decrypted into "+decryptedValue);
 
-    expect(decryptedValue).toBe(encryptionValue);
+    var encrypted = CryptoWrapper.encryptValue(encryptionValue, encryptionKey);
+    console.log("encrypted into : "+encrypted);
+
+    var decryptedValue = CryptoWrapper.decryptStringValue(encrypted, encryptionKey);
+    console.log("decrypted into : "+decryptedValue);
+
+    expect(decryptedValue ==encryptionValue ).toBe(true);
   });
 
 });
