@@ -83,6 +83,7 @@ angular.module('angularApp')
       var sessionKey = CryptoWrapper.randomKey();
       // Encrypt assertion with generated random key
       var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
+      $log.info(encryptedAssertion)
       // Encrypt session key to self
       pgp.encryptMessage(self.privateKey, sessionKey).then(function (encrypted){
           $log.info(encrypted);

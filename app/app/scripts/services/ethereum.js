@@ -13,6 +13,7 @@ var Web3 = require('web3');
 angular.module('angularApp')
   .service('Ethereum', function ($log, Config) {
     var self = this;
+    var GASPRICE = 50000000000;
 
     self.contractAbi = [{'constant':false,'inputs':[],'name':'kill','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'},{'name':'key','type':'string'},{'name':'value','type':'string'}],'name':'assert','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'}],'name':'attest','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'}],'name':'get','outputs':[{'name':'key','type':'string'},{'name':'value','type':'string'}],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'},{'name':'grantee','type':'address'},{'name':'key','type':'string'}],'name':'grant','outputs':[],'type':'function'},{'constant':false,'inputs':[],'name':'mortal','outputs':[],'type':'function'}];
 
@@ -51,12 +52,12 @@ angular.module('angularApp')
          from: keyStore.getAddresses()[0],
          data: self.contractBytes,
          gas: 3000000,
-         gasPrice: 200000
+         gasPrice: GASPRICE
         }, callback);
     };
 
     self.deleteContract = function(keyStore, address){
-      self.createIdentityClient(keyStore, address).kill({gas: 3000000, gasPrice: 200000}, function(e,res){ $log.info(e); $log.info(res);});
+      self.createIdentityClient(keyStore, address).kill({gas: 3000000, gasPrice: GASPRICE}, function(e,res){ $log.info(e); $log.info(res);});
     };
 
     /**
@@ -64,7 +65,7 @@ angular.module('angularApp')
     */
     self.assert = function(keyStore, address, assertionType, assertionKey, assertionValue){
       $log.info('Storing '+assertionType+' with key '+assertionKey+' and value '+assertionValue+' to contract at '+address);
-      self.createIdentityClient(keyStore, address).assert( assertionType, "foo", "bar", {gas: 3000000, gasPrice: 200000}, function(e,res){
+      self.createIdentityClient(keyStore, address).assert( assertionType, "foo", "bar", {gas: 3000000, gasPrice: GASPRICE}, function(e,res){
         if (e) { $log.info(e); };
         if (res) { $log.info(res);};
       });

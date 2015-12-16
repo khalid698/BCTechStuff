@@ -35,7 +35,7 @@ angular.module('angularApp')
         }
       };
 
-      Ethereum.createContract(Identity.keyStore, callback);
+      Ethereum.createContract(Identity.keyStore, Identity.getAddress, callback);
     };
 
     self.deleteIdentity = function() {
