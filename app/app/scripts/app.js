@@ -12,7 +12,8 @@
 angular
   .module('angularApp', [
     'ngRoute',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ngProgress'
   ])
   .constant('Config', {
 
