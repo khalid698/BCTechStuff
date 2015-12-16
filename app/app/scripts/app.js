@@ -35,6 +35,11 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
+      .when('/bank', {
+        templateUrl: 'views/bank.html',
+        controller: 'BankCtrl',
+        controllerAs: 'bank'
+      })
       .otherwise({
         redirectTo: '/'
       });
