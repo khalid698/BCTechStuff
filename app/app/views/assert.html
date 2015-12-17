@@ -3,8 +3,7 @@
   <div class="col-lg-6">
     <div class="form-group">
       <label for="type">Type</label>
-      <select id="type" ng-value="assertionType">
-        <option value="name">Name</option>
+      <select id="type" ng-model="assertionType" ng-options="c for c in assertionTypes">
       </select>
     </div>
 

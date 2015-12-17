@@ -86,7 +86,8 @@ angular.module('angularApp')
 
     // Assertions
     self.assertionTypes = {
-      name: 1
+      name: 1,
+      dob: 2
     };
 
     self.generateAssertion = function(assertionType, assertionValue) {
