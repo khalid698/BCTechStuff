@@ -19,6 +19,7 @@ angular.module('angularApp')
     self.privateKey = undefined;
     self.keyStore = undefined;
     self.contractAddress = undefined;
+    self.isPrivateKeyDecrypted = "no";
 
     // Key deletion and generation
     self.deleteKey = function() {
@@ -93,7 +94,7 @@ angular.module('angularApp')
       var sessionKey = CryptoWrapper.randomKey();
       // Encrypt assertion with generated random key
       var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
-      $log.info(encryptedAssertion)
+      // $log.info(encryptedAssertion)
       // Encrypt session key to self
       pgp.encryptMessage(self.privateKey, sessionKey).then(function (encrypted){
           $log.info(encrypted);
@@ -114,19 +115,21 @@ angular.module('angularApp')
       var sessionKey = pgp.decryptMessage(self.privateKey, openpgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
          var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
          callback(decryptedAssertion);
-      })
+      });
     };
 
     // Local storage
     self.readKey = function() {
       var privateKeyString = localStorageService.get('privateKey');
+      self.privateKeyPassphrase = localStorageService.get('privateKeyPassphrase');
+
       self.privateKey = pgp.key.readArmored(privateKeyString).keys[0];
       if(self.privateKey){
-        self.privateKey.decrypt('');
-        //self.keystore = LightWallet.keystore.deserialize();
+        $log.info('Decrypting key with passphrase : '+self.privateKeyPassphrase);
+        self.privateKey.decrypt(self.privateKeyPassphrase);
       }
-      $log.info(self.privateKey);
     };
+
     self.readKeyStore = function() {
       var serializedKeyStore = localStorageService.get('keyStore');
       if(serializedKeyStore){
@@ -134,6 +137,7 @@ angular.module('angularApp')
 
       }
     };
+
     self.readContractAddress = function() {
       self.contractAddress = localStorageService.get('contractAddress');
       $log.debug('Read contract address : '+self.contractAddress);
@@ -141,6 +145,7 @@ angular.module('angularApp')
 
     self.storeKey = function() {
       localStorageService.set('privateKey', self.privateKey.armor());
+      localStorageService.set('privateKeyPassphrase', self.privateKeyPassphrase);
     };
 
     self.storeKeyStore = function(){
