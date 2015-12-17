@@ -113,7 +113,7 @@ angular.module('angularApp')
       //   callback(decryptedAssertion);
       // };
       var result = Ethereum.get(self.keyStore, self.contractAddress, self.assertionTypes[assertionType]);
-      var sessionKey = pgp.decryptMessage(self.privateKey, openpgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
+      pgp.decryptMessage(self.privateKey, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
          var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
          callback(decryptedAssertion);
       });
