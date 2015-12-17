@@ -12,7 +12,7 @@ angular.module('angularApp')
       var self = this;
 
       $scope.assertionType = 'name';
-      $scope.assertionValue = '...';
+      $scope.assertionValue = '';
 
       self.assert = function() {
         $log.info('Asserting '+$scope.assertionType+' : '+$scope.assertionValue);
@@ -24,7 +24,7 @@ angular.module('angularApp')
           $log.info('Got assertion value : '+value);
           $scope.assertionValue = value;
           $scope.$apply();
-        }
+        };
         $log.info('Reading '+$scope.assertionType+' from contract');
         Identity.readAssertion($scope.assertionType, callback);
       };

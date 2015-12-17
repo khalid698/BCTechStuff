@@ -19,7 +19,6 @@ angular
 
   })
   .constant('moment', window.moment)
-//  .constant('web3', web3)
   .constant('pgp', window.openpgp)
   .constant('CryptoJS', window.CryptoJS)
   .constant('LightWallet', window.lightwallet)
