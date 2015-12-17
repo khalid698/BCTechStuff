@@ -7,162 +7,104 @@
  * # Identity
  * Service in the angularApp.
  */
+
+ function Identity( email, passphrase, pgp, eth, contractAddress) {
+  this.email = email;
+  this.passphrase = passphrase;
+  this.pgp = pgp;
+  eth.passwordProvider = function(e){ e(null, passphrase );};
+  this.eth = eth;
+
+  this.contractAddress = contractAddress;
+
+  this.pgpUserId = function() {
+    return this.pgp.users[0].userId.userid;
+  };
+
+  this.pgpFingerprint = function(){
+    return this.pgp.primaryKey.fingerprint;
+  };
+
+  this.ethAddress = function(){
+    return '0x'+this.eth.getAddresses()[0];
+  };
+
+  this.hasContract = function(){
+    return this.contractAddress !== undefined;
+  };
+}
+
 angular.module('angularApp')
-  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService, CryptoWrapper) {
+  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService) {
 
     var self = this;
 
-    self.email = '';
-    self.privateKeyPassphrase = '';
-
-    //PGP and Eth key holders
-    self.privateKey = undefined;
-    self.keyStore = undefined;
-    self.contractAddress = undefined;
-    self.isPrivateKeyDecrypted = "no";
-
-    // Key deletion and generation
-    self.deleteKey = function() {
-      self.privateKey = undefined;
-      self.keyStore = undefined;
-      self.contractAddress = undefined;
-      localStorageService.clear();
-    };
-
-    self.generateKey = function() {
-      // Generate BIP32 seed
-      var secretSeed = LightWallet.keystore.generateRandomSeed();
-      // console.log(secretSeed);
-      // Create keystore and add 5 addresses
-      var keyStore = new LightWallet.keystore(secretSeed, self.privateKeyPassphrase);
-      keyStore.generateNewAddress(self.privateKeyPassphrase,5);
-
-      var options = {
-        numBits: 4096,
-        userId: self.email,
-        passphrase: self.privateKeyPassphrase
-      };
-      $log.info('Generating key with options :');
-      // $log.info(options);
-      pgp.generateKeyPair(options).then(function(keypair) {
-          // Add ethereum literal to private key
-          // keypair.key.primaryKey.packets.push(symmetricallyEncrypted);
-          // keypair = pgp.key.Key(keypair.key.toPacketlist());
-
-          $log.info('Created PGP key');
-          console.log(keypair);
-          self.privateKey = keypair.key;
-          self.keyStore = keyStore;
-          //var privkey = keypair.privateKeyArmored;
-          //var pubkey = keypair.publicKeyArmored;
-          self.storeKey();
-          self.storeKeyStore();
-      });
-    };
-
-    self.deleteContract = function(){
-      var callback = function(e,res){
-        if ( e === undefined){
-          $log.info('Deleted contract at : '+self.contractAddress);
-          self.contractAddress = undefined;
-          self.storeContractAddress();
-        }
-        $log.debug(res);
-      };
-      $log.info('Deleting contract at : '+self.contractAddress);
-      Ethereum.deleteContract(self.keyStore, self.contractAddress, callback);
-    };
-
     /**
-    * Returns the 'wallet' address
+    * Generate PGP and Ehtereum private key
     */
-    self.getAddress = function(){
-      if (self.keyStore && self.keyStore.getAddresses().length > 0){
-        return self.keyStore.getAddresses()[0];
-      } else {
-        return undefined;
-      }
-    };
-
-    // Assertions
-    self.assertionTypes = {
-      name: 1,
-      dob: 2
-    };
-
-    self.generateAssertion = function(assertionType, assertionValue) {
-      // Generate unique enryption key for this assertion
-      var sessionKey = CryptoWrapper.randomKey();
-      // Encrypt assertion with generated random key
-      var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
-      // $log.info(encryptedAssertion)
-      // Encrypt session key to self
-      pgp.encryptMessage(self.privateKey, sessionKey).then(function (encrypted){
-          $log.info(encrypted);
-          return Ethereum.assert(self.keyStore, self.contractAddress, self.assertionTypes[assertionType], encrypted, encryptedAssertion);
-      }).then(function(result){
-        $log.info(result);
+    self.generateIdentity = function(email, passphrase, callback) {
+      // Generate ethereum
+      var secretSeed = LightWallet.keystore.generateRandomSeed();
+      var keyStore = new LightWallet.keystore(secretSeed, passphrase);
+      keyStore.generateNewAddress(passphrase,5);
+      // Generate PGP
+      var options = {
+        numBits: 1024,
+        userId: email,
+        passphrase: passphrase
+      };
+      pgp.generateKeyPair(options).then(function(keypair) {
+          //Store new identity and call backback
+          var identity = new Identity(email,passphrase,keypair.key, keyStore, undefined);
+          $log.info("Created identity",identity);
+          self.store(identity);
+          callback(identity);
       });
     };
 
-    self.readAssertion = function(assertionType, callback){
-      // var resultHandler = function(error, result){
-      //   $log.info(assertion);
-      //   var sessionKey = pgp.decryptMessage(self.privateKey, assertion[0]);
-      //   var decryptedAssertion = CryptoWrapper.decryptStringValue(assertion[1], sessionKey);
-      //   callback(decryptedAssertion);
-      // };
-      var result = Ethereum.get(self.keyStore, self.contractAddress, self.assertionTypes[assertionType]);
-      pgp.decryptMessage(self.privateKey, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
-         var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
-         callback(decryptedAssertion);
-      });
-    };
+    // self.delete = function(identity){
+    //   Ethereum.deleteContract(identity.keyStore, identity.contractAddress, callback);
+    // };
 
-    // Local storage
-    self.readKey = function() {
-      var privateKeyString = localStorageService.get('privateKey');
-      self.privateKeyPassphrase = localStorageService.get('privateKeyPassphrase');
+    self.store = function(identity){
+      var storageHolder = {};
+      storageHolder.email = identity.email;
+      storageHolder.passphrase = identity.passphrase;
+      storageHolder.eth = identity.eth.serialize();
+      storageHolder.pgp = identity.pgp.armor();
+      storageHolder.contractAddress = identity.contractAddress;
 
-      self.privateKey = pgp.key.readArmored(privateKeyString).keys[0];
-      if(self.privateKey){
-        $log.info('Decrypting key with passphrase : '+self.privateKeyPassphrase);
-        self.privateKey.decrypt(self.privateKeyPassphrase);
+      localStorageService.set(identity.email, storageHolder);
+      var identities = localStorageService.get('identities');
+      if ( identities.lastIndexOf(identity.email) === -1 ){
+        identities.push(identity.email);
+        localStorageService.set('identities', identities);
       }
     };
 
-    self.readKeyStore = function() {
-      var serializedKeyStore = localStorageService.get('keyStore');
-      if(serializedKeyStore){
-        self.keyStore = LightWallet.keystore.deserialize(serializedKeyStore,self.privateKeyPassphrase);
+    self.get = function(email){
+      var storageHolder = localStorageService.get(email);
+      storageHolder.eth = LightWallet.keystore.deserialize(storageHolder.eth,storageHolder.passphrase);
+      storageHolder.pgp = pgp.key.readArmored(storageHolder.pgp).keys[0];
+      storageHolder.pgp.decrypt(storageHolder.passphrase);
+      return new Identity(storageHolder.email, storageHolder.passphrase,  storageHolder.pgp, storageHolder.eth, storageHolder.contractAddress );
+    };
 
+    self.getIdentities = function() {
+      return localStorageService.get('identities');
+    };
+
+    self.init = function() {
+      var identities = localStorageService.get('identities');
+      $log.info("Known identities : ");
+      $log.info(identities);
+      if(!identities) {
+        $log.info("Creating identities local storage");
+        localStorageService.set('identities', []);
       }
-    };
-
-    self.readContractAddress = function() {
-      self.contractAddress = localStorageService.get('contractAddress');
-      $log.debug('Read contract address : '+self.contractAddress);
-    };
-
-    self.storeKey = function() {
-      localStorageService.set('privateKey', self.privateKey.armor());
-      localStorageService.set('privateKeyPassphrase', self.privateKeyPassphrase);
-    };
-
-    self.storeKeyStore = function(){
-      localStorageService.set('keyStore', self.keyStore.serialize());
-    };
-    self.storeContractAddress = function(){
-      $log.debug('Storing contract address : '+self.contractAddress);
-      localStorageService.set('contractAddress', self.contractAddress);
     };
 
     // Startup
-    self.readKey();
-    self.readKeyStore();
-    self.readContractAddress();
-    console.log('Initialized Identity');
-    console.log(self);
-
+    self.init();
 
 });

@@ -43,4 +43,16 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+  .run(function ($log, $rootScope, Identity){
+    $rootScope.identities = Identity.getIdentities();
+    $rootScope.selectedIdentity = undefined;
+
+    $rootScope.selectIdentity = function(identity){
+      $rootScope.selectedIdentity = Identity.get(identity);
+      $log.info("Selected identity : ", $rootScope.selectedIdentity);
+    };
+
+  })
+
+  ;
