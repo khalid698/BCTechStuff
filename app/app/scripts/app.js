@@ -13,7 +13,8 @@ angular
   .module('angularApp', [
     'ngRoute',
     'LocalStorageModule',
-    'ngProgress'
+    'ngProgress',
+    'ui-notification'
   ])
   .constant('Config', {
 
@@ -44,13 +45,14 @@ angular
         redirectTo: '/'
       });
   })
-  .run(function ($log, $rootScope, Identity){
+  .run(function ($log, $rootScope, Identity, Notification){
     $rootScope.identities = Identity.getIdentities();
     $rootScope.selectedIdentity = undefined;
 
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
+      Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
     };
 
   })

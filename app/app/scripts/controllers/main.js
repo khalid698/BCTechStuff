@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($log, $scope, $rootScope, Identity, Ethereum, IdentityContract) {
+  .controller('MainCtrl', function ($log, $scope, $rootScope, Identity, Ethereum, IdentityContract, Notification) {
     var self=this;
 
     self.email = '';

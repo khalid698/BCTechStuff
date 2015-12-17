@@ -219,6 +219,9 @@ module.exports = function (grunt) {
            'web3': {
               main: ['dist/web3.js']
            },
+           'angular-ui-notification': {
+              main: ['dist/angular-ui-notification.min.js']
+           },
            'hooked-web3-provider': {
               main: ['build/hooked-web3-provider.js']
            }

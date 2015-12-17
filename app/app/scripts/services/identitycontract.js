@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('IdentityContract', function ($log, pgp, CryptoWrapper, Web3) {
+  .service('IdentityContract', function ($log, pgp, CryptoWrapper, Web3, Notification) {
 
     var self = this;
 
@@ -39,18 +39,23 @@ angular.module('angularApp')
     self.assert = function(identity, assertionType, assertionValue) {
       // Generate unique enryption key for this assertion
       var sessionKey = CryptoWrapper.randomKey();
+      Notification.info('Generating Session Key: '+sessionKey);
       // Encrypt assertion with generated random key
       var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
+      Notification.info('Encrypting Assertion: '+encryptedAssertion);
       // Encrypt session key to self
+      Notification.info('Encrypting Session Key');
       pgp.encryptMessage(identity.pgp, sessionKey).then(function (encryptedSessionKey){
           // $log.info(encrypted);
           $log.info('Storing assertionType:"'+assertionType+'"" with key "'+sessionKey+'"" and value "'+assertionValue+'"" to contract at : '+identity.contractAddress);
+          Notification.info('Storing to contract at : '+identity.contractAddress);
           return self.createIdentityClient(identity, identity.contractAddress).assert( self.assertionTypes[assertionType], encryptedSessionKey, encryptedAssertion, {gas: 3000000, gasPrice: Web3.gasPrice}, function(e,res){
             if (e) { $log.info(e); }
             if (res) { $log.info(res); }
           });
       }).then(function(result){
         $log.info(result);
+        Notification.success("Value Asserted")
       });
     };
 
@@ -63,8 +68,10 @@ angular.module('angularApp')
           $log.warn("Got one or more empty responses from contract, read failed");
         } else {
           $log.debug(result);
+          Notification.info("Decrypting Session Key");
           pgp.decryptMessage(identity.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
              var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
+             Notification.info("Decrypting Assertion");
              callback(decryptedAssertion);
           });
         }

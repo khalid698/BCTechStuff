@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('BankCtrl', function ($log, ngProgressFactory, $scope) {
+  .controller('BankCtrl', function ($log, ngProgressFactory, $scope, Notification) {
     var self = this;
     $scope.progressbar = ngProgressFactory.createInstance();
 
