@@ -13,11 +13,9 @@ angular
   .module('angularApp', [
     'LocalStorageModule',
     'ngProgress',
-    'ui.router'
+    'ui.router',
+    'ui-notification'
   ])
-  .constant('Config', {
-
-  })
   .constant('moment', window.moment)
   .constant('pgp', window.openpgp)
   .constant('CryptoJS', window.CryptoJS)
@@ -43,20 +41,14 @@ angular
       // ALSO url '/home', overriding its parent's activation
       .state('bank.index', {
         url: '',
-        templateUrl: 'views/bank/index.html',
-        data: {
-          progress: 0
-        }
+        templateUrl: 'views/bank/index.html'
       })
       .state('bank.identities', {
         url: '/identities',
-        templateUrl: 'views/bank/identities.html',
-        data: {
-          progress: 33
-        }
+        templateUrl: 'views/bank/identities.html'
       })
   })
-  .run(function ($log, $rootScope, Identity, IdentityContract){
+  .run(function ($log, $rootScope, Identity, IdentityContract, Notification){
     $rootScope.identities = Identity.getIdentities();
     $rootScope.selectedIdentity = undefined;
     $rootScope.assertionTypes = IdentityContract.assertionTypes;
@@ -64,6 +56,7 @@ angular
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
+      Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
     };
     $rootScope.loading = false;
   })

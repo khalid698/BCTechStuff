@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($log, $scope, $rootScope, Identity, Ethereum, IdentityContract) {
+  .controller('MainCtrl', function ($log, $scope, $rootScope, Identity, Ethereum, IdentityContract, Notification) {
     var self=this;
 
     self.email = '';
@@ -17,9 +17,11 @@ angular.module('angularApp')
     self.generateIdentity = function() {
       var callback = function(identity){
         $log.info("Created identity");
+        Notification.success("Created identity");
         $log.info(identity);
       };
       $log.info("Creating new identity for "+self.email);
+      Notification.primary("Creating new identity for "+self.email);
       Identity.generateIdentity(self.email, self.passphrase, callback);
     };
 
@@ -61,5 +63,10 @@ angular.module('angularApp')
        }
       IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
     };
+
+    self.send = function () {
+      var selectedIdentity = $rootScope.selectedIdentity;
+      Ethereum.sendFunds(selectedIdentity, "0x1bf7dcfba55163b289757c53bbb06012a7f8ce0e", "0x7120afe73272039a63094ab532aec0ed06cd11e9", 1000000);
+    }
 
   });

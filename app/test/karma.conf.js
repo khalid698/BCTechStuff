@@ -33,6 +33,7 @@ module.exports = function(config) {
       'bower_components/ngprogress/build/ngProgress.js',
       'bower_components/hex-strings/hex-strings.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-ui-notification/dist/angular-ui-notification.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/crypto-js/crypto-js.js',
