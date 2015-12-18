@@ -25,7 +25,9 @@ angular.module('angularApp')
 
     self.createContract = function(identity, callback){
         $log.info("Creating contract for ", identity);
+        Notification.primary("Creating contract");
         $log.info("Using from address", identity.ethAddress());
+        Notification.info("Using from address: " + identity.ethAddress());
         var web3 = Web3.createSignedWeb3(identity);
         var identityContract = web3.eth.contract(self.contractAbi);
         identityContract.new({
@@ -49,9 +51,9 @@ angular.module('angularApp')
           // $log.info(encrypted);
           $log.info('Storing assertionType:"'+assertionType+'"" with key "'+sessionKey+'"" and value "'+assertionValue+'"" to contract at : '+identity.contractAddress);
           return self.createIdentityClient(identity, identity.contractAddress).assert( assertionType, encryptedSessionKey, encryptedAssertion, {gas: 3000000, gasPrice: Web3.gasPrice}, function(e,res){
-      }).then(function(result){
-        $log.info(result);
-        Notification.success("Value Asserted")
+      }).then(function(res){
+        $log.info(res);
+        Notification.success("Value Asserted");
       });
     });
     };
