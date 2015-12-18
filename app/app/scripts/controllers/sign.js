@@ -13,7 +13,8 @@ angular.module('angularApp')
   var self = this;
 
   self.message = '';
-  var identity = $rootScope.selectedIdentity;
+  self.signedMessage = '';
+  self.publicKey = '';
   
   self.signMessage = function(){
   	var callback = function(data){
@@ -23,6 +24,19 @@ angular.module('angularApp')
       };
     Notification.primary("Signing Message");
 	Verify.signMessage($rootScope.selectedIdentity.pgp, self.message, callback);
+	//set the public key to the message block
+	self.publicKey = $rootScope.selectedIdentity.pgp.toPublic().armor();
+  };
+
+  self.verifyMessage = function() {
+  	var callback = function(result){
+  		if(result.signatures[0].valid){
+  			Notification.success("Message Verified");
+  		} else {
+  			Notification.error("Message Invalid");
+  		}
+      };
+   	Verify.verifyMessage(self.publicKey, self.signedMessage, callback);
   };
 
 

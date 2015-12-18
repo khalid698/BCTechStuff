@@ -21,5 +21,16 @@ angular.module('angularApp')
 	    });
 	};
 
+	self.verifyMessage = function(publicKeyArmored, signedMessage, callback) {
+	    var publicKeyObject = openpgp.key.readArmored(publicKeyArmored).keys[0];
+    	var cleartextMessageObject = openpgp.cleartext.readArmored(signedMessage);
+    	openpgp.verifyClearSignedMessage(publicKeyObject, cleartextMessageObject)
+    	.then(function(result) {
+    		$log.info(result);
+    		$log.info(result.signatures[0].valid)
+    		callback(result);	
+		});
+	};
+
     
   });
