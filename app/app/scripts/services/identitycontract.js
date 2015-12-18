@@ -35,7 +35,9 @@ angular.module('angularApp')
     // Contract creation / Deletion
     self.createContract = function(identity, callback){
         $log.info("Creating contract for ", identity);
+        Notification.primary("Creating contract");
         $log.info("Using from address", identity.ethAddress());
+        Notification.info("Using from address: " + identity.ethAddress());
         var web3 = Web3.createSignedWeb3(identity);
         var identityContract = web3.eth.contract(self.contractAbi);
         identityContract.new({
@@ -68,7 +70,6 @@ angular.module('angularApp')
         }
       };
       pgp.encryptMessage(identity.pgp, sessionKey).then(function (encryptedSessionKey){
-          // $log.info(encrypted);
           $log.info('Storing assertionType:"'+assertionType+'"" with key "'+sessionKey+'"" and value "'+assertionValue+'"" to contract at : '+identity.contractAddress);
           return self.createIdentityClient(identity, identity.contractAddress).assert( assertionType, encryptedSessionKey, encryptedAssertion, {gas: 3000000, gasPrice: Web3.gasPrice}, callback);
       });

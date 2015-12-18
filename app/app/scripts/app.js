@@ -32,6 +32,11 @@ angular
         templateUrl: 'views/assert.html',
         controller: 'AssertCtrl as assert'
       })
+      .state('sign', {
+        url: '/sign',
+        templateUrl: 'views/sign.html',
+        controller: 'SignCtrl as sign'
+      })
       .state('bank', {
         url: '/bank',
         abstract: true,

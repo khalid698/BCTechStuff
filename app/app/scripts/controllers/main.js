@@ -14,6 +14,8 @@ angular.module('angularApp')
     self.email = '';
     self.passphrase = '';
     self.requests = [];
+    self.toAddress = '';
+    self.amount = '';
 
     self.generateIdentity = function() {
       var callback = function(identity){
@@ -26,10 +28,6 @@ angular.module('angularApp')
       Identity.generateIdentity(self.email, self.passphrase, callback);
     };
 
-    // self.deleteKey = function() {
-    //   self.identity.deleteKey();
-    // };
-
     self.balance = function() {
       if ($rootScope.selectedIdentity ){
         return Ethereum.getBalance($rootScope.selectedIdentity.eth.getAddresses()[0]).toString(10);
@@ -41,8 +39,12 @@ angular.module('angularApp')
       var selectedIdentity = $rootScope.selectedIdentity;
       var callback = function(e, contract){
         console.log(e, contract);
+        if(e !== null) {
+          Notification.error(e);
+        }
         if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
              console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
+             Notification.success('Contract mined!');
              selectedIdentity.contractAddress = contract.address;
              Identity.store(selectedIdentity);
         }
@@ -54,20 +56,22 @@ angular.module('angularApp')
       var selectedIdentity = $rootScope.selectedIdentity;
       var callback = function(e,r){
           if (!e) {
-            $log.info("Contract deleted, removing from identity");
+          $log.info("Contract deleted, removing from identity");
+            Notification.success("Contract deleted");
            selectedIdentity.contractAddress = undefined;
            Identity.store(selectedIdentity);
            $scope.$apply();
          } else {
           $log.warn("Could not delete contract ", e);
+          Notification.error("Could not delete contract: "+e);
          }
        }
       IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
     };
 
-    self.send = function () {
+    self.send = function (toAddress, value) {
       var selectedIdentity = $rootScope.selectedIdentity;
-      Ethereum.sendFunds(selectedIdentity, "0x1bf7dcfba55163b289757c53bbb06012a7f8ce0e", "0x7120afe73272039a63094ab532aec0ed06cd11e9", 1000000);
+      Ethereum.sendFunds(selectedIdentity, selectedIdentity.eth.getAddresses()[0], toAddress, value);
     }
 
     self.loadRequests = function() {
