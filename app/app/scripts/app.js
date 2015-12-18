@@ -11,9 +11,9 @@
 
 angular
   .module('angularApp', [
-    'ngRoute',
     'LocalStorageModule',
-    'ngProgress'
+    'ngProgress',
+    'ui.router'
   ])
   .constant('Config', {
 
@@ -23,36 +23,49 @@ angular
   .constant('CryptoJS', window.CryptoJS)
   .constant('LightWallet', window.lightwallet)
   .constant('Config', {gethEndpoint: 'http://localhost:8545'})
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/assert', {
-        templateUrl: 'views/assert.html',
-        controller: 'AssertCtrl',
-        controllerAs: 'assert'
-      })
-      .when('/', {
+  .config(function ($stateProvider){
+     $stateProvider.state('account', {
+        url: '/',
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
+        controller: 'MainCtrl as main'
       })
-      .when('/bank', {
-        templateUrl: 'views/bank.html',
-        controller: 'BankCtrl',
-        controllerAs: 'bank'
+      .state('assert', {
+        url: '/assert',
+        templateUrl: 'views/assert.html',
+        controller: 'AssertCtrl as assert'
       })
-      .otherwise({
-        redirectTo: '/'
-      });
+      .state('bank', {
+        url: '/bank',
+        abstract: true,
+        template: '<ui-view/>',
+        controller: 'BankCtrl as bank'
+      })
+      // ALSO url '/home', overriding its parent's activation
+      .state('bank.index', {
+        url: '',
+        templateUrl: 'views/bank/index.html',
+        data: {
+          progress: 0
+        }
+      })
+      .state('bank.identities', {
+        url: '/identities',
+        templateUrl: 'views/bank/identities.html',
+        data: {
+          progress: 33
+        }
+      })
   })
-  .run(function ($log, $rootScope, Identity){
+  .run(function ($log, $rootScope, Identity, IdentityContract){
     $rootScope.identities = Identity.getIdentities();
     $rootScope.selectedIdentity = undefined;
+    $rootScope.assertionTypes = IdentityContract.assertionTypes;
 
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
     };
-
+    $rootScope.loading = false;
   })
 
   ;

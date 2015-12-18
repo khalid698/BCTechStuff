@@ -10,11 +10,18 @@
 angular.module('angularApp')
   .controller('BankCtrl', function ($log, ngProgressFactory, $scope) {
     var self = this;
-    $scope.progressbar = ngProgressFactory.createInstance();
 
-    self.signUp = function() {
-      // $log.info("doing things!");
-      $scope.progressbar.start();
-    };
+    // Progress bar
+    // self.numberOfSteps = 3;
+    // self.step = 1;
+    // self.progess = 0;
+    // Identities
+    self.bankIdentity = undefined;
+    self.userIdentity = undefined;
 
+    // self.updateProgress = function(){
+    //   self.progess = Math.round((self.step / self.numberOfSteps) * 100);
+    // }
+
+    // self.updateProgress();
   });

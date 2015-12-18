@@ -11,23 +11,22 @@ angular.module('angularApp')
   .controller('AssertCtrl', function ($log, $rootScope, $scope, IdentityContract) {
       var self = this;
 
-      $scope.assertionType = 'name`';
-      $scope.assertionTypes = ['name', 'dob'];
-      $scope.assertionValue = '';
+      self.assertionType = '';
+      self.assertionValue = '';
 
       self.assert = function() {
-        $log.info('Asserting '+$scope.assertionType+' : '+$scope.assertionValue);
-        IdentityContract.assert($rootScope.selectedIdentity, $scope.assertionType, $scope.assertionValue);
+        $log.info('Asserting '+self.assertionType.label+' : '+self.assertionValue);
+        IdentityContract.assert($rootScope.selectedIdentity, self.assertionType.id, self.assertionValue);
       };
 
       self.read = function() {
         var callback = function(value){
           $log.info('Got assertion value : '+value);
-          $scope.assertionValue = value;
+          self.assertionValue = value;
           $scope.$apply();
         };
-        $log.info('Reading '+$scope.assertionType+' from contract');
-        IdentityContract.readAssertion($rootScope.selectedIdentity, $rootScope.selectedIdentity.contractAddress, $scope.assertionType, callback);
+        $log.info('Reading '+self.assertionType.label+' from contract');
+        IdentityContract.readAssertion($rootScope.selectedIdentity, $rootScope.selectedIdentity.contractAddress, self.assertionType.id, callback);
       };
 
   });
