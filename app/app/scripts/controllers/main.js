@@ -17,9 +17,11 @@ angular.module('angularApp')
     self.generateIdentity = function() {
       var callback = function(identity){
         $log.info("Created identity");
+        Notification.success("Created identity");
         $log.info(identity);
       };
       $log.info("Creating new identity for "+self.email);
+      Notification.primary("Creating new identity for "+self.email);
       Identity.generateIdentity(self.email, self.passphrase, callback);
     };
 

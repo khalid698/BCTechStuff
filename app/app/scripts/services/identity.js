@@ -35,7 +35,7 @@
 }
 
 angular.module('angularApp')
-  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService) {
+  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService, Notification) {
 
     var self = this;
 
@@ -47,6 +47,7 @@ angular.module('angularApp')
       var secretSeed = LightWallet.keystore.generateRandomSeed();
       var keyStore = new LightWallet.keystore(secretSeed, passphrase);
       keyStore.generateNewAddress(passphrase,5);
+      Notification.info("New Ethereum Address generated");
       // Generate PGP
       var options = {
         numBits: 1024,
@@ -57,6 +58,7 @@ angular.module('angularApp')
           //Store new identity and call backback
           var identity = new Identity(email,passphrase,keypair.key, keyStore, undefined);
           $log.info("Created identity",identity);
+          Notification.info("PGP Key generated");
           self.store(identity);
           callback(identity);
       });
