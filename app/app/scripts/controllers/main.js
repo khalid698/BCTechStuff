@@ -64,4 +64,9 @@ angular.module('angularApp')
       IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
     };
 
+    self.send = function () {
+      var selectedIdentity = $rootScope.selectedIdentity;
+      Ethereum.sendFunds(selectedIdentity, "0x1bf7dcfba55163b289757c53bbb06012a7f8ce0e", "0x7120afe73272039a63094ab532aec0ed06cd11e9", 1000000);
+    }
+
   });

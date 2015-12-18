@@ -30,6 +30,7 @@
       <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button>
       <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract()">Create contract</button>
       <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>
+      <button class="btn btn-sm btn-primary" ng-click="main.send()">Send from Hugo to Bank</button>
   </div>
 </div>
 </div>
