@@ -13,6 +13,7 @@ angular.module('angularApp')
 
     self.email = '';
     self.passphrase = '';
+    self.requests = [];
 
     self.generateIdentity = function() {
       var callback = function(identity){
@@ -37,8 +38,8 @@ angular.module('angularApp')
     };
 
     self.createContract = function() {
+      var selectedIdentity = $rootScope.selectedIdentity;
       var callback = function(e, contract){
-        var selectedIdentity = $rootScope.selectedIdentity;
         console.log(e, contract);
         if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
              console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
@@ -68,5 +69,12 @@ angular.module('angularApp')
       var selectedIdentity = $rootScope.selectedIdentity;
       Ethereum.sendFunds(selectedIdentity, "0x1bf7dcfba55163b289757c53bbb06012a7f8ce0e", "0x7120afe73272039a63094ab532aec0ed06cd11e9", 1000000);
     }
+
+    self.loadRequests = function() {
+      if($rootScope.selectedIdentity){
+        return self.requests = IdentityContract.requests($rootScope.selectedIdentity);
+      }
+    }
+    self.loadRequests();
 
   });

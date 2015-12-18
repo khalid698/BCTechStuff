@@ -8,20 +8,25 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('BankCtrl', function ($log, ngProgressFactory, $scope, Notification) {
+  .controller('BankCtrl', function ($log, ngProgressFactory, $scope, Notification, Identity, IdentityContract) {
     var self = this;
 
-    // Progress bar
-    // self.numberOfSteps = 3;
-    // self.step = 1;
-    // self.progess = 0;
     // Identities
     self.bankIdentity = undefined;
-    self.userIdentity = undefined;
+    self.clientIdentity = undefined;
 
-    // self.updateProgress = function(){
-    //   self.progess = Math.round((self.step / self.numberOfSteps) * 100);
-    // }
+    self.request = function(assertionTypes){
+        $log.info("Requesting access to ",assertionTypes," from ", self.bankIdentity, "to", self.clientIdentity);
+        // Load identities, self. references only contain the string names
+        var callback = function(e,r){
+          if(e){
+            $log.warn("Failed to request access : ",e);
+          }
+        };
+        var bankIdentity = Identity.get(self.bankIdentity);
+        var clientIdentity = Identity.get(self.clientIdentity);
+        IdentityContract.request(bankIdentity, clientIdentity, assertionTypes, callback);
+        Notification.primary('Requested access ');
 
-    // self.updateProgress();
+    }
   });

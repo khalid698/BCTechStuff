@@ -11,7 +11,7 @@ angular.module('angularApp')
   .controller('AssertCtrl', function ($log, $rootScope, $scope, IdentityContract, Notification) {
       var self = this;
 
-      self.assertionType = '';
+      self.assertionType = $rootScope.assertionTypes[0];
       self.assertionValue = '';
 
       self.assert = function() {

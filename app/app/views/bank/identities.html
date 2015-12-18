@@ -1,14 +1,17 @@
-<div class="container">
-  <div class="row">
-  <h4>Select identities</h4>
-  <div class="form-group">
-    <label for="bankid">Bank Identity</label>
-    <select ng-model="bank.bankIdentity" ng-options="id for id in identities"/>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Select identities.
   </div>
-  <div class="form-group">
-    <label for="bankid">Client Identity</label>
-    <select ng-model="bank.clientIdentity" ng-options="id for id in identities"/>
+  <div class="panel-body">
+    <div class="form-group">
+      <label for="bankid">Bank Identity</label>
+      <select ng-model="bank.bankIdentity" ng-options="id for id in identities"/>
+    </div>
+    <div class="form-group">
+      <label for="bankid">Client Identity</label>
+      <select ng-model="bank.clientIdentity" ng-options="id for id in identities"/>
+    </div>
+    <button class="btn btn-primary" ui-sref="bank.request" ng-if="bank.bankIdentity && bank.clientIdentity">Next</button>
+    <div>
   </div>
-  <button class="btn btn-primary" ui-sref="bank.identities" ng-if="bank.bankIdentity && bank.clientIdentity">Next</button>
-  <div>
 </div>

@@ -47,18 +47,30 @@ angular
         url: '/identities',
         templateUrl: 'views/bank/identities.html'
       })
+      .state('bank.request', {
+        url: '/request',
+        templateUrl: 'views/bank/request.html'
+      })
   })
-  .run(function ($log, $rootScope, Identity, IdentityContract, Notification){
+  .run(function ($log, $rootScope, Identity, IdentityContract, Notification, localStorageService, Helpers){
     $rootScope.identities = Identity.getIdentities();
     $rootScope.selectedIdentity = undefined;
     $rootScope.assertionTypes = IdentityContract.assertionTypes;
+    $rootScope.helpers = Helpers;
 
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
       Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
+      localStorageService.set('selectedIdentity', identity);
     };
+
     $rootScope.loading = false;
+    // Load stored identity
+    var storedIdentity = localStorageService.get('selectedIdentity');
+    if(storedIdentity){
+      $rootScope.selectIdentity(storedIdentity);
+    }
   })
 
   ;

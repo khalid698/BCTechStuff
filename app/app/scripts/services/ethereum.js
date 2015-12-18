@@ -19,7 +19,7 @@ angular.module('angularApp')
     self.sendFunds = function(identity, fromAddress, toAddress, value) {
       //return Web3.createWeb3().;
       //send funds
-      var tx = {}
+      var tx = {};
       tx.from = fromAddress;
       tx.to = toAddress;
       tx.value = value;
@@ -30,7 +30,7 @@ angular.module('angularApp')
         if (e) { $log.info(e);
                   Notification.error(e);
                    }
-        if (res) { 
+        if (res) {
           $log.info(res);
           Notification.success("sent "+tx.value+" to "+tx.to);
           }

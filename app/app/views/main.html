@@ -27,6 +27,26 @@
         <li>Balance: <strong>{{main.balance()}}</strong></li>
         <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
       </ul>
+      <h4>Requests</h4>
+      <div class="list-group" ng-repeat="request in main.requests">
+        <div class="row">
+          <div class="col-lg-6">
+            <p class="list-group-item-text">
+              {{request.requestee}} requests the following assertions
+              <ul>
+                <li ng-repeat="assertion in request.assertions">{{helpers.assertionLabelById(assertion)}}</li>
+              </ul>
+            </p>
+          </div>
+          <div class="col-lg-6">
+            <button class="btn btn-success btn-sm">Grant</button>
+            <button class="btn btn-danger btn-sm">Ignore</button>
+          </div>
+
+          </div>
+      </div>
+
+
       <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button>
       <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract()">Create contract</button>
       <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>

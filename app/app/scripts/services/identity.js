@@ -25,6 +25,10 @@
     return this.pgp.primaryKey.fingerprint;
   };
 
+  this.pgpPublicKey = function(){
+    return pgp.toPublic().armor();
+  };
+
   this.ethAddress = function(){
     return '0x'+this.eth.getAddresses()[0];
   };
