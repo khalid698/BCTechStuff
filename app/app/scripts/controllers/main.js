@@ -14,6 +14,7 @@ angular.module('angularApp')
     self.email = '';
     self.passphrase = '';
     self.requests = [];
+    self.grants = [];
     self.toAddress = '';
     self.amount = '';
 
@@ -72,13 +73,25 @@ angular.module('angularApp')
     self.send = function (toAddress, value) {
       var selectedIdentity = $rootScope.selectedIdentity;
       Ethereum.sendFunds(selectedIdentity, selectedIdentity.eth.getAddresses()[0], toAddress, value);
-    }
+    };
 
     self.loadRequests = function() {
       if($rootScope.selectedIdentity){
         return self.requests = IdentityContract.requests($rootScope.selectedIdentity);
       }
-    }
+    };
+
+    self.loadGrants = function() {
+      if($rootScope.selectedIdentity){
+        return self.grants = IdentityContract.grants($rootScope.selectedIdentity);
+      }
+    };
+
     self.loadRequests();
+    self.loadGrants();
+
+    self.grant = function(request){
+        IdentityContract.grant($rootScope.selectedIdentity, request);
+    };
 
   });

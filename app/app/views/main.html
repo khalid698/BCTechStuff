@@ -27,7 +27,8 @@
         <li>Balance: <strong>{{main.balance()}}</strong></li>
         <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
       </ul>
-      <h4>Requests</h4>
+
+      <h4 ng-if="main.requests.length > 0">Requests</h4>
       <div class="list-group" ng-repeat="request in main.requests">
         <div class="row">
           <div class="col-lg-6">
@@ -39,10 +40,21 @@
             </p>
           </div>
           <div class="col-lg-6">
-            <button class="btn btn-success btn-sm">Grant</button>
-            <button class="btn btn-danger btn-sm">Ignore</button>
+            <button class="btn btn-success btn-sm" ng-click="main.grant(request)">Grant</button>
+            <button class="btn btn-danger btn-sm" disabled="true">Ignore</button>
           </div>
+          </div>
+      </div>
 
+      <h4 ng-if="main.grants.length > 0">Grants</h4>
+      <div class="list-group" ng-repeat="grant in main.grants">
+        <div class="row">
+            <p class="list-group-item-text">
+              {{grant.requestee}} has access to the following assertions
+              <ul>
+                <li ng-repeat="assertion in grant.assertions">{{helpers.assertionLabelById(assertion)}}</li>
+              </ul>
+            </p>
           </div>
       </div>
 

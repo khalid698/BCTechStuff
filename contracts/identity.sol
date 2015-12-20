@@ -6,7 +6,12 @@ contract Identity {
     function Identity() { owner = msg.sender; }
     
     function kill() { if (msg.sender == owner) suicide(owner); }
-    modifier onlyowner { if (msg.sender == owner) _ }
+    modifier onlyowner { 
+        if (msg.sender != owner) {
+            throw;
+        }
+        _ 
+    }
     
     // Assertions
 	mapping(uint => Assertion) assertions;
@@ -25,6 +30,10 @@ contract Identity {
 		// Clear out attestations when values changes ?
 		assertions[assertionType] = Assertion(key, value);
 	}
+	
+	function updateKey(uint assertionType, string key) onlyowner {
+	    assertions[assertionType].key = key;
+	}
 
 	function get(uint assertionType) returns (string  key, string value){
 	    key = assertions[assertionType].key;
@@ -32,28 +41,44 @@ contract Identity {
 	}
 	
 	// Requests, 
-	struct Request {
-	    string publicKey;
-	    uint[] assertions;
-	}
-    mapping(address => Request) requests;
+// 	struct Request {
+// 	    string publicKey;
+// 	    uint[] assertions;
+// 	    uint[] grantedAssertions;
+// 	}
+//     mapping(address => Request) requests;
+    mapping(address => uint[]) requests;
+    mapping(address => uint[]) grants;
+    mapping(address => string) keys;
     address[] requestees;
     
 	function request(string publicKey, uint[] requestedAssertions){
-	   // for(var i=0; i < requestedAssertions.length; i++){
-	   //     requests.push(Request(msg.sender, publicKey, requestedAssertions[i]));
-	   // }
-	   requests[msg.sender] = Request(publicKey, requestedAssertions);
+	   keys[msg.sender] = publicKey;
+       requests[msg.sender] = requestedAssertions;
+	  // Exit early if requestee is already in requestee list
+	   for(var r=0; r< requestees.length; r++){
+	       if (requestees[r] == msg.sender){
+	           return;
+	       }
+	   }
 	   requestees.push(msg.sender);
 	}
 	
-	function grant(address requestee) onlyowner {
-	    delete requests[requestee];
-	    for(var i=0; i < requestees.length; i++){
-	        if ( requestees[i] == requestee) {
-	            delete requests[i];
-	        }
-	    }
+	// This only moves from assertions -> granted
+	// Deduping responsibility lies with request()
+	function grant(address requestee, uint[] assertionTypes) {
+	    uint a;
+	    for(a=0; a < assertionTypes.length; a++){
+	        grants[requestee].push(assertionTypes[a]);
+ 	    }
+ 	    delete requests[requestee];
+        // for(var r=0; r < requests[requestee].length; r++){
+    	   // for(a=0; a < assertionTypes.length; a++){
+        //         if(requests[requestee][r] == assertionTypes[a]){
+        //             delete requests[requestee][r];
+        //         }
+     	  //  }
+        // }
 	}
 	
 	function getRequesteeCount() returns (uint)  {
@@ -66,14 +91,20 @@ contract Identity {
 	
 	function getRequest(address requestee) returns (string publicKey, uint numberOfAssertions){
 	    var request = requests[requestee];
-        publicKey = request.publicKey;
-        numberOfAssertions = request.assertions.length;
+        publicKey = keys[requestee];
+        numberOfAssertions = requests[requestee].length;
 	}
 	
 	function getRequestAssertion(address requestee, uint index) returns (uint assertionType){
-	    assertionType = requests[requestee].assertions[index];
+	    assertionType = requests[requestee][index];
 	}
-	
+	// Grants ( shared model with requests)
+	function getGrantedAssertionCount(address requestee) returns (uint count){
+	    count = grants[requestee].length;
+	}
+	function getGrantedAssertion(address requestee, uint index) returns (uint assertionType){
+	    assertionType = grants[requestee][index];
+	}
 
 	function () {
         throw;
