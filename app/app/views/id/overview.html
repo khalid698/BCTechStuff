@@ -12,70 +12,67 @@
   <button type="submit" class="btn btn-lg btn-success" ng-click="main.generateIdentity()">Generate identity!</button>
 </div>
 
-<div class="container" ng-if="selectedIdentity">
-  <div class="row">
-   <div class="col-lg-12">
-      <h4>PGP key</h4>
-      <ul>
-        <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
-        <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
-      </ul>
-      <h4>Ethereum</h4>
-      <ul>
-        <!-- <li>Key hash: <strong>{{selectedIdentity.eth.keyHash}}</strong></li> -->
-        <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
-        <li>Balance: <strong>{{main.balance()}}</strong></li>
-        <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
-      </ul>
+<!--  PGP Panel -->
+<div class="panel panel-default" ng-if="selectedIdentity">
+  <div class="panel-heading">PGP</div>
+  <div class="panel-body">
+    <ul>
+      <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
+      <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
+    </ul>
+  </div>
+</div>
 
-<!--       <h4 ng-if="main.requests.length > 0">Requests</h4>
-      <div class="list-group" ng-repeat="request in main.requests">
-        <div class="row">
-          <div class="col-lg-6">
-            <p class="list-group-item-text">
-              {{request.requestee}} requests the following assertions
-              <ul>
-                <li ng-repeat="assertion in request.assertions">{{helpers.assertionLabelById(assertion)}}</li>
-              </ul>
-            </p>
-          </div>
-          <div class="col-lg-6">
-            <button class="btn btn-success btn-sm" ng-click="main.grant(request)">Grant</button>
-            <button class="btn btn-danger btn-sm" disabled="true">Ignore</button>
-          </div>
-          </div>
-      </div> -->
+<!-- Etherem panel -->
+<div class="panel panel-default" ng-if="selectedIdentity">
+  <div class="panel-heading">Ethereum</div>
+  <div class="panel-body">
+    <ul>
+      <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
+      <li>Balance: <strong>{{main.balance()}}</strong></li>
+      <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
+    </ul>
+  </div>
+</div>
 
-      <h4 ng-if="main.grants.length > 0">Grants</h4>
-      <div class="list-group" ng-repeat="grant in main.grants">
-        <div class="row">
-            <p class="list-group-item-text">
-              <strong>{{grant.requestee}}</strong>
-              <ul>
-                <li ng-repeat="assertion in grant.assertions">{{helpers.assertionLabelById(assertion)}}</li>
-              </ul>
-            </p>
-          </div>
-      </div>
+<!-- Grants -->
+<div class="panel panel-default" ng-repeat="grant in main.grants" ng-if="selectedIdentity">
+  <div class="panel-heading">
+    {{grant.requestee}} has access to
+  </div>
+  <div class="panel-body">
+    <ul>
+      <li ng-repeat="assertion in grant.assertions">{{helpers.assertionLabelById(assertion)}}</li>
+    </ul>
+  </div>
+</div>
 
-
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Identity actions
+  </div>
+  <div class="panel-body">
       <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button>
       <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract()">Create contract</button>
       <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>
   </div>
 </div>
-<div class="row">
-        <div class="form-group col-xs-4">
-            <label for="toAddress" class="sr-only"></label>
-            <input class="form-control " id="toAddress" type="text" ng-model="main.toAddress" placeholder="Recipient"/>
-        </div>
-        <div class="form-group col-xs-4">
-            <label for="amount" class="sr-only"></label>
-            <input class="form-control col-xs-6" id="amount" type="text" ng-model="main.amount" placeholder="Amount"/>
-        </div>
-        <div class="form-group col-xs-4">
-        <button class="btn btn-sm btn-primary" ng-click="main.send(main.toAddress, main.amount)">Send Funds</button>
-        </div>
-      </div>
-</div>
 
+<div class="panel panel-default" ng-if="selectedIdentity">
+  <div class="panel-heading">
+    Transfer ether
+  </div>
+  <div class="panel-body">
+    <div class="form-group col-xs-4">
+      <label for="toAddress" class="sr-only"></label>
+      <input class="form-control " id="toAddress" type="text" ng-model="main.toAddress" placeholder="Recipient"/>
+    </div>
+    <div class="form-group col-xs-4">
+      <label for="amount" class="sr-only"></label>
+      <input class="form-control col-xs-6" id="amount" type="text" ng-model="main.amount" placeholder="Amount"/>
+    </div>
+    <div class="form-group col-xs-4">
+      <button class="btn btn-sm btn-primary" ng-click="main.send(main.toAddress, main.amount)">Send Funds</button>
+    </div>
+  </div>
+</div>

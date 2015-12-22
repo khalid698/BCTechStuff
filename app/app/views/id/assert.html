@@ -1,20 +1,24 @@
-<div class="container" ng-if="selectedIdentity">
-  <div class="row">
-  <div class="col-lg-6">
-    <div class="form-group">
-      <label for="type">Type</label>
-      <select id="type" ng-model="identity.assertionType" ng-options="c as c.label for c in assertionTypes track by c.id">
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="value">Value</label>
-      <input type="text" ng-model="identity.assertionValue" />
-    </div>
-
-    <button type="button" class="btn btn-default" ng-click="identity.assert()">Assert</button>
-    <button type="button" class="btn btn-default" ng-click="identity.read()">Read</button>
+<div class="panel panel-default" ng-if="selectedIdentity">
+  <div class="panel-heading">
+    Assertions
   </div>
+  <div class="panel-body">
+    <div ng-repeat="assertionType in assertionTypes" ng-if="selectedIdentity">
+      <div class="row">
+        <div class="col-lg-3">
+          <label for="type">{{assertionType.label}}</label>
+        </div>
+        <div class="col-lg-3">
+          <input type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+        </div>
+        <div class="col-lg-1" ng-if="identity.isChanged(assertionType)">
+          <button type="button" class="btn btn-danger btn-sm" ng-click="identity.read(assertionType)">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary btn-sm" ng-click="identity.assert()" ng-disabled="!identity.hasChangedKeys()">Assert</button>
   </div>
 </div>
 
