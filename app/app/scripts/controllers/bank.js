@@ -11,11 +11,15 @@ angular.module('angularApp')
   .controller('BankCtrl', function ($log, $scope, $rootScope, IdentityContract) {
     var self = this;
 
+    self.grantedAssertions = [];
 
-    //
-    self.grantedAssertions = function(identity) {
-      return IdentityContract.grantsByGrantee($rootScope.selectedIdentity, $rootScope.bankIdentity.ethAddress() );
+    self.loadGrantedAssertions = function() {
+      IdentityContract.readGrantedAssertions($rootScope.bankIdentity, $rootScope.selectedIdentity )
+        .then(function(res){
+          self.grantedAssertions = res;
+        });
     };
+    self.loadGrantedAssertions();
 
     // self.request = function(assertionTypes){
     //     $log.info("Requesting access to ",assertionTypes," from ", self.bankIdentity, "to", self.clientIdentity);

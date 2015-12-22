@@ -6,6 +6,10 @@
  * @description
  * # IdentityContract
  * Service in the angularApp.
+ *
+ var identity = angular.element(document.body).injector().get('Identity').get("test")
+ var contract = angular.element(document.body).injector().get('IdentityContract')
+ *
  */
 angular.module('angularApp')
   .service('IdentityContract', function ($log, pgp, CryptoWrapper, Web3, Notification) {
@@ -75,8 +79,11 @@ angular.module('angularApp')
       });
     };
 
-    // Address is passed in since it can differ from the identity address
-    self.readAssertion = function(identity, identityAddress, assertionType){
+    /**
+    * Read encrypted assertion
+    * grantee can be the owner or a third party,
+    */
+    self.readAssertion = function(grantee, contractAddress, assertionType){
       return new Promise(function(resolve, reject){
         var internalCallback = function(e,result){
           if(e){
@@ -86,17 +93,18 @@ angular.module('angularApp')
             $log.warn("Got one or more empty responses from contract, read failed");
             reject("Got one or more empty responses from contract, read failed");
           } else {
-            $log.debug(result);
-            Notification.info("Decrypting Session Key");
-            pgp.decryptMessage(identity.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
+            // $log.debug(result);
+            // Notification.info("Decrypting Session Key");
+            pgp.decryptMessage(grantee.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
+               $log.debug("Decrypted session key", decryptedSessionKey);
                var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
-               Notification.info("Decrypting Assertion");
+               $log.debug("Decrypted assertion key", decryptedAssertion);
                //callback(decryptedAssertion);
                resolve(decryptedAssertion);
             });
           }
         };
-        self.createIdentityClient(identity, identityAddress).get.call(assertionType, internalCallback);
+        self.createIdentityClient(grantee, contractAddress).get.call(assertionType, internalCallback);
       });
     };
 
@@ -106,7 +114,8 @@ angular.module('angularApp')
     self.readGrantedAssertions = function(identity, target) {
       return new Promise(function(resolve, reject){
           if ( target.contractAddress === undefined){
-            throw "Cannot using idetity without contractAddress as target in readGrantedAssertions";
+            reject("Cannot using identity without contractAddress as target in readGrantedAssertions");
+            return;
           }
           // Read granted assertion types
           var grants = self.grantsByGrantee(target, identity.ethAddress());
@@ -115,6 +124,7 @@ angular.module('angularApp')
           function readEncryptedAssertion(assertionType){
               return self.readAssertion(identity, target.contractAddress, assertionType)
                     .then(function(value){
+                          $log.debug("Got assertion value", value);
                           return {
                             assertionType: assertionType,
                             value: value
@@ -122,14 +132,12 @@ angular.module('angularApp')
           }
           Promise.all(grants.map(readEncryptedAssertion)).then(function(value){
             $log.info("Loaded decrypted granted assertions", value);
+            resolve(value);
           });
         });
     };
-
-    /* To test :
-    var identity = angular.element(document.body).injector().get('Identity').get("test")
-    var contract = angular.element(document.body).injector().get('IdentityContract')
-    c = contract.createIdentityClient(identity, identity.contractAddress)
+    /**
+    * Returns the granted assertionTypes on 'identity' for grantee with address 'granteeAddress'
     */
     self.grantsByGrantee = function( identity, granteeAddress) {
         $log.info("Getting grants for ", granteeAddress," on contract at address ", identity.contractAddress);
@@ -166,7 +174,7 @@ angular.module('angularApp')
     };
 
     self.grant = function(identity, grantee, assertionTypes){
-      var web3 = Web3.createSignedWeb3(identity) //.eth.getTransactionCount(identity.ethAddress());
+      var web3 = Web3.createSignedWeb3(identity)
       var batch = web3.createBatch();
 
       $log.info("Granting assertions ", assertionTypes, " to ", grantee);
@@ -191,24 +199,27 @@ angular.module('angularApp')
       };
 
       var encryptWithGranteePublicKey = function(decryptedSessionKey){
-          $log.info("Decrypted session key ", decryptedSessionKey," encrypting with grantees public key");
+          $log.info("Encrypting session key ", decryptedSessionKey," with grantees public key");
           // Encrypt session with grantee public key
           return pgp.encryptMessage(grantee.pgp, decryptedSessionKey);
       };
 
       var readEncryptedSessionKey = function(assertionType){
-          $log.debug("Reading encrypted session  key for assertionType", assertionType);
+          $log.debug("Reading encrypted session key for assertionType", assertionType);
           var assertion = self.createIdentityClient(identity, identity.contractAddress).get.call(assertionType);
           if(assertion.indexOf("") !== -1){
             return Promise.reject("Cannot grant nonexisting assertion");
           } else {
-            return pgp.decryptMessage(identity.pgp, pgp.message.readArmored(assertion[0]));
+            return pgp.decryptMessage(identity.pgp, pgp.message.readArmored(assertion[0])).then(function(sessionKey){
+              $log.debug("Decrypted session key for assertionType ",assertionType," : ", sessionKey);
+              return sessionKey;
+            })
           }
       };
 
       Promise.all(assertionTypes.map(function(assertionType){
           return readEncryptedSessionKey(assertionType)
-            .then(function(sessionKey){ return encryptWithGranteePublicKey(assertionType, sessionKey);})
+            .then(encryptWithGranteePublicKey)
             .then(function(encryptedSessionKeyForGrantee){ return storeEncryptedSessionKey(assertionType,encryptedSessionKeyForGrantee);});
       })).then(function(){
         // Wait for all decryption/encrytion promises to complete, once done execute the batch
