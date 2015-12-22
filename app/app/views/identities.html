@@ -1,0 +1,23 @@
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Select active identity
+      </div>
+      <div class="panel-body">
+        <select ng-options="identity for identity in identities.getIdentities()"
+                ng-model="identities.selected"
+                ng-change="identities.selectIdentity()">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Select bank identity
+      </div>
+      <div class="panel-body">
+        <select ng-options="identity for identity in identities.getIdentities()"
+                ng-model="identities.bank"
+                ng-change="identities.selectBankIdentity()">
+        </select>
+      </div>
+  </div>

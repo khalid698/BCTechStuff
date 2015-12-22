@@ -12,9 +12,9 @@ angular.module('angularApp')
 
     var self = this;
 
-    self.contractAbi = [{'constant':false,'inputs':[],'name':'getRequesteeCount','outputs':[{'name':'','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'},{'name':'key','type':'string'}],'name':'updateKey','outputs':[],'type':'function'},{'constant':false,'inputs':[],'name':'kill','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'},{'name':'key','type':'string'},{'name':'value','type':'string'}],'name':'assert','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'publicKey','type':'string'},{'name':'requestedAssertions','type':'uint256[]'}],'name':'request','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'}],'name':'getRequest','outputs':[{'name':'publicKey','type':'string'},{'name':'numberOfAssertions','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'assertionTypes','type':'uint256[]'}],'name':'grant','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'index','type':'uint256'}],'name':'getRequestee','outputs':[{'name':'','type':'address'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'index','type':'uint256'}],'name':'getRequestAssertion','outputs':[{'name':'assertionType','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'}],'name':'get','outputs':[{'name':'key','type':'string'},{'name':'value','type':'string'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'}],'name':'getGrantedAssertionCount','outputs':[{'name':'count','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'index','type':'uint256'}],'name':'getGrantedAssertion','outputs':[{'name':'assertionType','type':'uint256'}],'type':'function'},{'inputs':[],'type':'constructor'}];
+    self.contractAbi = [{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'assertionType','type':'uint256'},{'name':'sessionKey','type':'string'}],'name':'grant','outputs':[],'type':'function'},{'constant':false,'inputs':[],'name':'kill','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'},{'name':'key','type':'string'},{'name':'value','type':'string'}],'name':'assert','outputs':[],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'assertionType','type':'uint256'}],'name':'getSessionKey','outputs':[{'name':'encryptedSessionKey','type':'string'}],'type':'function'},{'constant':false,'inputs':[{'name':'assertionType','type':'uint256'}],'name':'get','outputs':[{'name':'key','type':'string'},{'name':'value','type':'string'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'}],'name':'getGrantedAssertionCount','outputs':[{'name':'count','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[],'name':'getGranteeCount','outputs':[{'name':'count','type':'uint256'}],'type':'function'},{'constant':false,'inputs':[{'name':'index','type':'uint256'}],'name':'getGrantee','outputs':[{'name':'grantee','type':'address'}],'type':'function'},{'constant':false,'inputs':[{'name':'requestee','type':'address'},{'name':'index','type':'uint256'}],'name':'getGrantedAssertion','outputs':[{'name':'assertionType','type':'uint256'}],'type':'function'},{'inputs':[],'type':'constructor'}];
 
-    self.contractBytes = '60606040525b33600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b61111d8061003f6000396000f3606060405236156100b6576000357c010000000000000000000000000000000000000000000000000000000090048063201e2d3b146100c357806330d1ab4e146100e657806341c0e1b51461014557806348e724dd1461015457806361f57cd9146101fa57806363c1dff71461029457806368aa84811461031f5780638a1397291461037b5780639471d30b146103bd5780639507d39a146103f2578063a21d0afe146104d5578063fd29f85614610501576100b6565b6100c15b610002565b565b005b6100d06004805050610e77565b6040518082815260200191505060405180910390f35b6101436004808035906020019091908035906020019082018035906020019191908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509090919050506107be565b005b6101526004805050610e8c565b005b6101f86004808035906020019091908035906020019082018035906020019191908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050909091908035906020019082018035906020019191908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050909091905050610f20565b005b6102926004808035906020019082018035906020019191908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509090919080359060200190820180359060200191919080806020026020016040519081016040528093929190818152602001838360200280828437820191505050505050909091905050610a8c565b005b6102aa6004808035906020019091905050610580565b60405180806020018381526020018281038252848181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f1680156103105780820380516001836020036101000a031916815260200191505b50935050505060405180910390f35b61037960048080359060200190919080359060200190820180359060200191919080806020026020016040519081016040528093929190818152602001838360200280828437820191505050505050909091905050610d3a565b005b6103916004808035906020019091905050610536565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6103dc60048080359060200190919080359060200190919050506106d3565b6040518082815260200191505060405180910390f35b61040860048080359060200190919050506108e6565b6040518080602001806020018381038352858181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f16801561046c5780820380516001836020036101000a031916815260200191505b508381038252848181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f1680156104c55780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b6104eb6004808035906020019091905050610729565b6040518082815260200191505060405180910390f35b6105206004808035906020019091908035906020019091905050610768565b6040518082815260200191505060405180910390f35b6000600560005082815481101561000257906000526020600020900160005b9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905061057b565b919050565b602060405190810160405280600081526020015060006000600260005060008573ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000509050600460005060008573ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000508054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561068c5780601f106106615761010080835404028352916020019161068c565b820191906000526020600020905b81548152906001019060200180831161066f57829003601f168201915b505050505092508250600260005060008573ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005080549050915081505b50915091565b6000600260005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005082815481101561000257906000526020600020900160005b5054905080505b92915050565b6000600360005060008373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005080549050905080505b919050565b6000600360005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005082815481101561000257906000526020600020900160005b5054905080505b92915050565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561081a57610002565b80600160005060008481526020019081526020016000206000506000016000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061088357805160ff19168380011785556108b4565b828001600101855582156108b4579182015b828111156108b3578251826000505591602001919060010190610895565b5b5090506108df91906108c1565b808211156108db57600081815060009055506001016108c1565b5090565b50505b5050565b60206040519081016040528060008152602001506020604051908101604052806000815260200150600160005060008481526020019081526020016000206000506000016000508054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156109c15780601f10610996576101008083540402835291602001916109c1565b820191906000526020600020905b8154815290600101906020018083116109a457829003601f168201915b505050505091508150600160005060008481526020019081526020016000206000506001016000508054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610a7d5780601f10610a5257610100808354040283529160200191610a7d565b820191906000526020600020905b815481529060010190602001808311610a6057829003601f168201915b5050505050905080505b915091565b600082600460005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610b0757805160ff1916838001178555610b38565b82800160010185558215610b38579182015b82811115610b37578251826000505591602001919060010190610b19565b5b509050610b639190610b45565b80821115610b5f5760008181506000905550600101610b45565b5090565b505081600260005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000509080519060200190828054828255906000526020600020908101928215610bdc579160200282015b82811115610bdb578251826000505591602001919060010190610bbd565b5b509050610c079190610be9565b80821115610c035760008181506000905550600101610be9565b5090565b5050600090505b6005600050805490508160ff161015610ca3573373ffffffffffffffffffffffffffffffffffffffff16600560005082815481101561000257906000526020600020900160005b9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415610c9557610d35565b5b8080600101915050610c0e565b60056000508054806001018281815481835581811511610cf557818360005260206000209182019101610cf49190610cd6565b80821115610cf05760008181506000905550600101610cd6565b5090565b5b5050509190906000526020600020900160005b33909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff02191690830217905550505b505050565b60006000905080505b8151811015610e0557600360005060008473ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000508054806001018281815481835581811511610dc857818360005260206000209182019101610dc79190610da9565b80821115610dc35760008181506000905550600101610da9565b5090565b5b5050509190906000526020600020900160005b848481518110156100025790602001906020020151909190915055505b8080600101915050610d43565b600260005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005080546000825590600052602060002090810190610e6f9190610e51565b80821115610e6b5760008181506000905550600101610e51565b5090565b5b505b505050565b60006005600050805490509050610e89565b90565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415610f1d57600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b5b565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610f7c57610002565b60406040519081016040528083815260200182815260200150600160005060008581526020019081526020016000206000506000820151816000016000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061100357805160ff1916838001178555611034565b82800160010185558215611034579182015b82811115611033578251826000505591602001919060010190611015565b5b50905061105f9190611041565b8082111561105b5760008181506000905550600101611041565b5090565b50506020820151816001016000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106110b657805160ff19168380011785556110e7565b828001600101855582156110e7579182015b828111156110e65782518260005055916020019190600101906110c8565b5b50905061111291906110f4565b8082111561110e57600081815060009055506001016110f4565b5090565b50509050505b50505056';
+    self.contractBytes = '60606040525b33600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b610dc58061003f6000396000f360606040523615610095576000357c01000000000000000000000000000000000000000000000000000000009004806325faee46146100a257806341c0e1b51461010a57806348e724dd146101195780635fb3fbdb146101bf5780639507d39a1461024c578063a21d0afe1461032f578063e8f1ddb71461035b578063ecdd02971461037e578063fd29f856146103c057610095565b6100a05b610002565b565b005b6101086004808035906020019091908035906020019091908035906020019082018035906020019191908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509090919050506103f5565b005b610117600480505061093d565b005b6101bd6004808035906020019091908035906020019082018035906020019191908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050909091908035906020019082018035906020019191908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509090919050506109d1565b005b6101de6004808035906020019091908035906020019091905050610842565b60405180806020018281038252838181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f16801561023e5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6102626004808035906020019091905050610c01565b6040518080602001806020018381038352858181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f1680156102c65780820380516001836020036101000a031916815260200191505b508381038252848181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f16801561031f5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b61034560048080359060200190919050506107ad565b6040518082815260200191505060405180910390f35b6103686004805050610752565b6040518082815260200191505060405180910390f35b6103946004808035906020019091905050610765565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6103df60048080359060200190919080359060200190919050506107ec565b6040518082815260200191505060405180910390f35b6000600090505b600360005060008573ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050805490508160ff16101561049c5782600360005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005082815481101561000257906000526020600020900160005b5054141561048e57610002565b5b80806001019150506103fc565b81600260005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008581526020019081526020016000206000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061052957805160ff191683800117855561055a565b8280016001018555821561055a579182015b8281111561055957825182600050559160200191906001019061053b565b5b5090506105859190610567565b808211156105815760008181506000905550600101610567565b5090565b5050600360005060008573ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005080548060010182818154818355818115116106035781836000526020600020918201910161060291906105e4565b808211156105fe57600081815060009055506001016105e4565b5090565b5b5050509190906000526020600020900160005b85909190915055506000905080505b6004600050805490508160ff1610156106ba578373ffffffffffffffffffffffffffffffffffffffff16600460005082815481101561000257906000526020600020900160005b9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614156106ac5761074c565b5b8080600101915050610625565b6004600050805480600101828181548183558181151161070c5781836000526020600020918201910161070b91906106ed565b8082111561070757600081815060009055506001016106ed565b5090565b5b5050509190906000526020600020900160005b86909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff02191690830217905550505b50505050565b6000600460005080549050905080505b90565b6000600460005082815481101561000257906000526020600020900160005b9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905080505b919050565b6000600360005060008373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005080549050905080505b919050565b6000600360005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005082815481101561000257906000526020600020900160005b5054905080505b92915050565b6020604051908101604052806000815260200150600260005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008381526020019081526020016000206000508054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561092d5780601f106109025761010080835404028352916020019161092d565b820191906000526020600020905b81548152906001019060200180831161091057829003601f168201915b5050505050905080505b92915050565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156109ce57600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b5b565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610a2d57610002565b80600160005060008581526020019081526020016000206000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610a9057805160ff1916838001178555610ac1565b82800160010185558215610ac1579182015b82811115610ac0578251826000505591602001919060010190610aa2565b5b509050610aec9190610ace565b80821115610ae85760008181506000905550600101610ace565b5090565b50508160026000506000600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008581526020019081526020016000206000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610b9d57805160ff1916838001178555610bce565b82800160010185558215610bce579182015b82811115610bcd578251826000505591602001919060010190610baf565b5b509050610bf99190610bdb565b80821115610bf55760008181506000905550600101610bdb565b5090565b50505b505050565b60206040519081016040528060008152602001506020604051908101604052806000815260200150600260005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008481526020019081526020016000206000508054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610d005780601f10610cd557610100808354040283529160200191610d00565b820191906000526020600020905b815481529060010190602001808311610ce357829003601f168201915b505050505091508150600160005060008481526020019081526020016000206000508054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610db65780601f10610d8b57610100808354040283529160200191610db6565b820191906000526020600020905b815481529060010190602001808311610d9957829003601f168201915b5050505050905080505b91509156';
 
     self.assertionTypes = [
       {id:1, label: 'Name'},
@@ -76,79 +76,87 @@ angular.module('angularApp')
     };
 
     // Address is passed in since it can differ from the identity address
-    self.readAssertion = function(identity, identityAddress, assertionType, callback){
-      var internalCallback = function(e,result){
-        if(e){
-          $log.warn(e);
-        } else if (result.lastIndexOf("") !== -1 ){
-          $log.warn("Got one or more empty responses from contract, read failed");
-        } else {
-          $log.debug(result);
-          Notification.info("Decrypting Session Key");
-          pgp.decryptMessage(identity.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
-             var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
-             Notification.info("Decrypting Assertion");
-             callback(decryptedAssertion);
-          });
-        }
-      };
-      self.createIdentityClient(identity, identityAddress).get.call(assertionType, internalCallback);
+    self.readAssertion = function(identity, identityAddress, assertionType){
+      return new Promise(function(resolve, reject){
+        var internalCallback = function(e,result){
+          if(e){
+            $log.warn(e);
+            reject(e);
+          } else if (result.lastIndexOf("") !== -1 ){
+            $log.warn("Got one or more empty responses from contract, read failed");
+            reject("Got one or more empty responses from contract, read failed");
+          } else {
+            $log.debug(result);
+            Notification.info("Decrypting Session Key");
+            pgp.decryptMessage(identity.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
+               var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
+               Notification.info("Decrypting Assertion");
+               //callback(decryptedAssertion);
+               resolve(decryptedAssertion);
+            });
+          }
+        };
+        self.createIdentityClient(identity, identityAddress).get.call(assertionType, internalCallback);
+      });
     };
 
-    // Requests
     /**
-    * to test :
-    * identity = angular.element(document.body).injector().get('Identity').get("test")
-    *
-    **/
-    self.request = function(requesteeIdentity, targetIdentity, assertionTypes, callback){
-      self.createIdentityClient(requesteeIdentity, targetIdentity.contractAddress)
-        .request(requesteeIdentity.pgpPublicKey(), assertionTypes,{gas: 3000000, gasPrice: Web3.gasPrice}, callback);
+    * Read all granted assetions, returns [{assertionType, value}]
+    */
+    self.readGrantedAssertions = function(identity, target) {
+      return new Promise(function(resolve, reject){
+          if ( target.contractAddress === undefined){
+            throw "Cannot using idetity without contractAddress as target in readGrantedAssertions";
+          }
+          // Read granted assertion types
+          var grants = self.grantsByGrantee(target, identity.ethAddress());
+          $log.debug("Got grants ",grants, " on target ", target);
+          // Read and decrypt values
+          function readEncryptedAssertion(assertionType){
+              return self.readAssertion(identity, target.contractAddress, assertionType)
+                    .then(function(value){
+                          return {
+                            assertionType: assertionType,
+                            value: value
+                          };});
+          }
+          Promise.all(grants.map(readEncryptedAssertion)).then(function(value){
+            $log.info("Loaded decrypted granted assertions", value);
+          });
+        });
     };
-    /**
-    * To test :
+
+    /* To test :
     var identity = angular.element(document.body).injector().get('Identity').get("test")
     var contract = angular.element(document.body).injector().get('IdentityContract')
     c = contract.createIdentityClient(identity, identity.contractAddress)
     */
-    self.requests = function(targetIdentity){
-      var requests = [];
-      var contract = self.createIdentityClient(targetIdentity, targetIdentity.contractAddress);
-      var numberOfRequestees = contract.getRequesteeCount.call().toNumber();
-      for (var i=0; i < numberOfRequestees; i++){
-          var request = {};
-          request.requestee = contract.getRequestee.call(i);
-          var requestDetails = contract.getRequest.call(request.requestee);
-          request.publicKey = requestDetails[0];
-          var numberOfAssertions = requestDetails[1];
-          request.assertions = [];
-          for(var j=0; j < numberOfAssertions; j++){
-            request.assertions.push(contract.getRequestAssertion.call(request.requestee, j).toNumber());
-          }
-          if ( request.assertions.length > 0 ){
-            requests.push(request);
-          }
-      }
-      return requests;
+    self.grantsByGrantee = function( identity, granteeAddress) {
+        $log.info("Getting grants for ", granteeAddress," on contract at address ", identity.contractAddress);
+        // $log.info(identity);
+        var contract = self.createIdentityClient(identity, identity.contractAddress);
+        var grantedAssertionCount = contract.getGrantedAssertionCount.call(granteeAddress).toNumber();
+        $log.debug("Grantee ",granteeAddress, " has ", grantedAssertionCount, "granted assertions");
+        var grants = [];
+        for(var j=0; j < grantedAssertionCount; j++){
+          var assertion = contract.getGrantedAssertion.call(granteeAddress, j).toNumber();
+          $log.debug("Grantee ",granteeAddress, " has granted assertion ", assertion);
+          grants.push(assertion);
+        }
+        return grants;
     };
 
     self.grants = function(identity){
       var grants = [];
       var contract = self.createIdentityClient(identity, identity.contractAddress);
-      var numberOfRequestees = contract.getRequesteeCount.call().toNumber();
-      $log.debug("Number of requestees :",numberOfRequestees)
+      var numberOfRequestees = contract.getGranteeCount.call().toNumber();
+      $log.debug("Number of grantees on ",identity.contractAddress, " : " , numberOfRequestees);
       for (var i=0; i < numberOfRequestees; i++){
-          $log.debug("Getting grants for requestee :",i)
           var grant = {};
-          grant.requestee = contract.getRequestee.call(i);
-          var grantedAssertionCount = contract.getGrantedAssertionCount.call(grant.requestee).toNumber();
-          $log.debug("Requestee ",grant.requestee, " has ", grantedAssertionCount, "granted assertions");
-          grant.assertions = [];
-          for(var j=0; j < grantedAssertionCount; j++){
-            var assertion = contract.getGrantedAssertion.call(grant.requestee, j).toNumber()
-            $log.debug("Requestee ",grant.requestee, " has granted assertion ", assertion);
-            grant.assertions.push(assertion);
-          };
+          grant.requestee = contract.getGrantee.call(i);
+          $log.debug("Getting grants for requestee nr ",i," : ", grant.requestee);
+          grant.assertions = self.grantsByGrantee(identity, grant.requestee);
+
           if ( grant.assertions.length > 0 ){
             grants.push(grant);
           }
@@ -157,13 +165,56 @@ angular.module('angularApp')
       return grants;
     };
 
-    self.grant = function(identity, request){
-      var callback = function(){
-        Notification.info("Granted complete");
+    self.grant = function(identity, grantee, assertionTypes){
+      var web3 = Web3.createSignedWeb3(identity) //.eth.getTransactionCount(identity.ethAddress());
+      var batch = web3.createBatch();
+
+      $log.info("Granting assertions ", assertionTypes, " to ", grantee);
+
+      var grantCompleteCallback = function(assertionType){
+        Notification.info("Grant of ",assertionType," complete");
       };
-      $log.info("Granting assertions", request.assertions, " to ", request.requestee);
-      self.createIdentityClient(identity, identity.contractAddress)
-      .grant(request.requestee, request.assertions,{gas: 3000000, gasPrice: Web3.gasPrice}, callback);
+
+      var storeEncryptedSessionKey = function(assertionType, encryptedSessionKey){
+        $log.info("Storing encrypted session key for assertionType", assertionType);
+              batch.add(self.createIdentityClient(identity, identity.contractAddress)
+                        .grant.request(
+                            grantee.ethAddress(),
+                            assertionType,
+                            encryptedSessionKey,
+                            {from: identity.ethAddress(), gas: 3000000, gasPrice: Web3.gasPrice},
+                            function(e,r){
+                              $log.info(e);
+                              $log.info(r);
+                            }));
+              return Promise.resolve();
+      };
+
+      var encryptWithGranteePublicKey = function(decryptedSessionKey){
+          $log.info("Decrypted session key ", decryptedSessionKey," encrypting with grantees public key");
+          // Encrypt session with grantee public key
+          return pgp.encryptMessage(grantee.pgp, decryptedSessionKey);
+      };
+
+      var readEncryptedSessionKey = function(assertionType){
+          $log.debug("Reading encrypted session  key for assertionType", assertionType);
+          var assertion = self.createIdentityClient(identity, identity.contractAddress).get.call(assertionType);
+          if(assertion.indexOf("") !== -1){
+            return Promise.reject("Cannot grant nonexisting assertion");
+          } else {
+            return pgp.decryptMessage(identity.pgp, pgp.message.readArmored(assertion[0]));
+          }
+      };
+
+      Promise.all(assertionTypes.map(function(assertionType){
+          return readEncryptedSessionKey(assertionType)
+            .then(function(sessionKey){ return encryptWithGranteePublicKey(assertionType, sessionKey);})
+            .then(function(encryptedSessionKeyForGrantee){ return storeEncryptedSessionKey(assertionType,encryptedSessionKeyForGrantee);});
+      })).then(function(){
+        // Wait for all decryption/encrytion promises to complete, once done execute the batch
+        $log.debug("Executing batch with ",batch.requests.length," items");
+        batch.execute();
+      })
     };
 
   });

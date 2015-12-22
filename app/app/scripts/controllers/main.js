@@ -66,7 +66,7 @@ angular.module('angularApp')
           $log.warn("Could not delete contract ", e);
           Notification.error("Could not delete contract: "+e);
          }
-       }
+       };
       IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
     };
 
@@ -75,19 +75,19 @@ angular.module('angularApp')
       Ethereum.sendFunds(selectedIdentity, selectedIdentity.eth.getAddresses()[0], toAddress, value);
     };
 
-    self.loadRequests = function() {
-      if($rootScope.selectedIdentity){
-        return self.requests = IdentityContract.requests($rootScope.selectedIdentity);
-      }
-    };
+    // self.loadRequests = function() {
+    //   if($rootScope.selectedIdentity){
+    //     return self.requests = IdentityContract.requests($rootScope.selectedIdentity);
+    //   }
+    // };
 
     self.loadGrants = function() {
       if($rootScope.selectedIdentity){
-        return self.grants = IdentityContract.grants($rootScope.selectedIdentity);
+        self.grants = IdentityContract.grants($rootScope.selectedIdentity);
       }
     };
 
-    self.loadRequests();
+    // self.loadRequests();
     self.loadGrants();
 
     self.grant = function(request){

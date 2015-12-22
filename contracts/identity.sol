@@ -14,98 +14,59 @@ contract Identity {
     }
     
     // Assertions
-	mapping(uint => Assertion) assertions;
+	mapping(uint => string) assertions;
 
-	struct Assertion {
-	    string key;
-	    string value;
-	}
-    
-    /**
-     * assertionType -> integer mapping of type ( 0: name etc)
-     * value -> value of the assertion, encrypted
-     * key -> pgp key file, accessible by all granted keys
-     */
 	function assert(uint assertionType, string key, string  value) onlyowner {
 		// Clear out attestations when values changes ?
-		assertions[assertionType] = Assertion(key, value);
+		assertions[assertionType] = value;
+	    sessionKeys[owner][assertionType] = key;
 	}
 	
-	function updateKey(uint assertionType, string key) onlyowner {
-	    assertions[assertionType].key = key;
-	}
-
 	function get(uint assertionType) returns (string  key, string value){
-	    key = assertions[assertionType].key;
-	    value = assertions[assertionType].value;
+	    key = sessionKeys[msg.sender][assertionType];
+	    value = assertions[assertionType];
 	}
 	
-	// Requests, 
-// 	struct Request {
-// 	    string publicKey;
-// 	    uint[] assertions;
-// 	    uint[] grantedAssertions;
-// 	}
-//     mapping(address => Request) requests;
-    mapping(address => uint[]) requests;
-    mapping(address => uint[]) grants;
-    mapping(address => string) keys;
-    address[] requestees;
+    mapping(address => mapping(uint => string)) sessionKeys;
+    mapping(address => uint[]) grantedAssertions;
+    address[] grantees;
     
-	function request(string publicKey, uint[] requestedAssertions){
-	   keys[msg.sender] = publicKey;
-       requests[msg.sender] = requestedAssertions;
-	  // Exit early if requestee is already in requestee list
-	   for(var r=0; r< requestees.length; r++){
-	       if (requestees[r] == msg.sender){
+	function grant(address requestee, uint assertionType, string sessionKey) {
+	    for(var r=0; r < grantedAssertions[requestee].length; r++){
+	        if(grantedAssertions[requestee][r] == assertionType){
+	            throw;
+	        }
+	    }
+	    sessionKeys[requestee][assertionType] = sessionKey;
+	    grantedAssertions[requestee].push(assertionType);
+        for(r=0; r< grantees.length; r++){
+	       if (grantees[r] == requestee){
 	           return;
 	       }
-	   }
-	   requestees.push(msg.sender);
+	    }
+	    grantees.push(requestee);
 	}
 	
-	// This only moves from assertions -> granted
-	// Deduping responsibility lies with request()
-	function grant(address requestee, uint[] assertionTypes) {
-	    uint a;
-	    for(a=0; a < assertionTypes.length; a++){
-	        grants[requestee].push(assertionTypes[a]);
- 	    }
- 	    delete requests[requestee];
-        // for(var r=0; r < requests[requestee].length; r++){
-    	   // for(a=0; a < assertionTypes.length; a++){
-        //         if(requests[requestee][r] == assertionTypes[a]){
-        //             delete requests[requestee][r];
-        //         }
-     	  //  }
-        // }
+	function getGranteeCount() returns (uint count){
+	    count = grantees.length;
 	}
 	
-	function getRequesteeCount() returns (uint)  {
-	    return requestees.length;
+	function getGrantee(uint index) returns (address grantee){
+	    grantee = grantees[index];
 	}
 	
-	function getRequestee(uint index) returns (address){
-	    return requestees[index];
-	}
-	
-	function getRequest(address requestee) returns (string publicKey, uint numberOfAssertions){
-	    var request = requests[requestee];
-        publicKey = keys[requestee];
-        numberOfAssertions = requests[requestee].length;
-	}
-	
-	function getRequestAssertion(address requestee, uint index) returns (uint assertionType){
-	    assertionType = requests[requestee][index];
-	}
-	// Grants ( shared model with requests)
 	function getGrantedAssertionCount(address requestee) returns (uint count){
-	    count = grants[requestee].length;
+	    count = grantedAssertions[requestee].length;
 	}
+	
 	function getGrantedAssertion(address requestee, uint index) returns (uint assertionType){
-	    assertionType = grants[requestee][index];
+	    assertionType = grantedAssertions[requestee][index];
 	}
-
+	
+    function getSessionKey(address requestee, uint assertionType) returns (string encryptedSessionKey){
+        encryptedSessionKey = sessionKeys[requestee][assertionType];
+    }
+    
 	function () {
         throw;
     }

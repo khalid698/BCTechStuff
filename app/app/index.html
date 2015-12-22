@@ -35,21 +35,11 @@
             <ul class="nav navbar-nav">
               <li ng-class="{active: $route.current.activetab == 'bank'}"><a ng-href="/#/bank">Bank</a></li>
               <li ng-class="{active: $route.current.activetab == 'main'}"><a href="/#/">Account</a></li>
-              <li ng-class="{active: $route.current.activetab == 'assert'}"><a ng-href="/#/assert">Assert</a></li>
+              <li ng-class="{active: $route.current.activetab == 'assert'}"><a ng-href="/#/id/assert">Assert</a></li>
               <li ng-class="{active: $route.current.activetab == 'sign'}"><a ng-href="/#/sign">Sign</a></li>
-
-              <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Identities <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li ng-repeat="value in identities"><a ng-click="selectIdentity(value)">{{value}}</a></li>
-                  </ul>
-                </li>
+              <li ng-class="{active: $route.current.activetab == 'identities'}"><a ng-href="/#/identities">Identities</a></li>
             </ul>
             <i ng-if="loading" class="fa fa-refresh fa-spin fa-2x"></i>
-
-
-
-
         </div>
       </div>
     </div>
@@ -85,13 +75,14 @@
     <script src="scripts/services/ethereum.js"></script>
     <script src="scripts/services/identity.js"></script>
     <script src="scripts/services/web3.js"></script>
-    <script src="scripts/controllers/assert.js"></script>
+    <script src="scripts/controllers/id.js"></script>
     <script src="scripts/services/cryptowrapper.js"></script>
     <script src="scripts/controllers/bank.js"></script>
     <script src="scripts/services/identitycontract.js"></script>
     <script src="scripts/services/helpers.js"></script>
     <script src="scripts/controllers/sign.js"></script>
     <script src="scripts/services/verify.js"></script>
+    <script src="scripts/controllers/identities.js"></script>
     <!-- endbuild -->
 </body>
 </html>

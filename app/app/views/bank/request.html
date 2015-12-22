@@ -1,4 +1,25 @@
-<div class="container">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    BitBank current account signup
+  </div>
+
+  <div class="panel-body" ng-if="bank.grantedAssertions().length < 2">
+    <p>You can now signup using your digital id.</p>
+    <p>Bitbank will now redirect to your digital id provider and request the following assertions required to create your account.</p>
+    <button class="btn btn-primary btn-sm" ui-sref="id.request({requestee:bankIdentity.email, assertionTypes:[1,2] })">Next</button>
+  </div>
+
+  <div class="panel-body" ng-if="bank.grantedAssertions().length >= 2">
+    <p>Bitbank now has access to the following assertions</p>
+    <ul>
+      <li ng-repeat="assertion in bank.grantedAssertions()"><strong>{{helpers.assertionLabelById(assertion)}}</strong>
+    </ul>
+  </div>
+</div>
+
+
+
+<!-- <div class="container">
   <div class="row">
     <p>About to request access to <b>{{bank.clientIdentity}}</b> details :</p>
     <ul class="list-group">
@@ -11,3 +32,4 @@
 
   </div>
 <div>
+ -->

@@ -89,6 +89,7 @@ angular.module('angularApp')
     };
 
     self.get = function(email){
+      $log.debug("Loading identity ", email);
       var storageHolder = localStorageService.get(email);
       storageHolder.eth = LightWallet.keystore.deserialize(storageHolder.eth,storageHolder.passphrase);
       storageHolder.pgp = pgp.key.readArmored(storageHolder.pgp).keys[0];
