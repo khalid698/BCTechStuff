@@ -17,6 +17,9 @@ angular.module('angularApp')
     self.grants = [];
     self.toAddress = '';
     self.amount = '';
+    // Contract
+    self.identityName = '';
+    self.contractMining = false;
 
     self.generateIdentity = function() {
       var callback = function(identity){
@@ -38,19 +41,15 @@ angular.module('angularApp')
 
     self.createContract = function() {
       var selectedIdentity = $rootScope.selectedIdentity;
-      var callback = function(e, contract){
-        console.log(e, contract);
-        if(e !== null) {
-          Notification.error(e);
-        }
-        if (typeof contract !== 'undefined' && typeof contract.address !== 'undefined') {
+      self.contractMining = true;
+      IdentityContract.createContract($rootScope.selectedIdentity, self.identityName)
+        .then(function(contract){
              console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
              Notification.success('Contract mined!');
              selectedIdentity.contractAddress = contract.address;
              Identity.store(selectedIdentity);
-        }
-      };
-      IdentityContract.createContract($rootScope.selectedIdentity, callback);
+             self.contractMining = false;
+        });
     };
 
     self.deleteContract = function() {
@@ -75,19 +74,12 @@ angular.module('angularApp')
       Ethereum.sendFunds(selectedIdentity, selectedIdentity.eth.getAddresses()[0], toAddress, value);
     };
 
-    // self.loadRequests = function() {
-    //   if($rootScope.selectedIdentity){
-    //     return self.requests = IdentityContract.requests($rootScope.selectedIdentity);
-    //   }
-    // };
-
     self.loadGrants = function() {
       if($rootScope.selectedIdentity){
         self.grants = IdentityContract.grants($rootScope.selectedIdentity);
       }
     };
 
-    // self.loadRequests();
     self.loadGrants();
 
     self.grant = function(request){

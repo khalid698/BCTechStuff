@@ -1,9 +1,13 @@
 contract Identity {
 	
     address owner;
+    string public name; // Human readable identifier, can be 'John Smith' or 'BitBank Inc' depending on the usage.
     
     //constructor
-    function Identity() { owner = msg.sender; }
+    function Identity(string n) { 
+        owner = msg.sender; 
+        name = n;
+    }
     
     function kill() { if (msg.sender == owner) suicide(owner); }
     modifier onlyowner { 
@@ -30,6 +34,20 @@ contract Identity {
     mapping(address => mapping(uint => string)) sessionKeys;
     mapping(address => uint[]) grantedAssertions;
     address[] grantees;
+    
+    function revoke(address requestee) onlyowner {
+        for(var i=0; i < grantedAssertions[requestee].length; i++){
+            delete sessionKeys[requestee][grantedAssertions[requestee][i]];
+        }
+        delete grantedAssertions[requestee];
+        for(i=0; i < grantees.length; i++){
+            if(grantees[i] == requestee){
+                delete grantees[i];
+                grantees.length -= 1;
+                break;
+            }
+        }
+    }
     
 	function grant(address requestee, uint assertionType, string sessionKey) {
 	    for(var r=0; r < grantedAssertions[requestee].length; r++){

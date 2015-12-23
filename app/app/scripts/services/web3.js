@@ -11,7 +11,7 @@
 var Web3 = require('web3');
 
 angular.module('angularApp')
-  .service('Web3', function (Config) {
+  .service('Web3', function ($log, $timeout, Config) {
   var self = this;
   self.gasPrice = 200000;
 
@@ -46,6 +46,28 @@ angular.module('angularApp')
      gas: 3000000,
      gasPrice: self.gasPrice
     }, callback);
-};
+  };
 
+  /**
+  * Returns promise that resolves when the given transaction is mined
+  */
+  self.watchTransaction = function(identity, transaction){
+    $log.debug("Watching transaction", transaction," using from address ", identity.ethAddress());
+    return new Promise(function(resolve, reject){
+      var web3 = self.createWeb3();
+      var complete = false;
+      var resolveWhenDone = function(){
+        var tx = web3.eth.getTransaction(transaction);
+        // $log.debug("Current transaction", tx);
+        if (tx && tx.blockHash){
+          $log.debug("Transaction", tx.hash," mined on block ",tx.blockNumber);
+          resolve(transaction);
+        } else {
+          $timeout(resolveWhenDone, 1000);
+        }
+      }
+      resolveWhenDone();
+    }
+    );
+    };
 });

@@ -49,12 +49,17 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    Identity actions
+    Contract actions
   </div>
   <div class="panel-body">
-      <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button>
-      <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract()">Create contract</button>
-      <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>
+    <div class="progress" ng-if="main.contractMining">
+      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+      </div>
+    </div>
+    <!-- <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button> -->
+    <input type="text" ng-model="main.identityName" ng-if="!selectedIdentity.hasContract() && !main.contractMining" placeholder="Identity name"></input>
+    <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract() && !main.contractMining">Create contract</button>
+    <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>
   </div>
 </div>
 

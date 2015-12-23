@@ -13,6 +13,17 @@ angular.module('angularApp')
 
       self.assertions = {};
       self.changedAssertions = {};
+      self.assertionsPending = false;
+
+      self.request = {
+         requestee: $state.params.requestee,
+         assertionTypes: $state.params.assertionTypes,
+      };
+
+      self.grantRequest = function() {
+        var grantee = Identity.get(self.request.requestee);
+         IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes);
+      };
 
       self.assert = function() {
         $log.info('Storing changed assertions ', self.changedKeys());
@@ -21,7 +32,12 @@ angular.module('angularApp')
             assertionId: assertionId,
             value: self.assertions[assertionId]
           }});
-        IdentityContract.assert($rootScope.selectedIdentity, assertions);
+        self.assertionsPending = true;
+        IdentityContract.assert($rootScope.selectedIdentity, assertions).then(function(){
+          self.assertionsPending = false;
+          $scope.$apply();
+          self.init();
+        });
       };
 
       self.read = function(assertionType) {
@@ -38,12 +54,15 @@ angular.module('angularApp')
 
       self.init = function(){
         $rootScope.assertionTypes.map(self.read);
+        self.changedAssertions = {};
       };
       self.init();
 
       self.changedKeys = function(){
         var keys = [];
-        for(var k in self.changedAssertions) keys.push(k);
+        for(var k in self.changedAssertions){
+          keys.push(k);
+        };
         return keys;
       };
 
