@@ -21,33 +21,44 @@ angular
   .constant('CryptoJS', window.CryptoJS)
   .constant('LightWallet', window.lightwallet)
   .constant('Config', {gethEndpoint: 'http://localhost:8545'})
-  .config(function ($stateProvider){
-     $stateProvider.state('account', {
-        url: '/',
-        templateUrl: 'views/id/overview.html',
-        controller: 'MainCtrl as main'
-      })
-      // Request entrypoint, pass in [requestee, assertionTypes and publicKey]
-      .state('id', {
+  .config(function ($stateProvider, $urlRouterProvider){
+     $urlRouterProvider.otherwise('/id/personal');
+     $stateProvider.state('id', {
         url: '/id',
         abstract: true,
-        template: '<ui-view/>',
+        templateUrl: 'views/id/index.html',
         controller: 'IdentityCtrl as identity'
       })
       .state('id.assert', {
         url: '/assert',
         templateUrl: 'views/id/assert.html',
+        activetab: 'myidentity'
       })
       .state('id.request', {
         url: '/request?requestee&assertionTypes&publicKey',
         templateUrl: 'views/id/request.html',
       })
-
+      .state('id.personal', {
+        url: '/personal',
+        templateUrl: 'views/id/partial/assertions.html',
+        controller: 'MainCtrl as main',
+        activetab: 'myidentity',
+        displayAssertionTypes: [1,2,4,5]
+      })
+      .state('id.contact', {
+        url: '/contact',
+        templateUrl: 'views/id/partial/assertions.html',
+        controller: 'MainCtrl as main',
+        activetab: 'myidentity',
+        displayAssertionTypes: [3,6]
+      })
+      //
       .state('sign', {
         url: '/sign',
         templateUrl: 'views/sign.html',
         controller: 'SignCtrl as sign'
       })
+      //
       .state('bank', {
         url: '/bank',
         abstract: true,
@@ -73,11 +84,11 @@ angular
         templateUrl: 'views/identities.html'
       });
   })
-  .run(function ($log, $rootScope, Identity, IdentityContract, Notification, localStorageService, Helpers){
+  .run(function ($log, $rootScope, $state, Identity, IdentityContract, Notification, localStorageService, Helpers){
     // 'Fixed' identities
     $rootScope.selectedIdentity = undefined; // Main user identity
     $rootScope.bankIdentity = undefined; // Bank ID
-
+    $rootScope.$state = $state;
 
     $rootScope.assertionTypes = IdentityContract.assertionTypes;
     $rootScope.helpers = Helpers;
@@ -85,13 +96,13 @@ angular
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
-      Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
+      // Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
       localStorageService.set('selectedIdentity', identity);
     };
     $rootScope.selectBankIdentity = function(identity){
       $rootScope.bankIdentity = Identity.get(identity);
       $log.info("Selected bank identity : ", $rootScope.bankIdentity);
-      Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
+      // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
       localStorageService.set('bankIdentity', identity);
     };
 

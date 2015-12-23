@@ -19,32 +19,7 @@
     <!-- endbuild -->
   </head>
   <body ng-app="angularApp">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-    <!-- Add your site or application content here -->
-    <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#/">ObjectChain</a>
-          </div>
-
-
-            <ul class="nav navbar-nav">
-              <li ng-class="{active: $route.current.activetab == 'bank'}"><a ng-href="/#/bank">Bank</a></li>
-              <li ng-class="{active: $route.current.activetab == 'main'}"><a href="/#/">Account</a></li>
-              <li ng-class="{active: $route.current.activetab == 'assert'}"><a ng-href="/#/id/assert">Assert</a></li>
-              <li ng-class="{active: $route.current.activetab == 'sign'}"><a ng-href="/#/sign">Sign</a></li>
-              <li ng-class="{active: $route.current.activetab == 'identities'}"><a ng-href="/#/identities">Identities</a></li>
-            </ul>
-            <i ng-if="loading" class="fa fa-refresh fa-spin fa-2x"></i>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <!-- <div ng-view=""></div> -->
+    <div>
       <ui-view/>
     </div>
 

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="styles/id.css">
+<div ng-include src="'/views/id/partial/nav.html'"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2 col-lg-offset-2 leftnav">
+        <div class="row text-right">
+          <img src="/images/max.jpg" />
+        </div>
+        <div class="row link" ng-class="{active: $state.current.name == 'id.personal'}">
+          <a href="" ui-sref="id.personal">Personal Information</a>
+        </div>
+        <div class="row link" ng-class="{active: $state.current.name == 'id.contact'}">
+          <a href="" ui-sref="id.contact">Contact Information</a>
+        </div>
+    </div>
+    <div class="col-lg-6 rightpanel">
+      <ui-view/>
+    </div>
+  </div>
+</div>

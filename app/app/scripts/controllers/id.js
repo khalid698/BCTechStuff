@@ -13,6 +13,7 @@ angular.module('angularApp')
 
       self.assertions = {};
       self.changedAssertions = {};
+      self.editingAssertions = {};
       self.assertionsPending = false;
 
       self.request = {
@@ -44,12 +45,12 @@ angular.module('angularApp')
         $log.info('Reading '+assertionType.label+' from contract');
         IdentityContract.readAssertion($rootScope.selectedIdentity, $rootScope.selectedIdentity.contractAddress, assertionType.id)
           .then(function(decryptedAssertion){
-              Notification.success('Got assertion value : '+decryptedAssertion);
+              // Notification.success('Got assertion value : '+decryptedAssertion);
               self.assertions[assertionType.id] = decryptedAssertion;
               delete self.changedAssertions[assertionType.id];
               $scope.$apply();
           });
-        Notification.primary('Reading '+assertionType.label+' from contract');
+        // Notification.primary('Reading '+assertionType.label+' from contract');
       };
 
       self.init = function(){
@@ -58,6 +59,7 @@ angular.module('angularApp')
       };
       self.init();
 
+      // Changed tracking
       self.changedKeys = function(){
         var keys = [];
         for(var k in self.changedAssertions){
@@ -78,6 +80,35 @@ angular.module('angularApp')
       self.isChanged = function(assertionType){
         return  self.changedKeys().lastIndexOf(''+assertionType.id) > -1;
       };
+
+      // Editign tracking
+      self.edit  = function(assertionType){
+        self.editingAssertions[assertionType.id] = true;
+      };
+
+      self.editingKeys = function(){
+        var keys = [];
+        for(var k in self.editingAssertions){
+          keys.push(k);
+        };
+        return keys;
+      };
+
+      self.isEditing = function(assertionType){
+        return self.editingKeys().lastIndexOf(''+assertionType.id) > -1;
+      };
+
+      self.cancelEdit = function(assertionType){
+        delete self.editingAssertions[assertionType.id];
+        self.read(assertionType);
+      };
+      self.finishEdit = function(assertionType){
+        delete self.editingAssertions[assertionType.id];
+      }
+
+      self.displayAssertionTypes = function(){
+        return $state.current.displayAssertionTypes.map(function(id){return IdentityContract.assertionById(id)})
+      }
 
 
   });

@@ -37,6 +37,10 @@ module.exports = function (grunt) {
         files: ['bower.json'],
         tasks: ['wiredep']
       },
+      less: {
+        files: ['app/styles/*.less'],
+        tasks: ['less']
+      },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all', 'newer:jscs:all'],
@@ -66,7 +70,13 @@ module.exports = function (grunt) {
         ]
       }
     },
-
+    less: {
+      development: {
+        files: {
+          "app/styles/id.css" : "app/styles/id.less"
+        }
+      }
+    },
     // The actual grunt server settings
     connect: {
       options: {
@@ -504,4 +514,6 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.loadNpmTasks('grunt-contrib-less');
 };

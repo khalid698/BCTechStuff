@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <h4>Personal Information</h4>
+</div>
+<div ng-repeat="assertionType in identity.displayAssertionTypes()" class="container-fluid">
+  <div class="row assertion" ng-class="{assertionedit: identity.isEditing(assertionType)}">
+    <!-- Assertion title -->
+    <div class="col-lg-10">
+      <h5>{{assertionType.label}}</h5>
+    </div>
+
+    <!-- Edit button -->
+    <div class="col-lg-2 text-right" ng-if="!identity.isEditing(assertionType)">
+      <a href="" class="edit" ng-click="identity.edit(assertionType)">Edit</a>
+    </div>
+
+    <!-- Display in read mode -->
+    <div class="col-lg-12" ng-if="!identity.isEditing(assertionType)">
+      {{identity.assertions[assertionType.id]}}
+    </div>
+
+    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
+      <input type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+      <i class="fa fa-undo" ng-click="identity.read(assertionType)" ng-if="identity.isChanged(assertionType)"></i>
+    </div>
+
+    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
+      <button class="btn btn-primary btn-xs" ng-click="identity.finishEdit(assertionType)">Save</button>
+      <button class="btn btn-primary btn-xs" ng-click="identity.cancelEdit(assertionType)">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save button if pending changes -->
+<div class="container-fluid" ng-if="identity.hasChangedKeys() && !identity.assertionsPending">
+  <div class="col-lg-12 text-right">
+    <button type="button" class="btn btn-primary btn-sm" ng-click="identity.assert()">Save</button>
+  </div>
+</div>
+
+<!-- Loading bar -->
+<div class="container-fluid" ng-if="identity.assertionsPending">
+  <h5>Please wait while the changes are saved.</h5>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+    </div>
+  </div>
+</div>
