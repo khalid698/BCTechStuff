@@ -17,9 +17,7 @@ angular.module('angularApp')
     self.grants = [];
     self.toAddress = '';
     self.amount = '';
-    // Contract
-    self.identityName = '';
-    self.contractMining = false;
+
 
     self.generateIdentity = function() {
       var callback = function(identity){
@@ -32,42 +30,9 @@ angular.module('angularApp')
       Identity.generateIdentity(self.email, self.passphrase, callback);
     };
 
-    self.balance = function() {
-      if ($rootScope.selectedIdentity ){
-        return Ethereum.getBalance($rootScope.selectedIdentity.eth.getAddresses()[0]).toString(10);
-      }
-      return undefined;
-    };
 
-    self.createContract = function() {
-      var selectedIdentity = $rootScope.selectedIdentity;
-      self.contractMining = true;
-      IdentityContract.createContract($rootScope.selectedIdentity, self.identityName)
-        .then(function(contract){
-             console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
-             Notification.success('Contract mined!');
-             selectedIdentity.contractAddress = contract.address;
-             Identity.store(selectedIdentity);
-             self.contractMining = false;
-        });
-    };
 
-    self.deleteContract = function() {
-      var selectedIdentity = $rootScope.selectedIdentity;
-      var callback = function(e,r){
-          if (!e) {
-          $log.info("Contract deleted, removing from identity");
-            Notification.success("Contract deleted");
-           selectedIdentity.contractAddress = undefined;
-           Identity.store(selectedIdentity);
-           $scope.$apply();
-         } else {
-          $log.warn("Could not delete contract ", e);
-          Notification.error("Could not delete contract: "+e);
-         }
-       };
-      IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
-    };
+
 
     self.send = function (toAddress, value) {
       var selectedIdentity = $rootScope.selectedIdentity;

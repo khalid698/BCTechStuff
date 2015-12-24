@@ -12,28 +12,6 @@
   <button type="submit" class="btn btn-lg btn-success" ng-click="main.generateIdentity()">Generate identity!</button>
 </div>
 
-<!--  PGP Panel -->
-<div class="panel panel-default" ng-if="selectedIdentity">
-  <div class="panel-heading">PGP</div>
-  <div class="panel-body">
-    <ul>
-      <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
-      <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
-    </ul>
-  </div>
-</div>
-
-<!-- Etherem panel -->
-<div class="panel panel-default" ng-if="selectedIdentity">
-  <div class="panel-heading">Ethereum</div>
-  <div class="panel-body">
-    <ul>
-      <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
-      <li>Balance: <strong>{{main.balance()}}</strong></li>
-      <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
-    </ul>
-  </div>
-</div>
 
 <!-- Grants -->
 <div class="panel panel-default" ng-repeat="grant in main.grants" ng-if="selectedIdentity">
@@ -47,23 +25,7 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    Contract actions
-  </div>
-  <div class="panel-body">
-    <div class="progress" ng-if="main.contractMining">
-      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-      </div>
-    </div>
-    <!-- <button class="btn btn-sm btn-danger" ng-click="main.deleteIdentity()" ng-if="!selectedIdentity.hasContract()">Delete identity</button> -->
-    <input type="text" ng-model="main.identityName" ng-if="!selectedIdentity.hasContract() && !main.contractMining" placeholder="Identity name"></input>
-    <button class="btn btn-sm btn-primary" ng-click="main.createContract()" ng-if="!selectedIdentity.hasContract() && !main.contractMining">Create contract</button>
-    <button class="btn btn-sm btn-danger" ng-click="main.deleteContract()" ng-if="selectedIdentity.hasContract()">Delete contract</button>
-  </div>
-</div>
-
-<div class="panel panel-default" ng-if="selectedIdentity">
+<!-- <div class="panel panel-default" ng-if="selectedIdentity">
   <div class="panel-heading">
     Transfer ether
   </div>
@@ -80,4 +42,4 @@
       <button class="btn btn-sm btn-primary" ng-click="main.send(main.toAddress, main.amount)">Send Funds</button>
     </div>
   </div>
-</div>
+</div> -->

@@ -6,7 +6,7 @@
   <div class="panel-body" ng-if="bank.grantedAssertions.length < 2">
     <p>You can now signup using your digital id.</p>
     <p>Bitbank will now redirect to your digital id provider and request the following assertions required to create your account.</p>
-    <button class="btn btn-primary btn-sm" ui-sref="id.request({requestee:bankIdentity.email, assertionTypes:[1,2] })">Next</button>
+    <button class="btn btn-primary btn-sm" ui-sref="id.request({requestee:bankIdentity.email, assertionTypes:[1,2,3,4,5,6], description:'BitBank Inc. current account.' })">Next</button>
   </div>
 
   <div class="panel-body" ng-if="bank.grantedAssertions.length >= 2">

@@ -2,7 +2,7 @@
   <h4>Personal Information</h4>
 </div>
 <div ng-repeat="assertionType in identity.displayAssertionTypes()" class="container-fluid">
-  <div class="row assertion" ng-class="{assertionedit: identity.isEditing(assertionType)}">
+  <div class="row assertion greybottom" ng-class="{assertionedit: identity.isEditing(assertionType)}">
     <!-- Assertion title -->
     <div class="col-lg-10">
       <h5>{{assertionType.label}}</h5>

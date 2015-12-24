@@ -1,0 +1,26 @@
+<div class="container-fluid" >
+  <div class="row section">
+    <div class="col-lg-12">
+      <h4>Grant access to your digital identity.</h4>
+      <h5><b>{{identity.request.description}}</b> has requested access to the following assertions</h5>
+    <div>
+    <div class="col-lg-12">
+      <ul>
+        <li ng-repeat="item in identity.request.assertionTypes">{{helpers.assertionLabelById(item)}}</li>
+      </ul>
+    </div>
+    <div class="col-lg12 text-right" ng-if="!identity.grantsPending">
+      <button class="btn btn-primary btn-sm" ng-click="identity.grantRequest()">Grant</button>
+    </div>
+    <div class="col-lg12 text-right" ng-if="identity.grantsPending">
+      <h5>Please wait while the changes are saved.</h5>
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+

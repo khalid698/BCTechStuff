@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentitiesCtrl', function ($log, $rootScope, Identity, Notification, localStorageService) {
+  .controller('IdentitiesCtrl', function ($log, $rootScope, Identity, Notification) {
     var self = this;
 
     self.selected = undefined;

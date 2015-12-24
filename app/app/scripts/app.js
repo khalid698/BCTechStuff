@@ -27,37 +27,87 @@ angular
         url: '/id',
         abstract: true,
         templateUrl: 'views/id/index.html',
-        controller: 'IdentityCtrl as identity'
+        controller: 'IdentityCtrl as identity',
       })
-      .state('id.assert', {
-        url: '/assert',
-        templateUrl: 'views/id/assert.html',
-        activetab: 'myidentity'
-      })
+      // .state('id.assert', {
+      //   url: '/assert',
+      //   templateUrl: 'views/id/assert.html',
+      //   activetab: 'myidentity'
+      // })
       .state('id.request', {
-        url: '/request?requestee&assertionTypes&publicKey',
+        url: '/request?requestee&assertionTypes&publicKey&description',
         templateUrl: 'views/id/request.html',
+        activetab: 'access',
+        views: {
+          'left': {
+            template: ''
+          },
+          'right': {
+            templateUrl: 'views/id/partial/request.html',
+          }
+        }
       })
+      .state('id.settings', {
+        url: '/settings',
+        //controller: 'MainCtrl as main',
+        activetab: 'settings',
+        displayAssertionTypes: [1,2,4,5],
+        views: {
+          'right': {
+            templateUrl: 'views/id/partial/settings.html',
+          }
+        }
+      })
+
       .state('id.personal', {
         url: '/personal',
-        templateUrl: 'views/id/partial/assertions.html',
-        controller: 'MainCtrl as main',
+        // controller: 'MainCtrl as main',
         activetab: 'myidentity',
-        displayAssertionTypes: [1,2,4,5]
+        displayAssertionTypes: [1,2,4,5],
+        views: {
+          'left': {
+            templateUrl: 'views/id/partial/left_nav_my_identity.html',
+          },
+          'right': {
+            templateUrl: 'views/id/partial/assertions.html',
+          }
+        }
       })
       .state('id.contact', {
         url: '/contact',
         templateUrl: 'views/id/partial/assertions.html',
-        controller: 'MainCtrl as main',
+        // controller: 'MainCtrl as main',
         activetab: 'myidentity',
-        displayAssertionTypes: [3,6]
+        displayAssertionTypes: [3,6],
+        views: {
+          'left': {
+            templateUrl: 'views/id/partial/left_nav_my_identity.html',
+          },
+          'right': {
+            templateUrl: 'views/id/partial/assertions.html',
+          }
+        }
+      })
+      .state('id.access', {
+        url: '/access',
+        templateUrl: 'views/id/partial/assertions.html',
+        // controller: 'MainCtrl as main',
+        activetab: 'access',
+        views: {
+          'left': {
+            templateUrl: 'views/id/partial/left_nav_access.html',
+          },
+          'right': {
+            templateUrl: 'views/id/partial/grantee.html',
+          }
+        }
       })
       //
-      .state('sign', {
-        url: '/sign',
-        templateUrl: 'views/sign.html',
-        controller: 'SignCtrl as sign'
-      })
+      // .state('sign', {
+      //   url: '/sign',
+      //   templateUrl: 'views/sign.html',
+      //   controller: 'SignCtrl as sign'
+      // })
       //
       .state('bank', {
         url: '/bank',

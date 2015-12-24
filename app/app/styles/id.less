@@ -66,11 +66,12 @@ h5 {
   }
 }
 
+.section,
 .assertion {
   /*margin-top: 2px;*/
+  padding-bottom: 20px;
   border-top: 1px solid @background;
-  border-bottom: 1px solid @grey;
-  height: 85px;
+  min-height: 85px;
   a.edit {
     font-size: smaller;
     color: @blue;
@@ -79,6 +80,11 @@ h5 {
     }
   }
 }
+
+.greybottom {
+    border-bottom: 1px solid @grey;
+}
+
 .assertionedit {
   background-color: @lightgrey;
   border-top: 1px solid @grey;

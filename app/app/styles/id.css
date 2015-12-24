@@ -55,18 +55,24 @@ h5 {
 .rightpanel h4 {
   margin-top: 0px;
 }
+.section,
 .assertion {
   /*margin-top: 2px;*/
+  padding-bottom: 20px;
   border-top: 1px solid #fff;
-  border-bottom: 1px solid #dadada;
-  height: 85px;
+  min-height: 85px;
 }
+.section a.edit,
 .assertion a.edit {
   font-size: smaller;
   color: #317090;
 }
+.section a.edit :hover,
 .assertion a.edit :hover {
   cursor: pointer;
+}
+.greybottom {
+  border-bottom: 1px solid #dadada;
 }
 .assertionedit {
   background-color: #f2f2f2;

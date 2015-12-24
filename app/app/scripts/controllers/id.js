@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentityCtrl', function ($log, $rootScope, $scope, $state, IdentityContract, Identity, Notification) {
+  .controller('IdentityCtrl', function ($log, $rootScope, $scope, $state, IdentityContract, Identity, Notification, Ethereum) {
       var self = this;
 
       self.assertions = {};
@@ -16,14 +16,26 @@ angular.module('angularApp')
       self.editingAssertions = {};
       self.assertionsPending = false;
 
+      self.grants = [];
+      self.grantsPending = false;
+
+      // Holds incoming grant request from bank
       self.request = {
          requestee: $state.params.requestee,
          assertionTypes: $state.params.assertionTypes,
+         description: $state.params.description
       };
 
       self.grantRequest = function() {
+        $log.debug("Granting", self.request.assertionTypes,"to", grantee);
         var grantee = Identity.get(self.request.requestee);
-         IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes);
+        self.grantsPending = true;
+        IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description)
+          .then(function(){
+            self.grantsPending = false;
+            $scope.$apply();
+            $state.transitionTo('id.access');
+          });
       };
 
       self.assert = function() {
@@ -56,6 +68,9 @@ angular.module('angularApp')
       self.init = function(){
         $rootScope.assertionTypes.map(self.read);
         self.changedAssertions = {};
+        IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
+          self.grants = grants;
+        });
       };
       self.init();
 
@@ -110,5 +125,46 @@ angular.module('angularApp')
         return $state.current.displayAssertionTypes.map(function(id){return IdentityContract.assertionById(id)})
       }
 
+      // Contract code
+      // self.identityName = '';
+      self.contractMining = false;
+
+      self.deleteContract = function() {
+        var selectedIdentity = $rootScope.selectedIdentity;
+        var callback = function(e,r){
+            if (!e) {
+            $log.info("Contract deleted, removing from identity");
+              Notification.success("Contract deleted");
+             selectedIdentity.contractAddress = undefined;
+             Identity.store(selectedIdentity);
+             $scope.$apply();
+           } else {
+            $log.warn("Could not delete contract ", e);
+            Notification.error("Could not delete contract: "+e);
+           }
+         };
+        $log.debug('Deleting contract');
+        IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
+      };
+
+      self.createContract = function() {
+        var selectedIdentity = $rootScope.selectedIdentity;
+        self.contractMining = true;
+        IdentityContract.createContract($rootScope.selectedIdentity) // self.identityName
+          .then(function(contract){
+               console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
+               Notification.success('Contract mined!');
+               selectedIdentity.contractAddress = contract.address;
+               Identity.store(selectedIdentity);
+               self.contractMining = false;
+          });
+      };
+
+      self.balance = function() {
+        if ($rootScope.selectedIdentity ){
+          return Ethereum.getBalance($rootScope.selectedIdentity.eth.getAddresses()[0]).toString(10);
+        }
+        return undefined;
+      };
 
   });
