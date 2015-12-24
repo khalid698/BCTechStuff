@@ -1,12 +1,10 @@
 contract Identity {
 	
     address owner;
-    string public name; // Human readable identifier, can be 'John Smith' or 'BitBank Inc' depending on the usage.
-    
+
     //constructor
-    function Identity(string n) { 
+    function Identity() { 
         owner = msg.sender; 
-        name = n;
     }
     
     function kill() { if (msg.sender == owner) suicide(owner); }
@@ -30,7 +28,7 @@ contract Identity {
 	    key = sessionKeys[msg.sender][assertionType];
 	    value = assertions[assertionType];
 	}
-	
+	mapping(address => string) granteeDescriptions;
     mapping(address => mapping(uint => string)) sessionKeys;
     mapping(address => uint[]) grantedAssertions;
     address[] grantees;
@@ -49,7 +47,7 @@ contract Identity {
         }
     }
     
-	function grant(address requestee, uint assertionType, string sessionKey) {
+	function grant(address requestee, uint assertionType, string sessionKey, string description) {
 	    for(var r=0; r < grantedAssertions[requestee].length; r++){
 	        if(grantedAssertions[requestee][r] == assertionType){
 	            throw;
@@ -57,6 +55,7 @@ contract Identity {
 	    }
 	    sessionKeys[requestee][assertionType] = sessionKey;
 	    grantedAssertions[requestee].push(assertionType);
+	    granteeDescriptions[requestee] = description;
         for(r=0; r< grantees.length; r++){
 	       if (grantees[r] == requestee){
 	           return;
@@ -69,8 +68,9 @@ contract Identity {
 	    count = grantees.length;
 	}
 	
-	function getGrantee(uint index) returns (address grantee){
+	function getGrantee(uint index) returns (address grantee, string description){
 	    grantee = grantees[index];
+	    description = granteeDescriptions[grantee];
 	}
 	
 	function getGrantedAssertionCount(address requestee) returns (uint count){
@@ -84,6 +84,26 @@ contract Identity {
     function getSessionKey(address requestee, uint assertionType) returns (string encryptedSessionKey){
         encryptedSessionKey = sessionKeys[requestee][assertionType];
     }
+    
+    // Attestations
+    mapping(uint => address[]) attestations;
+    uint[] attestedAssertions;
+    
+    function attest(uint assertionType){
+	    for(var r=0; r < attestations[assertionType].length; r++){
+	        if(attestations[assertionType][r] == msg.sender){
+	            throw;
+	        }
+	    }
+	    attestations[assertionType].push(msg.sender);
+	    for(r=0; r < attestedAssertions.length; r++){
+	        if(attestedAssertions[r] == assertionType){
+	            return;
+	        }
+	    }
+	    attestedAssertions.push(assertionType);
+    }
+
     
 	function () {
         throw;
