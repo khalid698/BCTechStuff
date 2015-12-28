@@ -38,6 +38,15 @@ angular.module('angularApp')
           });
       };
 
+      self.revokeGrant = function(grant){
+        $log.debug("Revoking grant", grant);
+        self.grantsPending = true;
+        var grantee = Identity.getByAddress(grant.requestee);
+        IdentityContract.revoke($rootScope.selectedIdentity, grantee).then(function(){
+          self.grantsPending = false;
+        });
+      };
+
       self.assert = function() {
         $log.info('Storing changed assertions ', self.changedKeys());
         var assertions = self.changedKeys().map(function(assertionId){

@@ -68,10 +68,6 @@ angular.module('angularApp')
       });
     };
 
-    // self.delete = function(identity){
-    //   Ethereum.deleteContract(identity.keyStore, identity.contractAddress, callback);
-    // };
-
     self.store = function(identity){
       var storageHolder = {};
       storageHolder.email = identity.email;
@@ -85,6 +81,16 @@ angular.module('angularApp')
       if ( identities.lastIndexOf(identity.email) === -1 ){
         identities.push(identity.email);
         localStorageService.set('identities', identities);
+      }
+    };
+
+    self.getByAddress = function(address){
+      var identities = self.getIdentities();
+      for(var id in identities){
+        var storedId = self.get(identities[id]);
+        if(storedId.ethAddress() == address){
+          return storedId;
+        }
       }
     };
 
