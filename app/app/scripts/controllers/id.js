@@ -167,4 +167,11 @@ angular.module('angularApp')
         return undefined;
       };
 
+      // Grant display code
+      self.grant = undefined; // Selected grant to display
+      self.selectGrant = function(grant){
+        self.grant = grant;
+      };
+
+
   });

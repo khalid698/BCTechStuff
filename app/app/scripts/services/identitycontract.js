@@ -297,15 +297,15 @@ angular.module('angularApp')
         return Promise.resolve();
       };
       var encryptDescription = function(){
-        return pgp.encryptMessage(identity.pgp, description); // This is encrypted to the granting identity
+        return pgp.encryptMessage([identity.pgp, grantee.pgp], description); // This is encrypted to the granting identity
       };
 
       var encryptWithGranteePublicKey = function(decryptedSessionKey){
           $log.info("Encrypting session key ", decryptedSessionKey," with grantees public key");
           // Encrypt session with grantee public key
           return Promise.all([
-            pgp.encryptMessage(grantee.pgp, decryptedSessionKey),
-            pgp.encryptMessage(grantee.pgp, description)
+            pgp.encryptMessage([identity.pgp, grantee.pgp], decryptedSessionKey),
+            pgp.encryptMessage([identity.pgp, grantee.pgp], description)
             ]);
       };
 
