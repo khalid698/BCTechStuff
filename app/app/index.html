@@ -19,6 +19,13 @@
     <!-- endbuild -->
   </head>
   <body ng-app="angularApp">
+    <div class="container-fluid">
+      <ul class="nav nav-tabs">
+        <li role="presentation"><a href="" ui-sref="id.personal">Portal</a></li>
+        <li role="presentation"><a href="" ui-sref="bank.index">Bank</a></li>
+        <li role="presentation"><a href="" ui-sref="identities">Identities</a></li>
+      </ul>
+    </div>
     <div>
       <ui-view/>
     </div>
@@ -58,6 +65,7 @@
     <script src="scripts/controllers/sign.js"></script>
     <script src="scripts/services/verify.js"></script>
     <script src="scripts/controllers/identities.js"></script>
+    <script src="scripts/controllers/attestation.js"></script>
     <!-- endbuild -->
 </body>
 </html>

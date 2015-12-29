@@ -1,0 +1,24 @@
+<div class="container-fluid" ng-if="identity.grant && !identity.grantsPending">
+  <h4>{{identity.grant.description}}</h4>
+  <div class="row">
+    <div class="col-lg-6">
+      <h5>Accessable Information</h5>
+    </div>
+    <div class="col-lg-6 text-right">
+      <a class="btn btn-sm btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke</a>
+    </div>
+  </div>
+  <div class="row assertion greybottom" ng-repeat="assertion in identity.grant.assertions">
+    <h5>{{helpers.assertionLabelById(assertion)}}</h5>
+    <p>{{identity.assertions[assertion]}}</p>
+  </div>
+</div>
+
+<!-- Loading bar -->
+<div class="container-fluid" ng-if="identity.grantsPending">
+  <h5>Please wait while the changes are saved.</h5>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+    </div>
+  </div>
+</div>

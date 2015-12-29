@@ -120,24 +120,29 @@ angular
         url: '',
         templateUrl: 'views/bank/index.html'
       })
-      // .state('bank.identities', {
-      //   url: '/identities',
-      //   templateUrl: 'views/bank/identities.html'
-      // })
       .state('bank.request', {
         url: '/request',
         templateUrl: 'views/bank/request.html'
       })
+      // Identity management page
       .state('identities', {
         url: '/identities',
         controller: 'IdentitiesCtrl as identities',
         templateUrl: 'views/identities.html'
-      });
+      })
+      .state('attest', {
+        url: '/attest',
+        controller: 'AttestationCtrl as attestation',
+        templateUrl: 'views/attestation/index.html'
+      })
+      ;
   })
   .run(function ($log, $rootScope, $state, Identity, IdentityContract, Notification, localStorageService, Helpers){
     // 'Fixed' identities
     $rootScope.selectedIdentity = undefined; // Main user identity
     $rootScope.bankIdentity = undefined; // Bank ID
+    $rootScope.attestationIdentity = undefined;
+
     $rootScope.$state = $state;
 
     $rootScope.assertionTypes = IdentityContract.assertionTypes;
@@ -156,17 +161,29 @@ angular
       localStorageService.set('bankIdentity', identity);
     };
 
+    $rootScope.selectAttestationIdentity = function(identity){
+      $rootScope.attestationIdentity = Identity.get(identity);
+      $log.info("Selected attestationIdentity identity : ", $rootScope.attestationIdentity);
+      // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
+      localStorageService.set('attestationIdentity', identity);
+    };
+
+
 
     $rootScope.loading = false;
     // Load stored identities
     var storedIdentity = localStorageService.get('selectedIdentity');
     if(storedIdentity){
       $rootScope.selectIdentity(storedIdentity);
-    }
+    };
     storedIdentity = localStorageService.get('bankIdentity');
     if(storedIdentity){
       $rootScope.selectBankIdentity(storedIdentity);
-    }
+    };
+    storedIdentity = localStorageService.get('attestationIdentity');
+    if(storedIdentity){
+      $rootScope.selectAttestationIdentity(storedIdentity);
+    };
 
   })
 

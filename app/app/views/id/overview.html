@@ -1,17 +1,3 @@
-<div class="jumbotron" ng-if="!selectedIdentity">
-  <h1>Welcome to ObjectChain</h1>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input class="form-control" id="email" type="text" ng-model="main.email"/>
-  </div>
-  <div class="form-group">
-    <label for="passphrase">Passphrase</label>
-    <input class="form-control" id="passphrase" type="text" ng-model="main.passphrase"/>
-  </div>
-
-  <button type="submit" class="btn btn-lg btn-success" ng-click="main.generateIdentity()">Generate identity!</button>
-</div>
-
 
 <!-- Grants -->
 <div class="panel panel-default" ng-repeat="grant in main.grants" ng-if="selectedIdentity">
