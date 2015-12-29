@@ -107,7 +107,7 @@ angular
           }
         }
       })
-      
+
       .state('bank', {
         url: '/bank',
         abstract: true,
@@ -121,7 +121,7 @@ angular
       })
       .state('bank.request', {
         url: '/request',
-        templateUrl: 'views/bank/request.html'
+        templateUrl: 'views/bank/partial/request.html'
       })
       // Identity management page
       .state('identities', {
