@@ -97,13 +97,17 @@ angular
           }
         }
       })
-      //
-      // .state('sign', {
-      //   url: '/sign',
-      //   templateUrl: 'views/sign.html',
-      //   controller: 'SignCtrl as sign'
-      // })
-      //
+
+      .state('id.sign', {
+        url: '/sign',
+        activetab: 'sign',
+        views: {
+          'right': {
+            templateUrl: 'views/id/partial/sign.html',
+          }
+        }
+      })
+      
       .state('bank', {
         url: '/bank',
         abstract: true,
