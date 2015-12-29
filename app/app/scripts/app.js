@@ -29,11 +29,6 @@ angular
         templateUrl: 'views/id/index.html',
         controller: 'IdentityCtrl as identity',
       })
-      // .state('id.assert', {
-      //   url: '/assert',
-      //   templateUrl: 'views/id/assert.html',
-      //   activetab: 'myidentity'
-      // })
       .state('id.request', {
         url: '/request?requestee&assertionTypes&publicKey&description',
         templateUrl: 'views/id/request.html',
@@ -169,8 +164,31 @@ angular
     };
 
 
+    $rootScope.progressbar = {
+      steps: 0,
+      progress: 0,
+      title: ''
+    };
+    $rootScope.progressbar.init = function(steps, title){
+      $rootScope.progressbar.steps = steps;
+      $rootScope.progressbar.progress = 0;
+      $rootScope.progressbar.title = title;
+    };
 
-    $rootScope.loading = false;
+    $rootScope.progressbar.active = function(){
+      return $rootScope.progressbar.steps > 0 && $rootScope.progressbar.progress < $rootScope.progressbar.steps;
+    };
+    $rootScope.progressbar.percentage = function(){
+        if ($rootScope.progressbar.progress > 0) {
+          return Math.round(($rootScope.progressbar.progress/$rootScope.progressbar.steps)*100);
+        } else {
+          return 0;
+        }
+    };
+    $rootScope.progressbar.bump = function(){
+      $rootScope.progressbar.progress++;
+    };
+
     // Load stored identities
     var storedIdentity = localStorageService.get('selectedIdentity');
     if(storedIdentity){

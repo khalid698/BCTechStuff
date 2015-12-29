@@ -1,0 +1,21 @@
+<!--
+Loading bar, takes a scope containing
+- title
+- steps
+- progress ( where progress == steps is 100%)
+-->
+  <div class="row" ng-if="progressbar.active()">
+    <div class="col-lg-6 col-lg-offset-3">
+    <h5>{{progressbar.title}}</h5>
+    <div class="progress">
+      <div class="progress-bar"
+            role="progressbar"
+            aria-valuenow="{{progressbar.percentage()}}"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style="width: {{progressbar.percentage()}}%;">
+            {{progressbar.percentage()}}%
+      </div>
+    </div>
+  </div>
+</div>

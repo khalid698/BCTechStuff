@@ -54,10 +54,11 @@ angular.module('angularApp')
             assertionId: assertionId,
             value: self.assertions[assertionId]
           }});
-        self.assertionsPending = true;
-        IdentityContract.assert($rootScope.selectedIdentity, assertions).then(function(){
-          self.assertionsPending = false;
-          $scope.$apply();
+        //self.assertionsPending = true;
+        $rootScope.progressbar.init(assertions.length,'Storing assertions');
+        IdentityContract.assert($rootScope.selectedIdentity, assertions, $rootScope.progressbar.bump).then(function(){
+          //self.assertionsPending = false;
+          // $scope.$apply();
           self.init();
         });
       };

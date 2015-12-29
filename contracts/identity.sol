@@ -103,7 +103,22 @@ contract Identity {
 	    }
 	    attestedAssertions.push(assertionType);
     }
-
+    
+    function getAttestedAssertionCount() returns ( uint count){
+        count = attestedAssertions.length;
+    }
+    
+    function getAttestedAssertion(uint index) returns (uint assertionType) {
+        assertionType = attestedAssertions[index];
+    }
+    
+    function getAttesteeCount(uint assertionType) returns (uint count){
+        count = attestations[assertionType].length;
+    }
+    
+    function getAttestee(uint assertionType, uint index) returns (address attestee) {
+        attestee = attestations[assertionType][index];
+    }
     
 	function () {
         throw;
