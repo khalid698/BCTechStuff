@@ -107,13 +107,13 @@ angular
       .state('bank', {
         url: '/bank',
         abstract: true,
-        template: '<ui-view/>',
+        templateUrl: 'views/bank/index.html',
         controller: 'BankCtrl as bank'
       })
       // ALSO url '/home', overriding its parent's activation
-      .state('bank.index', {
+      .state('bank.welcome', {
         url: '',
-        templateUrl: 'views/bank/index.html'
+        templateUrl: 'views/bank/partial/welcome.html'
       })
       .state('bank.request', {
         url: '/request',

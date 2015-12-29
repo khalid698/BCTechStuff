@@ -94,9 +94,19 @@ angular.module('angularApp')
         });
     };
 
-    self.deleteContract = function(identity, callback){
+    self.deleteContract = function(identity){
       $log.debug('Deleting contract for identity',identity);
-      self.createIdentityClient(identity, identity.contractAddress).kill(self.web3Options, callback);
+      var p = Promise.defer();
+      var web3 = Web3.createSignedWeb3(identity);
+      var batch = web3.createBatch();
+      var identityClient = self.createIdentityClient(identity, identity.contractAddress)
+      var request = identityClient.kill.request(self.web3OptionsWithFrom(identity), self.web3PromiseResolver(p));
+      request.format = false;
+      batch.add(request);
+      batch.execute()
+      return p.promise.then(function(tx){
+        return Web3.watchTransaction(identity, tx);
+      });
     };
 
     /**
@@ -279,7 +289,7 @@ angular.module('angularApp')
       }));
     };
 
-    self.grant = function(identity, grantee, assertionTypes, description){
+    self.grant = function(identity, grantee, assertionTypes, description, callback){
       var web3 = Web3.createSignedWeb3(identity);
       var batch = web3.createBatch();
 
@@ -345,7 +355,7 @@ angular.module('angularApp')
         return Promise.all(grantPromises).then(function(t){
           $log.info("transactions",t);
           return Promise.all(t.map(function(tx){
-            return Web3.watchTransaction(identity, tx);
+            return Web3.watchTransaction(identity, tx).then(function(){callback()});
           }));
         });
       }).then(function(){
@@ -391,5 +401,32 @@ angular.module('angularApp')
       var p = Promise.defer();
       self.createIdentityClient(identity, identity.contractAddress).revoke(grantee.ethAddress(), self.web3Options, self.web3PromiseResolver(p));
       return p.promise;
-    }
-  });
+    };
+
+    /**
+    * Returns
+    * {
+    *    <assertionId> : [<address>, ...]
+    */
+    self.attestations = function(identity){
+      var contract = self.createIdentityClient(identity, identity.contractAddress);
+      var attestedAssertionCount = contract.getAttestedAssertionCount.call();
+      var result = {};
+
+      $log.debug("Got",attestedAssertionCount.toNumber(),"attested assertions");
+      for(var i=0; i < attestedAssertionCount; i++){
+        var attestedAssertionType = contract.getAttestedAssertion.call(i);
+        var attesteeCount = contract.getAttesteeCount.call(attestedAssertionType);
+        //$log.debug("Got",attesteeCount.toNumber(),"attestees for assertiontype",attestedAssertionType.toNumber() );
+        result[attestedAssertionType.toNumber()] = [];
+        for(var j=0; j < attesteeCount; j++){
+          var attestee = contract.getAttestee.call(attestedAssertionType, j);
+          //$log.debug("Got attestee",attestee," for assertiontype", attestedAssertionType.toNumber());
+          result[attestedAssertionType.toNumber()].push(attestee);
+        }
+      }
+      $log.debug("Returning attestations", result);
+      return result;
+    };
+
+});

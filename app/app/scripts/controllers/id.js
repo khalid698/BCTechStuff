@@ -17,7 +17,8 @@ angular.module('angularApp')
       self.assertionsPending = false;
 
       self.grants = [];
-      self.grantsPending = false;
+
+      self.attestations = [];
 
       // Holds incoming grant request from bank
       self.request = {
@@ -29,10 +30,9 @@ angular.module('angularApp')
       self.grantRequest = function() {
         $log.debug("Granting", self.request.assertionTypes,"to", grantee);
         var grantee = Identity.get(self.request.requestee);
-        self.grantsPending = true;
-        IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description)
+        $rootScope.progressbar.init(self.request.assertionTypes.length,'Granting access');
+        IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description, $rootScope.progressbar.bump)
           .then(function(){
-            self.grantsPending = false;
             $state.transitionTo('id.access');
             $scope.$apply();
           });
@@ -81,6 +81,7 @@ angular.module('angularApp')
         IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
           self.grants = grants;
         });
+        self.attestations = IdentityContract.attestations($rootScope.selectedIdentity);
       };
       self.init();
 
@@ -141,20 +142,14 @@ angular.module('angularApp')
 
       self.deleteContract = function() {
         var selectedIdentity = $rootScope.selectedIdentity;
-        var callback = function(e,r){
-            if (!e) {
-            $log.info("Contract deleted, removing from identity");
-              Notification.success("Contract deleted");
-             selectedIdentity.contractAddress = undefined;
-             Identity.store(selectedIdentity);
-             $scope.$apply();
-           } else {
-            $log.warn("Could not delete contract ", e);
-            Notification.error("Could not delete contract: "+e);
-           }
-         };
         $log.debug('Deleting contract');
-        IdentityContract.deleteContract($rootScope.selectedIdentity, callback);
+        IdentityContract.deleteContract($rootScope.selectedIdentity).then(function(){
+            $log.info("Contract deleted, removing from identity");
+            Notification.success("Contract deleted");
+            selectedIdentity.contractAddress = undefined;
+            Identity.store(selectedIdentity);
+            $scope.$apply();
+        });
       };
 
       self.createContract = function() {
