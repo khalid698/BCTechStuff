@@ -74,6 +74,15 @@ h5 {
 .greybottom {
   border-bottom: 1px solid #dadada;
 }
+.green {
+  background-color: #E8FFE8;
+  padding: 10px;
+  border: 1px solid #f2f2f2;
+}
+.title {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
 .assertionedit {
   background-color: #f2f2f2;
   border-top: 1px solid #dadada;

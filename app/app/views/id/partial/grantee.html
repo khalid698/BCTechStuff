@@ -1,13 +1,13 @@
 <div class="container-fluid" ng-if="identity.grant && !identity.grantsPending">
-  <h4>{{identity.grant.description}}</h4>
-  <p>ID: {{identity.grant.requestee}}</p>
-  <div class="row">
-    <div class="col-lg-6">
-      <h5>Accessable Information</h5>
-    </div>
-    <div class="col-lg-6 text-right">
-      <a class="btn btn-sm btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke</a>
-    </div>
+  <div class="row green">
+    <h4>{{identity.grant.description}}</h4>
+    <p>ID: {{identity.grant.requestee}}</p>
+    <a class="btn btn-sm btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke Access</a>
+    <a class="btn btn-sm btn-primary">Whois?</a>
+  </div>
+  
+  <div class="row title greybottom">
+    <h4>Has Access to:</h4>
   </div>
   <div class="row assertion greybottom" ng-repeat="assertion in identity.grant.assertions">
     <h5>{{helpers.assertionLabelById(assertion)}}</h5>

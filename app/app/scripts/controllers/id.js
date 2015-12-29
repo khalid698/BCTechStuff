@@ -33,8 +33,8 @@ angular.module('angularApp')
         IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description)
           .then(function(){
             self.grantsPending = false;
-            $scope.$apply();
             $state.transitionTo('id.access');
+            $scope.$apply();
           });
       };
 
