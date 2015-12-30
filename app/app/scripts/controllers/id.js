@@ -27,6 +27,24 @@ angular.module('angularApp')
          description: $state.params.description
       };
 
+      self.login = function(email, password){
+        $log.debug('Logging in',email);
+        var identity = Identity.get(email);
+        if(!identity){
+          $log.debug('Unknown identity');
+          $scope.invalidCredentials = true;
+        } else if (identity && identity.passphrase == password){
+          $scope.invalidCredentials = false;
+          $rootScope.selectIdentity(email);
+          $log.debug('Password correct, redirect to id.personal');
+          self.init();
+          $state.go('id.personal');
+        } else {
+          $log.debug('Password', password,'incorrect, expected', identity.passphrase);
+          $scope.invalidCredentials = true;
+        }
+      };
+
       self.grantRequest = function() {
         $log.debug("Granting", self.request.assertionTypes,"to", grantee);
         var grantee = Identity.get(self.request.requestee);
@@ -76,12 +94,16 @@ angular.module('angularApp')
       };
 
       self.init = function(){
-        $rootScope.assertionTypes.map(self.read);
+        if($rootScope.selectedIdentity){
+          $rootScope.assertionTypes.map(self.read);
+          IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
+            self.grants = grants;
+          });
+          self.attestations = IdentityContract.attestations($rootScope.selectedIdentity);
+        } else {
+          $state.go('id.login');
+        }
         self.changedAssertions = {};
-        IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
-          self.grants = grants;
-        });
-        self.attestations = IdentityContract.attestations($rootScope.selectedIdentity);
       };
       self.init();
 

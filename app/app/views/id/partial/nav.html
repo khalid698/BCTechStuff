@@ -5,6 +5,7 @@
         <li ng-class="{active: $state.current.activetab == 'access'}"><a href="" ui-sref="id.access">Access</a></li>
         <li ng-class="{active: $state.current.activetab == 'sign'}"><a href="" ui-sref="id.sign">Sign</a></li>
         <li ng-class="{active: $state.current.activetab == 'settings'}"><a href="" ui-sref="id.settings">Settings</a></li>
-    </ul>
+        <li ng-if="selectedIdentity"><a href="" ng-click="logout()">Log out</a></li>
+      </ul>
   </div>
 </nav>

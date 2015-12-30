@@ -27,7 +27,7 @@ angular
         url: '/id',
         abstract: true,
         templateUrl: 'views/id/index.html',
-        controller: 'IdentityCtrl as identity',
+        controller: 'IdentityCtrl as identity'
       })
       .state('id.request', {
         url: '/request?requestee&assertionTypes&publicKey&description',
@@ -107,6 +107,14 @@ angular
           }
         }
       })
+      .state('id.login', {
+        url: '/login',
+        views: {
+          'right': {
+            templateUrl: 'views/id/partial/login.html',
+          }
+        }
+      })
 
       .state('bank', {
         url: '/bank',
@@ -138,7 +146,7 @@ angular
   })
   .run(function ($log, $rootScope, $state, Identity, IdentityContract, Notification, localStorageService, Helpers){
     // 'Fixed' identities
-    $rootScope.selectedIdentity = undefined; // Main user identity
+    $rootScope.selectedIdentity = undefined; // Main user identity, aka, logged in user
     $rootScope.bankIdentity = undefined; // Bank ID
     $rootScope.attestationIdentity = undefined;
 
@@ -147,27 +155,34 @@ angular
     $rootScope.assertionTypes = IdentityContract.assertionTypes;
     $rootScope.helpers = Helpers;
 
+    // Identity management, login, logout
     $rootScope.selectIdentity = function(identity){
       $rootScope.selectedIdentity = Identity.get(identity);
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
       // Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
       localStorageService.set('selectedIdentity', identity);
-    };
+    }
     $rootScope.selectBankIdentity = function(identity){
       $rootScope.bankIdentity = Identity.get(identity);
       $log.info("Selected bank identity : ", $rootScope.bankIdentity);
       // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
       localStorageService.set('bankIdentity', identity);
-    };
+    }
 
     $rootScope.selectAttestationIdentity = function(identity){
       $rootScope.attestationIdentity = Identity.get(identity);
       $log.info("Selected attestationIdentity identity : ", $rootScope.attestationIdentity);
       // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
       localStorageService.set('attestationIdentity', identity);
-    };
+    }
+    $rootScope.logout = function(){
+      $log.info("Logging out");
+      localStorageService.set('selectedIdentity', undefined);
+      $rootScope.selectedIdentity = undefined;
+      $state.go('id.login');
+    }
 
-
+    // Progress bar, global object...
     $rootScope.progressbar = {
       steps: 0,
       progress: 0,
@@ -206,6 +221,12 @@ angular
     if(storedIdentity){
       $rootScope.selectAttestationIdentity(storedIdentity);
     }
+
+    // Post startup, check if identity present, redirect to login if not
+    if(!$rootScope.selectedIdentity){
+      $log.debug('Not logged in, redirecting to login page');
+      // $state.go("id.login");
+    };
 
   })
 
