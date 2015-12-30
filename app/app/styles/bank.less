@@ -5,16 +5,64 @@
 @green: #E8FFE8;
 @success: #409A3D;
 @background: #fff;
+@acroblue: #139EEB;
+@acroblue2: #0570AB;
+
 
 .header {
-  background: @lightgrey;
+  background-image: url("/images/hero.png");
+  background-position: -300px -100px;
   padding-left: 100px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding-top: 100px;
+  padding-bottom: 100px;
   margin-bottom: 30px;
 }
 
 .icon-large {
   font-size: 1.5em;
   color: @black;
+}
+
+.acro {
+  color: @acroblue;
+}
+
+.btn-primary.raised {
+  background: @acroblue;
+  box-shadow: 0 3px 0 0 @acroblue2;
+}
+
+.btn-primary.raised:active, .btn-primary.raised.active {
+  background: @acroblue;
+  box-shadow: none;
+  margin-bottom: -3px;
+  margin-top: 3px;
+}
+
+.green {
+  background-color: @green;
+  padding: 10px;
+  border: 1px solid @lightgrey;
+}
+
+.breakout {
+  color: white;
+  background-image: url("/images/beach.png");
+  background-width: 100%;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 60px;
+  padding-bottom: 180px;
+  margin-top: 20px;
+}
+
+.logo {
+  padding-top: 20px;
+  display: block;
+}
+
+.nav-row {
+  padding-top: 10px;
 }
