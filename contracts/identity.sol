@@ -24,6 +24,12 @@ contract Identity {
 	    sessionKeys[owner][assertionType] = key;
 	}
 	
+	function assertAll(uint[] assertionTypes, string keys, string  values){
+        // for(var i=0; i < assertionTypes.length; i++){
+        //     assert(assertionTypes[i], keys[i], values[i]);
+        // }
+	}
+	
 	function get(uint assertionType) returns (string  key, string value){
 	    key = sessionKeys[msg.sender][assertionType];
 	    value = assertions[assertionType];
@@ -89,19 +95,32 @@ contract Identity {
     mapping(uint => address[]) attestations;
     uint[] attestedAssertions;
     
-    function attest(uint assertionType){
-	    for(var r=0; r < attestations[assertionType].length; r++){
-	        if(attestations[assertionType][r] == msg.sender){
-	            throw;
+    function attest(uint[] assertionTypes){
+	    for(var r=0; r < assertionTypes.length; r++){
+	        // process individual assertion
+	        var assertionType = assertionTypes[r];
+	        var addToAttestedAssertions = true;
+	        var addToAttestations = true;
+	        
+	        // Check if this is already attested by msg.sender
+	        for(var s=0; s < attestations[assertionType].length; r++){
+	          if(attestations[assertionType][s] == msg.sender){
+	            addToAttestations = false;
+	          }
 	        }
+	        
+    	    for(s=0; r < attestedAssertions.length; r++){
+    	        if(attestedAssertions[r] == assertionType){
+    	            addToAttestedAssertions = false;
+    	        }
+    	    }
+            if ( addToAttestedAssertions ){
+	            attestedAssertions.push(assertionType);
+            }
+            if ( addToAttestations ){
+                attestations[assertionType].push(msg.sender);
+            }
 	    }
-	    attestations[assertionType].push(msg.sender);
-	    for(r=0; r < attestedAssertions.length; r++){
-	        if(attestedAssertions[r] == assertionType){
-	            return;
-	        }
-	    }
-	    attestedAssertions.push(assertionType);
     }
     
     function getAttestedAssertionCount() returns ( uint count){

@@ -182,7 +182,7 @@ angular.module('angularApp')
       self.message = '';
       self.signedMessage = '';
       self.publicKey = '';
-      
+
       self.signMessage = function(){
         var callback = function(data){
             //do stuff

@@ -197,15 +197,15 @@ angular
     var storedIdentity = localStorageService.get('selectedIdentity');
     if(storedIdentity){
       $rootScope.selectIdentity(storedIdentity);
-    };
+    }
     storedIdentity = localStorageService.get('bankIdentity');
     if(storedIdentity){
       $rootScope.selectBankIdentity(storedIdentity);
-    };
+    }
     storedIdentity = localStorageService.get('attestationIdentity');
     if(storedIdentity){
       $rootScope.selectAttestationIdentity(storedIdentity);
-    };
+    }
 
   })
 
