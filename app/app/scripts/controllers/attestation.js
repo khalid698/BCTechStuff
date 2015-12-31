@@ -19,8 +19,11 @@ angular.module('angularApp')
       self.pendingAttestation = true;
       $rootScope.progressbar.init(1,'Storing attestations');
       IdentityContract
-        .attest($rootScope.attestationIdentity, $rootScope.selectedIdentity, self.assertionTypes, $rootScope.progressbar.bump)
-        .then($rootScope.progressbar.bump);
+        .attest($rootScope.attestationIdentity, $rootScope.selectedIdentity, self.assertionTypes)
+        .then($rootScope.progressbar.bump)
+        .then(function(){
+          $scope.$apply();
+        })
     };
 
 

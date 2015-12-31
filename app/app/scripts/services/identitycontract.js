@@ -367,7 +367,7 @@ angular.module('angularApp')
     /**
     *
     */
-    self.attest = function(identity, target, assertionTypes, callback){
+    self.attest = function(identity, target, assertionTypes){
       var web3 = Web3.createSignedWeb3(identity);
       var batch = web3.createBatch();
 
@@ -379,6 +379,7 @@ angular.module('angularApp')
       return p.promise.then(function(tx){
         return Web3.watchTransaction(identity, tx).then(function(){
           $log.debug("Attestation complete");
+          return true;
         })
       });
 

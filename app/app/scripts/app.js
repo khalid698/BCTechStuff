@@ -206,6 +206,7 @@ angular
     };
     $rootScope.progressbar.bump = function(){
       $rootScope.progressbar.progress++;
+      $log.debug('Progressbar now at', $rootScope.progressbar.progress,'of',$rootScope.progressbar.steps);
     };
 
     // Load stored identities
