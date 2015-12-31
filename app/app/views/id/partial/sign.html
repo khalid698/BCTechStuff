@@ -1,3 +1,4 @@
+<div class="container-fluid" >
 
 <div class="row">
   <div class="col-lg-12">
@@ -18,22 +19,22 @@
 </div>
 
 <div class="row assertion greybottom">
-  <div class="col-lg-6 pull-right">
+  <div class="col-lg-12">
   <button type="button" class="btn btn-primary" ng-click="identity.signMessage()">
-    <span class="glyphicon glyphicon-pencil"></span> Sign Message</button>
+    <i class="fa fa-pencil"></i>  Sign Message</button>
 
-  <button type="button" class="btn btn-primary" ng-click="identity.verifyMessage()">Verify Message</button>
+  <button type="button" class="btn btn-primary" ng-click="identity.verifyMessage()">
+    <i class="fa fa-check-circle"></i>  Verify Message</button>
   </div>
 </div>
 
-<div class="row">
+<div class="row top">
   <div class="col-lg-12">
   <div class="form-group">
     <h4>Public Key</h4>
     <textarea class="form-control" rows="5" id="publicKey" type="text-area" ng-model="identity.publicKey"></textarea>
   </div>
   </div>
-
-
-
  </div>
+
+</div>
