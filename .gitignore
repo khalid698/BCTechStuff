@@ -10,3 +10,5 @@ app/dist
 app/.tmp
 app/.sass-cache
 app/bower_components
+app/app/styles/bank.css
+app/app/styles/id.css
