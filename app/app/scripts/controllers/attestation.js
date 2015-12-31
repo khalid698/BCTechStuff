@@ -13,7 +13,6 @@ angular.module('angularApp')
     var self = this;
 
     self.assertionTypes = [1,2,3,4,5,6].map(function(i){ return IdentityContract.assertionById(i);});
-    self.selectedIdentity = $rootScope.selectedIdentity;
 
     $scope.selection = [];
     $scope.toggleSelection = function toggleSelection(assertionType) {
