@@ -46,7 +46,6 @@ angular
         url: '/settings',
         //controller: 'MainCtrl as main',
         activetab: 'settings',
-        displayAssertionTypes: [1,2,4,5],
         views: {
           'right': {
             templateUrl: 'views/id/partial/settings.html',
@@ -58,7 +57,7 @@ angular
         url: '/personal',
         // controller: 'MainCtrl as main',
         activetab: 'myidentity',
-        displayAssertionTypes: [1,2,4,5],
+        displayAssertionTypes: [1,2,4,5,7],
         views: {
           'left': {
             templateUrl: 'views/id/partial/left_nav_my_identity.html',

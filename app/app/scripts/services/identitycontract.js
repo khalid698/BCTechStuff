@@ -39,7 +39,8 @@ angular.module('angularApp')
       {id:3, label: 'Telephone number', format: 'text'},
       {id:4, label: 'Passport number', format: 'text'},
       {id:5, label: 'Driver licence number', format: 'text'},
-      {id:6, label: 'Address', format: 'multiline'}
+      {id:6, label: 'Address', format: 'multiline'},
+      {id:7, label: 'Photo', format: 'text'} //TODO : Url type ?
     ];
 
     /**

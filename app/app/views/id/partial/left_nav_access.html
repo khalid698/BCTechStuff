@@ -1,10 +1,4 @@
-<div class="row text-right">
-  <img src="/images/max.jpg" />
-</div>
-
-<div class="row link" ng-if="identity.grants.length > 0">
-  <p>Incoming Access:</p>
-</div>
+<div ng-include src="'views/id/partial/id_image.html'"></div>
 
 <div class="row link" ng-if="identity.grants.length == 0">
   <p>You haven't granted access to anyone!</p>
