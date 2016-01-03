@@ -103,22 +103,22 @@ contract Identity {
 	        var addToAttestations = true;
 	        
 	        // Check if this is already attested by msg.sender
-	        for(var s=0; s < attestations[assertionType].length; r++){
+	        for(var s=0; s < attestations[assertionType].length; s++){
 	          if(attestations[assertionType][s] == msg.sender){
 	            addToAttestations = false;
 	          }
 	        }
-	        
-    	    for(s=0; r < attestedAssertions.length; r++){
-    	        if(attestedAssertions[r] == assertionType){
+            if ( addToAttestations ){
+                attestations[assertionType].push(msg.sender);
+            }
+            // Check if this assertion is already attested	        
+    	    for(s=0; s < attestedAssertions.length; s++){
+    	        if(attestedAssertions[s] == assertionType){
     	            addToAttestedAssertions = false;
     	        }
     	    }
             if ( addToAttestedAssertions ){
 	            attestedAssertions.push(assertionType);
-            }
-            if ( addToAttestations ){
-                attestations[assertionType].push(msg.sender);
             }
 	    }
     }

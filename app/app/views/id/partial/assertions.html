@@ -34,7 +34,7 @@
 </div>
 
 <!-- Save button if pending changes -->
-<div class="container-fluid" ng-if="identity.hasChangedKeys() && !identity.assertionsPending">
+<div class="container-fluid" ng-if="identity.hasChangedKeys() && !progressbar.active()">
   <div class="col-lg-12 text-right">
     <button type="button" class="btn btn-primary btn-sm" ng-click="identity.assert()">Save</button>
   </div>
