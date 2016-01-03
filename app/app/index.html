@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css" />
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/ngprogress/ngProgress.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="angularApp">
+    <div class="container-fluid">
+      <ul class="nav nav-tabs">
+        <li role="presentation"><a href="" ui-sref="id.personal">Portal</a></li>
+        <li role="presentation"><a href="" ui-sref="bank.welcome">Bank</a></li>
+        <li role="presentation"><a href="" ui-sref="identities">Identities</a></li>
+        <li role="presentation"><a href="" ui-sref="attest">Attestation</a></li>
+      </ul>
+    </div>
+    <div>
+      <ui-view/>
+    </div>
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bignumber.js/bignumber.js"></script>
+    <script src="bower_components/crypto-js/crypto-js.js"></script>
+    <script src="bower_components/crypto-js/aes.js"></script>
+    <script src="bower_components/crypto-js/enc-base64.js"></script>
+    <script src="bower_components/web3/dist/web3.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="bower_components/openpgp/dist/openpgp.js"></script>
+    <script src="bower_components/eth-lightwallet/dist/lightwallet.min.js"></script>
+    <script src="bower_components/hooked-web3-provider/build/hooked-web3-provider.js"></script>
+    <script src="bower_components/ngprogress/build/ngProgress.js"></script>
+    <script src="bower_components/hex-strings/hex-strings.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/services/ethereum.js"></script>
+    <script src="scripts/services/identity.js"></script>
+    <script src="scripts/services/web3.js"></script>
+    <script src="scripts/controllers/id.js"></script>
+    <script src="scripts/services/cryptowrapper.js"></script>
+    <script src="scripts/controllers/bank.js"></script>
+    <script src="scripts/services/identitycontract.js"></script>
+    <script src="scripts/services/helpers.js"></script>
+    <script src="scripts/controllers/sign.js"></script>
+    <script src="scripts/services/verify.js"></script>
+    <script src="scripts/controllers/identities.js"></script>
+    <script src="scripts/controllers/attestation.js"></script>
+    <!-- endbuild -->
+</body>
+</html>

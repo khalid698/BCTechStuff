@@ -1,0 +1,14 @@
+<span ng-if="bank.grantedAssertions.length < 2">
+    <h2>Get started with your Digital Id.</h2>
+    <p>ACRO will redirect to your digital id provider to request the assertions required to create your account.</p>
+    <button class="btn btn-primary btn-lg raised" ui-sref="id.request({requestee:bankIdentity.email, assertionTypes:[1,2,3,4,5,6], description:'BitBank' })">Next <i class="fa fa-arrow-right"></i></button>
+</span>
+
+<span ng-if="bank.grantedAssertions.length >= 2">
+    <p>Bitbank now has access to the following assertions</p>
+    <ul>
+      <li ng-repeat="assertion in bank.grantedAssertions">
+        <strong>{{helpers.assertionLabelById(assertion.assertionType)}}</strong>
+        {{assertion.value}}
+    </ul>
+</span>

@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <h4>Personal Information</h4>
+</div>
+<div ng-repeat="assertionType in identity.displayAssertionTypes()" class="container-fluid">
+  <div class="row assertion greybottom" ng-class="{assertionedit: identity.isEditing(assertionType)}">
+    <!-- Assertion title -->
+    <div class="col-lg-10">
+      <h5>{{assertionType.label}}</h5>
+    </div>
+
+    <!-- Edit button -->
+    <div class="col-lg-2 text-right" ng-if="!identity.isEditing(assertionType)">
+      <a href="" class="edit" ng-click="identity.edit(assertionType)">Edit</a>
+    </div>
+
+    <!-- Display in read mode -->
+    <div class="col-lg-12" ng-if="!identity.isEditing(assertionType)">
+      <span>{{identity.assertions[assertionType.id]}}</span>
+      <ul class="fa-ul">
+        <li ng-repeat="attestee in identity.attestations[assertionType.id]"><i class="fa-li fa fa-check-circle success"></i>{{helpers.identityNameByAddress(attestee)}}</li>
+      </ul>
+    </div>
+
+    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
+      <input type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+      <i class="fa fa-undo" ng-click="identity.read(assertionType)" ng-if="identity.isChanged(assertionType)"></i>
+    </div>
+
+    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
+      <button class="btn btn-primary btn-xs" ng-click="identity.finishEdit(assertionType)">Save</button>
+      <button class="btn btn-primary btn-xs" ng-click="identity.cancelEdit(assertionType)">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save button if pending changes -->
+<div class="container-fluid" ng-if="identity.hasChangedKeys() && !identity.assertionsPending">
+  <div class="col-lg-12 text-right">
+    <button type="button" class="btn btn-primary btn-sm" ng-click="identity.assert()">Save</button>
+  </div>
+</div>

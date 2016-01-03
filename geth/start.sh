@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "Starting private network"
 geth --rpc --rpcaddr "0.0.0.0" \
+	--gasprice 10000 \
 	--datadir . \
 	--genesis genesis.json \
 	--networkid 10742 \

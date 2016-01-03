@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Add identity
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" id="email" type="text" ng-model="identities.email"/>
+      </div>
+      <div class="form-group">
+        <label for="passphrase">Passphrase</label>
+        <input class="form-control" id="passphrase" type="text" ng-model="identities.passphrase"/>
+      </div>
+
+      <button type="submit" class="btn btn-sm btn-success" ng-click="identities.generateIdentity()">Generate identity!</button>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Select active identity
+      </div>
+      <div class="panel-body">
+        <select ng-options="identity for identity in identities.getIdentities()"
+                ng-model="identities.selected"
+                ng-change="identities.selectIdentity()">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Select bank identity
+      </div>
+      <div class="panel-body">
+        <select ng-options="identity for identity in identities.getIdentities()"
+                ng-model="identities.bank"
+                ng-change="identities.selectBankIdentity()">
+        </select>
+      </div>
+  </div>
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Select attestation identity
+      </div>
+      <div class="panel-body">
+        <select ng-options="identity for identity in identities.getIdentities()"
+                ng-model="identities.attestation"
+                ng-change="identities.selectAttestationIdentity()">
+        </select>
+      </div>
+  </div>
+</div>

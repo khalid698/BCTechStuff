@@ -1,0 +1,33 @@
+<div class="container-fluid" ng-if="selectedIdentity">
+<div class="green">
+  <h4>PGP</h4>
+  <ul>
+    <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
+    <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
+  </ul>
+
+  <h4>Ethereum</h4>
+  <ul>
+    <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
+    <li>Balance: <strong>{{identity.balance()}}</strong></li>
+    <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
+  </ul>
+  <a class="btn btn-sm btn-primary">Export Keys</a>
+</div>
+
+  <h4>Contract actions</h4>
+  <div class="progress" ng-if="identity.contractMining">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+    </div>
+  </div>
+  <div ng-if="!selectedIdentity.hasContract() && !identity.contractMining">
+    <!-- <input type="text" ng-model="identity.identityName"  placeholder="Identity name"></input> -->
+    <button class="btn btn-sm btn-primary" ng-click="identity.createContract()" >Create contract</button>
+  </div>
+
+  <div ng-if="selectedIdentity.hasContract()">
+    <button class="btn btn-sm btn-danger" ng-click="identity.deleteContract()" >Delete contract</button>
+  </div>
+  </ul>
+</div>
+

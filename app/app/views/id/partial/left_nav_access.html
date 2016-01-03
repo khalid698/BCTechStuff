@@ -1,0 +1,15 @@
+<div class="row text-right">
+  <img src="/images/max.jpg" />
+</div>
+
+<div class="row link" ng-if="identity.grants.length > 0">
+  <p>Incoming Access:</p>
+</div>
+
+<div class="row link" ng-if="identity.grants.length == 0">
+  <p>You haven't granted access to anyone!</p>
+</div>
+
+<div class="row link" ng-repeat="grant in identity.grants" ng-class="{active: identity.grant == this.grant}">
+      <a href="" ng-click="identity.selectGrant(grant)">{{grant.description}}</a>
+</div>
