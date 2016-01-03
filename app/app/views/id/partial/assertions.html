@@ -21,8 +21,11 @@
       </ul>
     </div>
 
-    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
-      <input type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+    <div class="col-lg-12" ng-if="identity.isEditing(assertionType)" ng-switch on="assertionType.format">
+      <input ng-switch-when="text" type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+      <input ng-switch-when="date" type="date" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+      <input ng-switch-when="number" type="number" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
+      <input ng-switch-when="multiline" type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
       <i class="fa fa-undo" ng-click="identity.read(assertionType)" ng-if="identity.isChanged(assertionType)"></i>
     </div>
 

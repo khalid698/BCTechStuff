@@ -34,11 +34,11 @@ angular.module('angularApp')
 
     // Default 'format' is text
     self.assertionTypes = [
-      {id:1, label: 'Name'},
-      {id:2, label: 'Date of birth'}, // TODO : Date ?
-      {id:3, label: 'Telephone number'},
-      {id:4, label: 'Passport number'},
-      {id:5, label: 'Driver licence number'},
+      {id:1, label: 'Name', format: 'text'},
+      {id:2, label: 'Date of birth', format: 'date'}, // TODO : Date ?
+      {id:3, label: 'Telephone number', format: 'text'},
+      {id:4, label: 'Passport number', format: 'text'},
+      {id:5, label: 'Driver licence number', format: 'text'},
       {id:6, label: 'Address', format: 'multiline'}
     ];
 
