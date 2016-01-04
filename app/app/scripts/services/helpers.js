@@ -33,11 +33,15 @@ angular.module('angularApp')
     };
 
     self.getDateFormat = function(){
-      return 'yyyy, MMMM, dd';
+      return 'yyyy - MMMM - dd';
     };
 
     self.dateConverter = function(dateString){
-        return new Date(dateString);
+      return new Date(dateString);
     };
+
+    self.getRequesteeEmail = function(ethAddress){
+      return Identity.getByAddress(ethAddress).email;
+    }
 
   });
