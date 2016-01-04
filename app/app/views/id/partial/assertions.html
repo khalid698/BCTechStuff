@@ -25,18 +25,20 @@
       <span ng-switch-when="date">{{helpers.dateConverter(identity.assertions[assertionType.id]) | date: helpers.getDateFormat()}}</span>
       <span ng-switch-when="number">{{identity.assertions[assertionType.id]}}</span>
       <span ng-switch-when="multiline">{{identity.assertions[assertionType.id]}}</span>
-      
       <ul class="fa-ul">
         <li ng-repeat="attestee in identity.attestations[assertionType.id]"><i class="fa-li fa fa-check-circle success"></i>{{helpers.identityNameByAddress(attestee)}}</li>
       </ul>
     </div>
-
+    <!-- Edit box -->
     <div class="col-lg-12" ng-if="identity.isEditing(assertionType)" ng-switch on="assertionType.format">
       <input ng-switch-when="text" type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
       <input ng-switch-when="date" type="date" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
       <input ng-switch-when="number" type="number" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
       <input ng-switch-when="multiline" type="text" ng-model="identity.assertions[assertionType.id]" ng-change="identity.changed(assertionType)"/>
       <i class="fa fa-undo" ng-click="identity.read(assertionType)" ng-if="identity.isChanged(assertionType)"></i>
+      <div class="alert alert-warning" role="alert" ng-if="identity.attestations[assertionType.id].length > 0">
+        Changing this assertion will undo {{identity.attestations[assertionType.id].length}} attestations.
+      </div>
     </div>
 
     <div class="col-lg-12" ng-if="identity.isEditing(assertionType)">
