@@ -70,7 +70,7 @@ angular.module('angularApp')
         var assertions = self.changedKeys().map(function(assertionId){
           return {
             assertionId: assertionId,
-            value: self.assertions[assertionId]
+            value: self.assertions[assertionId].toString()
           }});
         //self.assertionsPending = true;
         $rootScope.progressbar.init(assertions.length,'Storing assertions');
@@ -226,6 +226,10 @@ angular.module('angularApp')
           }
           };
         Verify.verifyMessage(self.publicKey, self.signedMessage, callback);
+      };
+
+      self.dateConverter = function(dateString){
+        return new Date(dateString);
       };
 
 
