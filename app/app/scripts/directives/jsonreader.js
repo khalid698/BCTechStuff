@@ -7,7 +7,7 @@
  * # jsonReader
  */
 angular.module('angularApp')
-  .directive('jsonReader', function (Identity) {
+  .directive('jsonReader', function (Identity, Exporter) {
 	return {
 	    scope: {
 	      jsonReader:"="
@@ -19,10 +19,12 @@ angular.module('angularApp')
 	          var r = new FileReader();
 	          r.onload = function(e) {
 	              var contents = e.target.result;
-	              //convert contents to JSON object
+	              //convert contents to JSON
 	              var data = JSON.parse(contents);
-	              //load object to localStorage
-	              //Identity.restoreIdentity(data);
+	              //convert JSON to an identity object
+		          var identity = Exporter.JSONKeysToIdentityObj(data);
+	              //store identity object in local storage
+	              Identity.store(identity);
 	          };
 	          r.readAsText(files[0]);
 	        }

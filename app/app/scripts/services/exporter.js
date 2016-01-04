@@ -29,12 +29,12 @@ angular.module('angularApp')
       var id = {};
       id.email = idJSON.email;
       id.passphrase = idJSON.passphrase;
-      id.secretSeed = identity.secretSeed;
+      id.secretSeed = idJSON.secretSeed;
   		id.eth = LightWallet.keystore.deserialize(idJSON.eth,idJSON.passphrase);
       id.pgp = pgp.key.readArmored(idJSON.pgp).keys[0];
       id.pgp.decrypt(idJSON.passphrase);
       id.contractAddress = idJSON.contractAddress;
-      return new Identity(id.email, id.passphrase, id.secretSeed, id.pgp, id.eth, id.contractAddress)
+      return Identity.createIdentity(id.email, id.passphrase, id.secretSeed, id.pgp, id.eth, id.contractAddress)
   	}
 
   });

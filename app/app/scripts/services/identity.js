@@ -122,6 +122,10 @@ angular.module('angularApp')
       }
     };
 
+    self.createIdentity = function (email, passphrase, secretSeed, pgp, eth, contractAddress) {
+      return new Identity(email, passphrase, secretSeed, pgp, eth, contractAddress)
+    }
+
     // Startup
     self.init();
 
