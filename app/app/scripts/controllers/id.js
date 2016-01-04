@@ -20,12 +20,38 @@ angular.module('angularApp')
 
       self.attestations = [];
 
+      // Holds a small subset of assertions, used during request flow. overrides state given set.
+      self.customDisplayAssertionTypes = undefined;
+      self.postAssertionState = undefined;
+
       // Holds incoming grant request from bank
       self.request = {
          requestee: $state.params.requestee,
          assertionTypes: $state.params.assertionTypes,
          description: $state.params.description
       };
+
+      // Returns assertiontypes present in request, but not asserted
+      self.missingAssertionTypes = function(){
+        var isMissing = function(assertion){
+          return self.assertions[assertion] === undefined;
+        };
+        return self.request.assertionTypes.filter(isMissing);
+      };
+
+      self.presentAssertionTypes = function(){
+        var isPresent = function(assertion){
+          return self.assertions[assertion] !== undefined;
+        };
+        return self.request.assertionTypes.filter(isPresent);
+      };
+
+      self.addMissingAssertions = function(params){
+        self.customDisplayAssertionTypes = self.missingAssertionTypes();
+        self.postAssertionState = 'id.request';
+        $state.go('id.personal');
+      };
+
 
       self.login = function(email, password){
         $log.debug('Logging in',email);
@@ -51,6 +77,12 @@ angular.module('angularApp')
         $rootScope.progressbar.init(self.request.assertionTypes.length,'Granting access');
         IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description, $rootScope.progressbar.bump)
           .then(function(){
+            self.init();
+            for(var g in self.grants){
+              if ( self.grants[g].requestee === grantee){
+                self.grant = self.grants[g];
+              }
+            }
             $state.transitionTo('id.access');
             $scope.$apply();
           });
@@ -72,12 +104,16 @@ angular.module('angularApp')
             assertionId: assertionId,
             value: self.assertions[assertionId].toString()
           }});
-        //self.assertionsPending = true;
         $rootScope.progressbar.init(assertions.length,'Storing assertions');
         IdentityContract.assert($rootScope.selectedIdentity, assertions, $rootScope.progressbar.bump).then(function(){
-          //self.assertionsPending = false;
-          // $scope.$apply();
-          self.init();
+          self.init().then(function(){
+          if(self.postAssertionState){
+              var target = self.postAssertionState;
+              self.postAssertionState = undefined;
+              $log.debug('Redirecting to',target);
+              $state.go(target);
+            }
+          })
         });
       };
 
@@ -93,17 +129,31 @@ angular.module('angularApp')
         // Notification.primary('Reading '+assertionType.label+' from contract');
       };
 
+      self.loadProfile = function(){
+
+      };
+
       self.init = function(){
+        self.changedAssertions = {};
+        self.customDisplayAssertionTypes = undefined;
+        var p = Promise.defer();
         if($rootScope.selectedIdentity){
           $rootScope.assertionTypes.map(self.read);
           IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
             self.grants = grants;
+            // If there's only one grant, just select that one
+            if(self.grants.length == 1 ){
+              self.grant = self.grants[0];
+              $log.info('Only one grant present, selected', self.selectGrant(self.grants[0]))
+            };
+            p.resolve();
           });
           self.attestations = IdentityContract.attestations($rootScope.selectedIdentity);
         } else {
           $state.go('id.login');
+          p.resolve();
         }
-        self.changedAssertions = {};
+        return p.promise;
       };
       self.init();
 
@@ -150,13 +200,20 @@ angular.module('angularApp')
         delete self.editingAssertions[assertionType.id];
         self.read(assertionType);
       };
+
       self.finishEdit = function(assertionType){
         delete self.editingAssertions[assertionType.id];
-      }
+      };
 
       self.displayAssertionTypes = function(){
-        return $state.current.displayAssertionTypes.map(function(id){return IdentityContract.assertionById(id)})
-      }
+        var res = undefined;
+        if(self.customDisplayAssertionTypes){
+          res = self.customDisplayAssertionTypes;
+        } else {
+          res = $state.current.displayAssertionTypes;
+        }
+        return res.map(function(id){return IdentityContract.assertionById(id)});
+      };
 
       // Contract code
       // self.identityName = '';

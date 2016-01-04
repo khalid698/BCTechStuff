@@ -1,10 +1,9 @@
 <div class="" ng-if="identity.grant && !identity.grantsPending">
-
 	<div class="access-header">
 		<div class="row">
 			<div class="col-xs-8">
-				<h2>{{identity.grant.description}}</h2>
-				<p>{{helpers.identityName(identity.grant.requestee)}}</p>
+				<h2>{{helpers.getRequesteeEmail(identity.grant.requestee)}}</h2>
+				<p>PGP Fingerprint: <strong>{{helpers.getRequesteePGPFingerprint(identity.grant.requestee)}}</strong></p>
 			</div>
 			<div class="col-xs-4 text-right">
 				<a class="btn btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke Access</a>
@@ -12,7 +11,7 @@
 		</div>
 	</div>  
 
-	<div class="assertion-row" ng-repeat="assertion in identity.grant.assertions">
+	<div class="assertion-row" ng-repeat="assertion in identity.grant.assertions" ng-switch on="helpers.assertionFormatById(assertion)">
 		<div class="assertion">
 			<div class="row">
 				<div class="col-xs-12">
@@ -21,7 +20,10 @@
 			</div>
 			<div class="row">
 				<div class="information col-xs-12">
-					<span class="information">{{identity.assertions[assertion]}}</span>
+					<span ng-switch-when="text">{{identity.assertions[assertion]}}</span>
+					<span ng-switch-when="date">{{helpers.dateConverter(identity.assertions[assertion]) | date: helpers.getDateFormat()}}</span>
+					<span ng-switch-when="number">{{identity.assertions[assertion]}}</span>
+					<span ng-switch-when="multiline">{{identity.assertions[assertion]}}</span>
 				</div>
 			</div>
 		</div>

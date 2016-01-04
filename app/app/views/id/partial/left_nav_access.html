@@ -5,5 +5,5 @@
 </div>
 
 <div class="row link" ng-repeat="grant in identity.grants" ng-class="{active: identity.grant == this.grant}">
-      <a href="" ng-click="identity.selectGrant(grant)">{{grant.description}}</a>
+      <a href="" ng-click="identity.selectGrant(grant)">{{helpers.getRequesteeEmail(grant.requestee)}}</a>
 </div>

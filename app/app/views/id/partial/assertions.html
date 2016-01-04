@@ -1,5 +1,12 @@
 <div ng-repeat="assertionType in identity.displayAssertionTypes()" class="assertion-row">
   <div class="assertion" ng-class="{assertionedit: identity.isEditing(assertionType)}">
+
+    <div class="row" ng-if="!selectedIdentity.contractAddress">
+      <div class="alert alert-danger" role="alert">
+        Please <a href="" ui-sref="id.settings">create a contract</a> before making assertions.
+      </div>
+    </div>
+
     <!-- Assertion title -->
 
     <div class="row">
@@ -10,11 +17,11 @@
 
     <div class="row">
       <!-- Display in read mode -->
-      <div class="col-xs-10 information" ng-if="!identity.isEditing(assertionType)" ng-switch on="assertionType.format">
-        <span ng-switch-when="text">{{identity.assertions[assertionType.id]}}</span>
-        <span ng-switch-when="date">{{identity.dateConverter(identity.assertions[assertionType.id]) | date:'yyyy, MMMM, dd'}}</span>
-        <span ng-switch-when="number">{{identity.assertions[assertionType.id]}}</span>
-        <span ng-switch-when="multiline">{{identity.assertions[assertionType.id]}}</span>
+      <div class="col-lg-10 information" ng-if="!identity.isEditing(assertionType)" ng-switch on="assertionType.format">
+      <span ng-switch-when="text">{{identity.assertions[assertionType.id]}}</span>
+      <span ng-switch-when="date">{{helpers.dateConverter(identity.assertions[assertionType.id]) | date: helpers.getDateFormat()}}</span>
+      <span ng-switch-when="number">{{identity.assertions[assertionType.id]}}</span>
+      <span ng-switch-when="multiline">{{identity.assertions[assertionType.id]}}</span>
         
         <ul class="attestees">
           <li ng-repeat="attestee in identity.attestations[assertionType.id]">
