@@ -1,5 +1,14 @@
 # How to run the POC meteor app 
 
+## Installing geth
+
+Run the following commands to add the tap and install geth:
+
+```
+brew tap ethereum/ethereum
+brew install ethereum
+```
+
 ## Start the private chain
 Ensure the geth homebrew package is installed, this wrapper just bootstraps a node using the present installation.
 
