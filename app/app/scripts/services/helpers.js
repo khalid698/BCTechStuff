@@ -28,4 +28,8 @@ angular.module('angularApp')
       return self.namesByAddress[address];
     };
 
+    self.assertionFormatById = function(id){
+      return IdentityContract.assertionById(id).format;
+    }
+
   });

@@ -8,8 +8,11 @@
   <div class="row title greybottom">
     <h4>Has Access to:</h4>
   </div>
-  <div class="row assertion greybottom" ng-repeat="assertion in identity.grant.assertions">
+  <div class="row assertion greybottom" ng-repeat="assertion in identity.grant.assertions" ng-switch on="helpers.assertionFormatById(assertion)">
     <h5>{{helpers.assertionLabelById(assertion)}}</h5>
-    <p>{{identity.assertions[assertion]}}</p>
+    <p ng-switch-when="text">{{identity.assertions[assertion]}}</p>
+    <p ng-switch-when="date">{{identity.dateConverter(identity.assertions[assertion]) | date:'yyyy, MMMM, dd'}}</p>
+    <p ng-switch-when="number">{{identity.assertions[assertion]}}</p>
+    <p ng-switch-when="multiline">{{identity.assertions[assertion]}}</p>
   </div>
 </div>
