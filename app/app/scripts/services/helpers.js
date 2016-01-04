@@ -44,13 +44,20 @@ angular.module('angularApp')
       return Identity.getByAddress(ethAddress).email;
     };
 
-    self.getRequesteeFingerprint = function(ethAddress){
+    self.getRequesteePGPFingerprint = function(ethAddress){
       var fingerprint = Identity.getByAddress(ethAddress).pgp.primaryKey.fingerprint;
+      var ch = fingerprint.toUpperCase().split('');
+      var l = ch.length;
+      var shortened =  ch[l-16]+ch[l-15]+' '+ch[l-14]+ch[l-13]+' '+ch[l-12]+ch[l-11]+' '+ch[l-10]+ch[l-9]+' '+ch[l-8]+ch[l-7]+' '+ch[l-6]+ch[l-5]+' '+ch[l-4]+ch[l-3]+' '+ch[l-2]+ch[l-1];
+      return shortened;
+    };
+
+    self.getRequesteeEthFingerprint = function(ethAddress){
+      var fingerprint = ethAddress;
       var ch = fingerprint.toUpperCase().split('');
       var l = ch.length;
       var shortened =  ch[l-8]+ch[l-7]+' '+ch[l-6]+ch[l-5]+' '+ch[l-4]+ch[l-3]+' '+ch[l-2]+ch[l-1];
       return shortened;
     };
-
 
   });
