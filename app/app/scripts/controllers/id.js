@@ -52,7 +52,6 @@ angular.module('angularApp')
         $state.go('id.personal');
       };
 
-
       self.login = function(email, password){
         $log.debug('Logging in',email);
         var identity = Identity.get(email);
@@ -136,6 +135,12 @@ angular.module('angularApp')
       self.init = function(){
         self.changedAssertions = {};
         self.customDisplayAssertionTypes = undefined;
+        self.assertions = {};
+        self.editingAssertions = {};
+        self.assertionsPending = false;
+        self.grants = [];
+        self.attestations = [];
+
         var p = Promise.defer();
         if($rootScope.selectedIdentity){
           $rootScope.assertionTypes.map(self.read);
@@ -216,31 +221,33 @@ angular.module('angularApp')
       };
 
       // Contract code
-      // self.identityName = '';
-      self.contractMining = false;
 
       self.deleteContract = function() {
         var selectedIdentity = $rootScope.selectedIdentity;
         $log.debug('Deleting contract');
+        $rootScope.progressbar.init(1, 'Deleting contract');
         IdentityContract.deleteContract($rootScope.selectedIdentity).then(function(){
             $log.info("Contract deleted, removing from identity");
             Notification.success("Contract deleted");
             selectedIdentity.contractAddress = undefined;
             Identity.store(selectedIdentity);
+            self.init();
+            $rootScope.progressbar.bump();
             $scope.$apply();
         });
       };
 
       self.createContract = function() {
         var selectedIdentity = $rootScope.selectedIdentity;
-        self.contractMining = true;
+        $rootScope.progressbar.init(1, 'Creating contract');
         IdentityContract.createContract($rootScope.selectedIdentity) // self.identityName
           .then(function(contract){
                console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
                Notification.success('Contract mined!');
                selectedIdentity.contractAddress = contract.address;
                Identity.store(selectedIdentity);
-               self.contractMining = false;
+               $rootScope.progressbar.bump();
+               self.init();
           });
       };
 

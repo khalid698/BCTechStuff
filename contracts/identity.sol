@@ -1,5 +1,5 @@
 contract Identity {
-	
+    
     address owner;
 
     //constructor
@@ -16,25 +16,31 @@ contract Identity {
     }
     
     // Assertions
-	mapping(uint => string) assertions;
+    mapping(uint => string) assertions;
 
-	function assert(uint assertionType, string key, string  value) onlyowner {
-		// Clear out attestations when values changes ?
-		assertions[assertionType] = value;
-	    sessionKeys[owner][assertionType] = key;
-	}
-	
-	function assertAll(uint[] assertionTypes, string keys, string  values){
+    function assert(uint assertionType, string key, string  value) onlyowner {
+        // Clear out attestations when values changes ?
+        assertions[assertionType] = value;
+        sessionKeys[owner][assertionType] = key;
+        delete attestations[assertionType];
+        for(var i=0; i < attestedAssertions.length; i++){
+            if(attestedAssertions[i] == assertionType){
+                delete attestedAssertions[i];    
+            }
+        }
+    }
+    
+    function assertAll(uint[] assertionTypes, string keys, string  values){
         // for(var i=0; i < assertionTypes.length; i++){
         //     assert(assertionTypes[i], keys[i], values[i]);
         // }
-	}
-	
-	function get(uint assertionType) returns (string  key, string value){
-	    key = sessionKeys[msg.sender][assertionType];
-	    value = assertions[assertionType];
-	}
-	mapping(address => string) granteeDescriptions;
+    }
+    
+    function get(uint assertionType) returns (string  key, string value){
+        key = sessionKeys[msg.sender][assertionType];
+        value = assertions[assertionType];
+    }
+    mapping(address => string) granteeDescriptions;
     mapping(address => mapping(uint => string)) sessionKeys;
     mapping(address => uint[]) grantedAssertions;
     address[] grantees;
@@ -53,40 +59,40 @@ contract Identity {
         }
     }
     
-	function grant(address requestee, uint assertionType, string sessionKey, string description) {
-	    for(var r=0; r < grantedAssertions[requestee].length; r++){
-	        if(grantedAssertions[requestee][r] == assertionType){
-	            throw;
-	        }
-	    }
-	    sessionKeys[requestee][assertionType] = sessionKey;
-	    grantedAssertions[requestee].push(assertionType);
-	    granteeDescriptions[requestee] = description;
+    function grant(address requestee, uint assertionType, string sessionKey, string description) {
+        for(var r=0; r < grantedAssertions[requestee].length; r++){
+            if(grantedAssertions[requestee][r] == assertionType){
+                throw;
+            }
+        }
+        sessionKeys[requestee][assertionType] = sessionKey;
+        grantedAssertions[requestee].push(assertionType);
+        granteeDescriptions[requestee] = description;
         for(r=0; r< grantees.length; r++){
-	       if (grantees[r] == requestee){
-	           return;
-	       }
-	    }
-	    grantees.push(requestee);
-	}
-	
-	function getGranteeCount() returns (uint count){
-	    count = grantees.length;
-	}
-	
-	function getGrantee(uint index) returns (address grantee, string description){
-	    grantee = grantees[index];
-	    description = granteeDescriptions[grantee];
-	}
-	
-	function getGrantedAssertionCount(address requestee) returns (uint count){
-	    count = grantedAssertions[requestee].length;
-	}
-	
-	function getGrantedAssertion(address requestee, uint index) returns (uint assertionType){
-	    assertionType = grantedAssertions[requestee][index];
-	}
-	
+           if (grantees[r] == requestee){
+               return;
+           }
+        }
+        grantees.push(requestee);
+    }
+    
+    function getGranteeCount() returns (uint count){
+        count = grantees.length;
+    }
+    
+    function getGrantee(uint index) returns (address grantee, string description){
+        grantee = grantees[index];
+        description = granteeDescriptions[grantee];
+    }
+    
+    function getGrantedAssertionCount(address requestee) returns (uint count){
+        count = grantedAssertions[requestee].length;
+    }
+    
+    function getGrantedAssertion(address requestee, uint index) returns (uint assertionType){
+        assertionType = grantedAssertions[requestee][index];
+    }
+    
     function getSessionKey(address requestee, uint assertionType) returns (string encryptedSessionKey){
         encryptedSessionKey = sessionKeys[requestee][assertionType];
     }
@@ -96,31 +102,31 @@ contract Identity {
     uint[] attestedAssertions;
     
     function attest(uint[] assertionTypes){
-	    for(var r=0; r < assertionTypes.length; r++){
-	        // process individual assertion
-	        var assertionType = assertionTypes[r];
-	        var addToAttestedAssertions = true;
-	        var addToAttestations = true;
-	        
-	        // Check if this is already attested by msg.sender
-	        for(var s=0; s < attestations[assertionType].length; s++){
-	          if(attestations[assertionType][s] == msg.sender){
-	            addToAttestations = false;
-	          }
-	        }
+        for(var r=0; r < assertionTypes.length; r++){
+            // process individual assertion
+            var assertionType = assertionTypes[r];
+            var addToAttestedAssertions = true;
+            var addToAttestations = true;
+            
+            // Check if this is already attested by msg.sender
+            for(var s=0; s < attestations[assertionType].length; s++){
+              if(attestations[assertionType][s] == msg.sender){
+                addToAttestations = false;
+              }
+            }
             if ( addToAttestations ){
                 attestations[assertionType].push(msg.sender);
             }
-            // Check if this assertion is already attested	        
-    	    for(s=0; s < attestedAssertions.length; s++){
-    	        if(attestedAssertions[s] == assertionType){
-    	            addToAttestedAssertions = false;
-    	        }
-    	    }
-            if ( addToAttestedAssertions ){
-	            attestedAssertions.push(assertionType);
+            // Check if this assertion is already attested          
+            for(s=0; s < attestedAssertions.length; s++){
+                if(attestedAssertions[s] == assertionType){
+                    addToAttestedAssertions = false;
+                }
             }
-	    }
+            if ( addToAttestedAssertions ){
+                attestedAssertions.push(assertionType);
+            }
+        }
     }
     
     function getAttestedAssertionCount() returns ( uint count){
@@ -139,7 +145,7 @@ contract Identity {
         attestee = attestations[assertionType][index];
     }
     
-	function () {
+    function () {
         throw;
     }
 }
