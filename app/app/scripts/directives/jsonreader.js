@@ -22,7 +22,7 @@ angular.module('angularApp')
 	              //convert contents to JSON object
 	              var data = JSON.parse(contents);
 	              //load object to localStorage
-	              Identity.restoreIdentity(data);
+	              //Identity.restoreIdentity(data);
 	          };
 	          r.readAsText(files[0]);
 	        }

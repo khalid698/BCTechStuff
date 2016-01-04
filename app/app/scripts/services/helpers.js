@@ -10,7 +10,7 @@
  * helpers = angular.element(document.body).injector().get('Helpers')
  */
 angular.module('angularApp')
-  .service('Helpers', function (IdentityContract, Identity) {
+  .service('Helpers', function (IdentityContract, Identity, Exporter) {
     var self=this;
 
     self.namesByAddress = {};
@@ -60,17 +60,18 @@ angular.module('angularApp')
       return shortened;
     };
 
-    self.exportKeys = function(data) {
+    self.exportKeys = function(identity) {
+      //
       //get fingerprint for unique file names
-      var fingerprint = data.pgp.primaryKey.fingerprint;
+      var fingerprint = identity.pgp.primaryKey.fingerprint;
 
-      if (!data) {
+      if (!identity) {
         console.error('No data');
         return;
       }
 
-      if (typeof data === 'object') {
-        data = JSON.stringify(data, undefined, 2);
+      if (typeof identity === 'object') {
+        var data = JSON.stringify(Exporter.identityObjToJSONKeys(identity), undefined, 2);
       }
 
       var blob = new Blob([data], {type: 'text/json'}),
@@ -83,21 +84,6 @@ angular.module('angularApp')
       e.initMouseEvent('click', true, false, window,
           0, 0, 0, 0, 0, false, false, false, false, 0, null);
       a.dispatchEvent(e);
-    };
-
-    self.importKeys = function (file) {
-
-        Upload.upload({
-            url: 'upload/url',
-            data: {file: file, 'username': 'test'}
-        }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
     };
 
   });
