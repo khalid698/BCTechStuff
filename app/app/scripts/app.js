@@ -207,7 +207,7 @@ angular
       $rootScope.progressbar.progress++;
       $log.debug('Progressbar now at', $rootScope.progressbar.progress,'of',$rootScope.progressbar.steps);
     };
-    // Reset progress bar on state change
+    // Reset progress bar on state $stateChangeStart
     $rootScope.$on('$stateChangeStart',
       function(){
         $rootScope.progressbar.init(0, undefined);
