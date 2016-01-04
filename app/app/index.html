@@ -30,7 +30,10 @@
       </ul>
     </div>
 
+    <div>
+      <!-- This div is required, angular will throw 'WARNING: Tried to load angular more than once.' errors if removed -->
       <ui-view/>
+    </div>
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -65,7 +68,6 @@
     <script src="scripts/controllers/bank.js"></script>
     <script src="scripts/services/identitycontract.js"></script>
     <script src="scripts/services/helpers.js"></script>
-    <script src="scripts/controllers/sign.js"></script>
     <script src="scripts/services/verify.js"></script>
     <script src="scripts/controllers/identities.js"></script>
     <script src="scripts/controllers/attestation.js"></script>
