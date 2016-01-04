@@ -19,8 +19,13 @@
     </div>
 
     <!-- Display in read mode -->
-    <div class="col-lg-12" ng-if="!identity.isEditing(assertionType)">
-      <span>{{identity.assertions[assertionType.id]}}</span>
+    <div class="col-lg-12" ng-if="!identity.isEditing(assertionType)" ng-switch on="assertionType.format">
+
+      <span ng-switch-when="text">{{identity.assertions[assertionType.id]}}</span>
+      <span ng-switch-when="date">{{identity.dateConverter(identity.assertions[assertionType.id]) | date:'yyyy, MMMM, dd'}}</span>
+      <span ng-switch-when="number">{{identity.assertions[assertionType.id]}}</span>
+      <span ng-switch-when="multiline">{{identity.assertions[assertionType.id]}}</span>
+      
       <ul class="fa-ul">
         <li ng-repeat="attestee in identity.attestations[assertionType.id]"><i class="fa-li fa fa-check-circle success"></i>{{helpers.identityNameByAddress(attestee)}}</li>
       </ul>
