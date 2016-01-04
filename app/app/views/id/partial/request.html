@@ -1,38 +1,61 @@
-<div class="container-fluid" >
-  <div class="row section">
-      <h4>Grant access to your digital identity.</h4>
-    <!-- Present assertions -->
-    <div class="col-lg-12" ng-if="identity.presentAssertionTypes().length > 0">
-      <h5><b>{{identity.request.requestee}}</b> has requested access to the following assertions:</h5>
-      <ul class="fa-ul">
-        <li ng-repeat="item in identity.presentAssertionTypes()">
-          <i class="fa-li fa fa-check-square success"></i>
-          {{helpers.assertionLabelById(item)}}
-        </li>
-      </ul>
-    </div>
-    <!-- Missing -->
-    <div class="col-lg-12" ng-if="identity.missingAssertionTypes().length > 0">
-      <h5>The following assertions are requested, but not present on your identity:</h5>
-      <ul class="fa-ul">
-        <li ng-repeat="item in identity.missingAssertionTypes()">
-          <i class="fa-li fa fa-question warning"></i>
-          {{helpers.assertionLabelById(item)}}
-        </li>
-      </ul>
-    </div>
+<style>
+  .info-container {
+    background: transparent !important;
+  }
+  .leftnav {
+    display: none;
+  }
+  .rightpanel {
+    width: 100% !important;
+    background: transparent !important;
+  }
+</style>
 
-    <div class="col-lg12 text-right">
-      <button class="btn btn-primary btn-sm"
-              ng-click="identity.grantRequest()"
-              ng-if="!progressbar.active() && identity.missingAssertionTypes().length == 0">Grant</button>
-      <button class="btn btn-primary btn-sm"
-              ng-click="identity.addMissingAssertions()"
-              ng-if="identity.missingAssertionTypes().length > 0">Add missing assertions</button>
+<div class="container" >
+  <div class="grant-access col-xs-6 col-xs-offset-3" >
 
-    </div>
+      <img src="/images/logo.png" alt="" class="logo">
+
+      <h3>Continue to Acro Bank as Patrick Wadden</h3>
+
+      <div class="profile-image" ng-if="!identity.assertions[7]">
+        <img src="/images/no-user.png" alt="" class="">
+      </div>
+
+      <div class="profile-image" ng-if="identity.assertions[7]">
+        <img ng-src="{{identity.assertions[7]}}" alt="" class="">
+      </div>
+
+      <!-- Present assertions -->
+      <div class="col-lg-12 assertions" ng-if="identity.presentAssertionTypes().length > 0">
+        <b>Acro Bank</b> will receive the following information:<br>
+        <span ng-repeat="item in identity.presentAssertionTypes()">{{helpers.assertionLabelById(item)}}</span>
+      </div>
+
+      <!-- Missing -->
+      <div class="col-lg-12" ng-if="identity.missingAssertionTypes().length > 0">
+        <h5>The following assertions are requested, but not present on your identity:</h5>
+        <ul class="fa-ul">
+          <li ng-repeat="item in identity.missingAssertionTypes()">
+            <i class="fa-li fa fa-question warning"></i>
+            {{helpers.assertionLabelById(item)}}
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-lg12 text-center">
+        <button class="btn btn-primary btn-lg"
+                ng-click="identity.grantRequest()"
+                ng-if="!progressbar.active() && identity.missingAssertionTypes().length == 0">Continue</button>
+        <button class="btn btn-primary"
+                ng-click="identity.addMissingAssertions()"
+                ng-if="identity.missingAssertionTypes().length > 0">Add missing assertions</button>
+        <p><button class="btn btn-link" >Cancel</button></p>
+
+      </div>
 
   </div>
-
 </div>
+
+<div class="modal-backdrop in"></div>
 
