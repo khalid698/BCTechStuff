@@ -12,7 +12,7 @@
     <li>Balance: <strong>{{identity.balance()}}</strong></li>
     <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
   </ul>
-  <a class="btn btn-sm btn-primary">Export Keys</a>
+  <a class="btn btn-sm btn-primary" ng-click="helpers.exportData(selectedIdentity)">Export Keys</a>
 </div>
 
   <h4>Contract actions</h4>
