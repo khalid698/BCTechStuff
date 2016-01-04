@@ -60,7 +60,9 @@ angular.module('angularApp')
       return shortened;
     };
 
-    self.exportData = function(data) {
+    self.exportKeys = function(data) {
+      //get fingerprint for unique file names
+      var fingerprint = data.pgp.primaryKey.fingerprint;
 
       if (!data) {
         console.error('No data');
@@ -75,7 +77,7 @@ angular.module('angularApp')
         e = document.createEvent('MouseEvents'),
         a = document.createElement('a');
 
-      a.download = 'DIDkeys.json';
+      a.download = 'DIDkeys_'+fingerprint+'.json';
       a.href = window.URL.createObjectURL(blob);
       a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
       e.initMouseEvent('click', true, false, window,
