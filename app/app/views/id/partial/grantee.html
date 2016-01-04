@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-if="identity.grant && !identity.grantsPending">
   <div class="row green">
-    <h4>{{identity.grant.description}}</h4>
-    <p>{{helpers.identityName(identity.grant.requestee)}}</p>
+    <h4>{{helpers.getRequesteeEmail(identity.grant.requestee)}}</h4>
+    <p>Fingerprint: <strong>{{helpers.getRequesteeFingerprint(identity.grant.requestee)}}</strong></p>
     <a class="btn btn-sm btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke Access</a>
   </div>
 
