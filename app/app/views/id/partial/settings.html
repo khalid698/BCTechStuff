@@ -21,8 +21,17 @@
     </div>
   </div>
   <div ng-if="!selectedIdentity.hasContract() && !identity.contractMining">
-    <!-- <input type="text" ng-model="identity.identityName"  placeholder="Identity name"></input> -->
-    <button class="btn btn-sm btn-primary" ng-click="identity.createContract()" >Create contract</button>
+    <button ng-disabled="identity.balance() == 0" class="btn btn-sm btn-primary" ng-click="identity.createContract()" >Create contract</button>
+    <div ng-if="identity.balance() == 0" class="alert alert-danger" role="alert">
+     This ethereum address has no funds, transfer funds to this address using the following commands :
+     <pre>
+      cd scripts
+      ./unlock.sh
+      ./transfer.sh {{selectedIdentity.ethAddress()}}
+      </pre>
+    </div>
+  </div>
+
   </div>
 
   <div ng-if="selectedIdentity.hasContract()">
