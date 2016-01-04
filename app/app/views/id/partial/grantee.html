@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-if="identity.grant && !identity.grantsPending">
   <div class="row green">
-    <h4>{{identity.grant.description}}</h4>
-    <p>{{helpers.identityName(identity.grant.requestee)}}</p>
+    <h4>{{helpers.getRequesteeEmail(identity.grant.requestee)}}</h4>
+    <p>Fingerprint: <strong>{{helpers.getRequesteeFingerprint(identity.grant.requestee)}}</strong></p>
     <a class="btn btn-sm btn-danger" ng-click="identity.revokeGrant(identity.grant)">Revoke Access</a>
   </div>
 
@@ -11,7 +11,7 @@
   <div class="row assertion greybottom" ng-repeat="assertion in identity.grant.assertions" ng-switch on="helpers.assertionFormatById(assertion)">
     <h5>{{helpers.assertionLabelById(assertion)}}</h5>
     <p ng-switch-when="text">{{identity.assertions[assertion]}}</p>
-    <p ng-switch-when="date">{{identity.dateConverter(identity.assertions[assertion]) | date:'yyyy, MMMM, dd'}}</p>
+    <p ng-switch-when="date">{{helpers.dateConverter(identity.assertions[assertion]) | date: helpers.getDateFormat()}}</p>
     <p ng-switch-when="number">{{identity.assertions[assertion]}}</p>
     <p ng-switch-when="multiline">{{identity.assertions[assertion]}}</p>
   </div>
