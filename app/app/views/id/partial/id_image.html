@@ -1,7 +1,8 @@
-<div class="row text-center" ng-if="!identity.assertions[7]">
-  <i class="fa fa-question fa-5x"></i>
+<div class="profile-image" ng-if="!identity.assertions[7]">
+	<img src="/images/no-user.png" alt="" class="img-responsive">
 </div>
 
-<div class="row text-right" ng-if="identity.assertions[7]">
-  <img ng-src="{{identity.assertions[7]}}" />
+<div class="profile-image" ng-if="identity.assertions[7]">
+	<img ng-src="{{identity.assertions[7]}}" alt="" class="img-responsive">
 </div>
+

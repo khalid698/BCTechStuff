@@ -1,0 +1,28 @@
+.internal-nav {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	opacity: 0.2;
+	transition: opacity (200ms);
+}
+.internal-nav:hover {
+	opacity: 1;
+}
+.internal-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: right;
+}
+.internal-nav ul a {
+    display: block;
+    padding: 10px;
+    width: 100px;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #333;
+}
+.internal-nav ul a:hover {
+	background: #D8D8D8;
+}

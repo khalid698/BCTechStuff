@@ -10,6 +10,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/ngprogress/ngProgress.css" />
     <!-- endbower -->
@@ -19,17 +20,18 @@
     <!-- endbuild -->
   </head>
   <body ng-app="angularApp">
-    <div class="container-fluid">
-      <ul class="nav nav-tabs">
+
+    <div class="internal-nav">
+      <ul class="">
         <li role="presentation"><a href="" ui-sref="id.personal">Portal</a></li>
         <li role="presentation"><a href="" ui-sref="bank.welcome">Bank</a></li>
-        <li role="presentation"><a href="" ui-sref="identities">Identities</a></li>
-        <li role="presentation"><a href="" ui-sref="attest">Attestation</a></li>
+        <li role="presentation"><a href="" ui-sref="identities">Ids</a></li>
+        <li role="presentation"><a href="" ui-sref="attest">Att</a></li>
       </ul>
     </div>
-    <div>
+
       <ui-view/>
-    </div>
+
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->

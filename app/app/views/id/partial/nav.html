@@ -1,11 +1,26 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default id-nav">
   <div class="container">
-     <ul class="nav navbar-nav nav-left">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Sovereign<strong>Identity</strong></a>
+    </div>
+
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
         <li ng-class="{active: $state.current.activetab == 'myidentity'}"><a href="" ui-sref="id.personal">My Identity</a></li>
         <li ng-class="{active: $state.current.activetab == 'access'}"><a href="" ui-sref="id.access">Access</a></li>
         <li ng-class="{active: $state.current.activetab == 'sign'}"><a href="" ui-sref="id.sign">Sign</a></li>
         <li ng-class="{active: $state.current.activetab == 'settings'}"><a href="" ui-sref="id.settings">Settings</a></li>
         <li ng-if="selectedIdentity"><a href="" ng-click="logout()">Log out</a></li>
       </ul>
+    </div>
   </div>
 </nav>
+
+<div class="container id-number">
+    <div class="row">
+        <div class="col-xs-12">
+            My ID: 0io3456xealskt54657r45574574reayrrt
+        </div>
+    </div>
+</div>
