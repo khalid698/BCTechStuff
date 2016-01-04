@@ -120,6 +120,12 @@ angular.module('angularApp')
       }
     };
 
+    self.restoreIdentity = function (data) {
+      var keyStore = new LightWallet.keystore(secretSeed, data.passphrase);
+      var identity = new Identity(data.email, data.passphrase, data.pgp, keyStore, data.contractAddress);
+      self.store(identity);
+    }
+
     // Startup
     self.init();
 

@@ -13,6 +13,9 @@
     <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
   </ul>
   <a class="btn btn-sm btn-primary" ng-click="helpers.exportKeys(selectedIdentity)">Export Keys</a>
+  
+  <input json-reader="fileContent" type="file" json-reader="fileContent" />
+
 </div>
 
   <h4>Contract actions</h4>
