@@ -67,14 +67,14 @@
               ng-model="identity.assertions[assertionType.id]"
               ng-change="identity.changed(assertionType)"
               />
-          <input
+          <textarea
               autofocus
               class="form-control"
               ng-switch-when="multiline"
               type="text"
               ng-model="identity.assertions[assertionType.id]"
               ng-change="identity.changed(assertionType)"
-              />
+              ></textarea>
           <i class="fa fa-undo" ng-click="identity.read(assertionType)" ng-if="identity.isChanged(assertionType)"></i>
         </div>
       </div>
