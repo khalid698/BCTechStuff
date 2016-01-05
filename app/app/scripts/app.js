@@ -44,7 +44,6 @@ angular
       })
       .state('id.settings', {
         url: '/settings',
-        //controller: 'MainCtrl as main',
         activetab: 'settings',
         views: {
           'right': {
@@ -55,7 +54,6 @@ angular
 
       .state('id.personal', {
         url: '/personal',
-        // controller: 'MainCtrl as main',
         activetab: 'myidentity',
         displayAssertionTypes: [1,2,4,5,7],
         views: {
@@ -70,7 +68,6 @@ angular
       .state('id.contact', {
         url: '/contact',
         templateUrl: 'views/id/partial/assertions.html',
-        // controller: 'MainCtrl as main',
         activetab: 'myidentity',
         displayAssertionTypes: [3,6],
         views: {
@@ -85,7 +82,6 @@ angular
       .state('id.access', {
         url: '/access',
         templateUrl: 'views/id/partial/assertions.html',
-        // controller: 'MainCtrl as main',
         activetab: 'access',
         views: {
           'left': {

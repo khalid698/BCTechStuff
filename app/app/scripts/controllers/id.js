@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentityCtrl', function ($q, $log, $rootScope, $scope, $state, IdentityContract, Identity, Notification, Ethereum, Verify, Web3) {
+  .controller('IdentityCtrl', function ($q, $log, $rootScope, $scope, $state, IdentityContract, Identity, Notification, Verify, Web3) {
       var self = this;
 
       self.assertions = {};
@@ -248,7 +248,7 @@ angular.module('angularApp')
 
       self.balance = function() {
         if ($rootScope.selectedIdentity ){
-          return Ethereum.getBalance($rootScope.selectedIdentity.eth.getAddresses()[0]).toString(10);
+          return Web3.getBalance($rootScope.selectedIdentity.eth.getAddresses()[0]).toString(10);
         }
         return undefined;
       };

@@ -40,7 +40,7 @@
 }
 
 angular.module('angularApp')
-  .service('Identity', function ($log, pgp, Ethereum, LightWallet, localStorageService, Notification) {
+  .service('Identity', function ($log, pgp, LightWallet, localStorageService, Notification) {
 
     var self = this;
 

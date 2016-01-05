@@ -15,6 +15,10 @@ angular.module('angularApp')
   var self = this;
   self.gasPrice = 200000;
 
+  self.getBalance = function(address) {
+      return self.createWeb3().eth.getBalance(address);
+  };
+
   self.createWeb3 = function() {
     var web3 = new Web3();
     web3.setProvider(new web3.providers.HttpProvider(Config.gethEndpoint));

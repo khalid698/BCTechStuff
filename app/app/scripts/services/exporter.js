@@ -8,8 +8,8 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('Exporter', function (Identity, pgp, LightWallet, Ethereum) {
-    
+  .service('Exporter', function (Identity, pgp, LightWallet) {
+
     var self = this;
 
   	//take an identity object, return JSON
