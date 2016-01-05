@@ -8,9 +8,10 @@
  * Service in the angularApp.
  */
 
- function Identity( email, passphrase, pgp, eth, contractAddress) {
+ function Identity( email, passphrase, secretSeed, pgp, eth, contractAddress) {
   this.email = email;
   this.passphrase = passphrase;
+  this.secretSeed = secretSeed;
   this.pgp = pgp;
   eth.passwordProvider = function(e){ e(null, passphrase );};
   this.eth = eth;
@@ -60,7 +61,7 @@ angular.module('angularApp')
       };
       pgp.generateKeyPair(options).then(function(keypair) {
           //Store new identity and call backback
-          var identity = new Identity(email,passphrase,keypair.key, keyStore, undefined);
+          var identity = new Identity(email,passphrase,secretSeed,keypair.key, keyStore, undefined);
           $log.info("Created identity",identity);
           Notification.info("PGP Key generated");
           self.store(identity);
@@ -72,6 +73,7 @@ angular.module('angularApp')
       var storageHolder = {};
       storageHolder.email = identity.email;
       storageHolder.passphrase = identity.passphrase;
+      storageHolder.secretSeed = identity.secretSeed;
       storageHolder.eth = identity.eth.serialize();
       storageHolder.pgp = identity.pgp.armor();
       storageHolder.contractAddress = identity.contractAddress;
@@ -103,7 +105,7 @@ angular.module('angularApp')
       storageHolder.eth = LightWallet.keystore.deserialize(storageHolder.eth,storageHolder.passphrase);
       storageHolder.pgp = pgp.key.readArmored(storageHolder.pgp).keys[0];
       storageHolder.pgp.decrypt(storageHolder.passphrase);
-      return new Identity(storageHolder.email, storageHolder.passphrase,  storageHolder.pgp, storageHolder.eth, storageHolder.contractAddress );
+      return new Identity(storageHolder.email, storageHolder.passphrase, storageHolder.secretSeed,  storageHolder.pgp, storageHolder.eth, storageHolder.contractAddress );
     };
 
     self.getIdentities = function() {
@@ -119,6 +121,10 @@ angular.module('angularApp')
         localStorageService.set('identities', []);
       }
     };
+
+    self.createIdentity = function (email, passphrase, secretSeed, pgp, eth, contractAddress) {
+      return new Identity(email, passphrase, secretSeed, pgp, eth, contractAddress)
+    }
 
     // Startup
     self.init();

@@ -10,7 +10,7 @@
  * helpers = angular.element(document.body).injector().get('Helpers')
  */
 angular.module('angularApp')
-  .service('Helpers', function (IdentityContract, Identity) {
+  .service('Helpers', function (IdentityContract, Identity, Exporter) {
     var self=this;
 
     self.namesByAddress = {};
@@ -58,6 +58,32 @@ angular.module('angularApp')
       var l = ch.length;
       var shortened =  ch[l-8]+ch[l-7]+' '+ch[l-6]+ch[l-5]+' '+ch[l-4]+ch[l-3]+' '+ch[l-2]+ch[l-1];
       return shortened;
+    };
+
+    self.exportKeys = function(identity) {
+      //
+      //get fingerprint for unique file names
+      var fingerprint = identity.pgp.primaryKey.fingerprint;
+
+      if (!identity) {
+        console.error('No data');
+        return;
+      }
+
+      if (typeof identity === 'object') {
+        var data = JSON.stringify(Exporter.identityObjToJSONKeys(identity), undefined, 2);
+      }
+
+      var blob = new Blob([data], {type: 'text/json'}),
+        e = document.createEvent('MouseEvents'),
+        a = document.createElement('a');
+
+      a.download = 'DIDkeys_'+fingerprint+'.json';
+      a.href = window.URL.createObjectURL(blob);
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+      e.initMouseEvent('click', true, false, window,
+          0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      a.dispatchEvent(e);
     };
 
   });

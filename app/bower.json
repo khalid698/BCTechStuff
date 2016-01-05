@@ -13,7 +13,8 @@
     "ngprogress": "~1.1.2",
     "hex-strings": "~1.0.0",
     "angular-ui-router": "~0.2.15",
-    "angular-ui-notification": "~0.1.0"
+    "angular-ui-notification": "~0.1.0",
+    "ng-file-upload": "~11.0.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
