@@ -159,12 +159,12 @@ angular.module('angularApp')
           .then(storeAssertion);
       })).then(function(){
         // Second promise, executes batch
-        $log.debug("Executing batch with ",batch.requests.length," items");
+        $log.debug("Executing batch with",batch.requests.length,"items");
         batch.execute();
         // Notification.info("Assertion complete");
       }).then(function(){
         // Wait for
-        $log.debug("Waiting for ",batchTransactionPromises," promises to complete");
+        $log.debug("Waiting for",batchTransactionPromises,"promises to complete");
         return Promise.all(batchTransactionPromises).then(function(t){
           return Promise.all(t.map(function(tx){
             return Web3.watchTransaction(identity, tx).then(function(){callback()});
@@ -184,17 +184,17 @@ angular.module('angularApp')
             $log.warn(e);
             reject(e);
           } else if (result.lastIndexOf("") !== -1 ){
-            $log.debug("Got empty response reading assertionType",assertionType);
+            $log.debug("Got empty response reading assertion",self.assertionById(assertionType).label);
             //reject("Got one or more empty responses from contract, read failed");
             resolve(undefined);
           } else {
             // $log.debug(result);
             // Notification.info("Decrypting Session Key");
-            $log.debug("Decrypting session key for assertion ", assertionType);
+            $log.debug("Decrypting session key for assertion",self.assertionById(assertionType).label,"using PGP private key");
             pgp.decryptMessage(grantee.pgp, pgp.message.readArmored(result[0])).then(function(decryptedSessionKey){
-               $log.debug("Decrypted session key", decryptedSessionKey);
+               // $log.debug("Decrypted session key", decryptedSessionKey," for assertion", assertionType);
                var decryptedAssertion = CryptoWrapper.decryptStringValue(result[1], decryptedSessionKey);
-               $log.debug("Decrypted assertion key", decryptedAssertion);
+               $log.debug("Decrypted assertion of type", self.assertionById(assertionType).label, "with value", decryptedAssertion," using session key", decryptedSessionKey);
                //callback(decryptedAssertion);
                resolve(decryptedAssertion);
             });
@@ -216,7 +216,7 @@ angular.module('angularApp')
           }
           // Read granted assertion types
           var grants = self.grantsByGrantee(target, identity.ethAddress());
-          $log.debug("Got grants ",grants, " on target ", target);
+          $log.debug("Got grants",grants,"on target", target);
           // Read and decrypt values
           function readEncryptedAssertion(assertionType){
               return self.readAssertion(identity, target.contractAddress, assertionType)

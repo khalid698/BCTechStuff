@@ -120,16 +120,10 @@ angular.module('angularApp')
         $log.info('Reading '+assertionType.label+' from contract');
         IdentityContract.readAssertion($rootScope.selectedIdentity, $rootScope.selectedIdentity.contractAddress, assertionType.id)
           .then(function(decryptedAssertion){
-              // Notification.success('Got assertion value : '+decryptedAssertion);
               self.assertions[assertionType.id] = decryptedAssertion;
               delete self.changedAssertions[assertionType.id];
-              $scope.$apply();
+              // $scope.$apply(); This seems to be causing some trouble on firefox
           });
-        // Notification.primary('Reading '+assertionType.label+' from contract');
-      };
-
-      self.loadProfile = function(){
-
       };
 
       self.init = function(){
