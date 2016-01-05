@@ -14,7 +14,7 @@ angular.module('angularApp')
     var self = this;
 
     self.signMessage = function(decryptedPrivateKeyObject, plaintextMessage, callback) {
-	    openpgp.signClearMessage(decryptedPrivateKeyObject, plaintextMessage)
+	    pgp.signClearMessage(decryptedPrivateKeyObject, plaintextMessage)
 	    .then(function(signedMessage) {
 	        $log.info(signedMessage);
 	        callback(signedMessage);
@@ -22,12 +22,12 @@ angular.module('angularApp')
 	};
 
 	self.verifyMessage = function(publicKeyArmored, signedMessage, callback) {
-	    var publicKeyObject = openpgp.key.readArmored(publicKeyArmored).keys[0];
-    	var cleartextMessageObject = openpgp.cleartext.readArmored(signedMessage);
-    	openpgp.verifyClearSignedMessage(publicKeyObject, cleartextMessageObject)
+	    var publicKeyObject = pgp.key.readArmored(publicKeyArmored).keys[0];
+    	var cleartextMessageObject = pgp.cleartext.readArmored(signedMessage);
+    	pgp.verifyClearSignedMessage(publicKeyObject, cleartextMessageObject)
     	.then(function(result) {
     		$log.info(result);
-    		$log.info(result.signatures[0].valid)
+    		$log.info(result.signatures[0].valid);
     		callback(result);
 		});
 	};

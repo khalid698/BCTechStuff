@@ -72,7 +72,7 @@ angular.module('angularApp')
       } else {
         promise.resolve(r);
       }
-    }
+    };
   };
 
   /**
@@ -80,9 +80,8 @@ angular.module('angularApp')
   */
   self.watchTransaction = function(identity, transaction){
     $log.debug("Watching transaction", transaction," using from address ", identity.ethAddress());
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve){
       var web3 = self.createWeb3();
-      var complete = false;
       var resolveWhenDone = function(){
         var tx = web3.eth.getTransaction(transaction);
         // $log.debug("Current transaction", tx);
@@ -92,7 +91,7 @@ angular.module('angularApp')
         } else {
           $timeout(resolveWhenDone, 1000);
         }
-      }
+      };
       resolveWhenDone();
     }
     );

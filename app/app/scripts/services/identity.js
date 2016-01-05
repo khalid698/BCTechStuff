@@ -90,7 +90,7 @@ angular.module('angularApp')
       var identities = self.getIdentities();
       for(var id in identities){
         var storedId = self.get(identities[id]);
-        if(storedId.ethAddress() == address){
+        if(storedId.ethAddress() === address){
           return storedId;
         }
       }
@@ -109,10 +109,10 @@ angular.module('angularApp')
     };
 
     self.delete = function(email){
-      $log.info('Deleting identity', email)
+      $log.info('Deleting identity', email);
       localStorageService.remove(email);
       var identities = localStorageService.get('identities');
-      identities = identities.filter(function(i){ return i !== email});
+      identities = identities.filter(function(i){ return i !== email;});
       localStorageService.set('identities', identities);
       self.init();
     };
@@ -132,8 +132,8 @@ angular.module('angularApp')
     };
 
     self.createIdentity = function (email, passphrase, secretSeed, pgp, eth, contractAddress) {
-      return new Identity(email, passphrase, secretSeed, pgp, eth, contractAddress)
-    }
+      return new Identity(email, passphrase, secretSeed, pgp, eth, contractAddress);
+    };
 
     // Startup
     self.init();

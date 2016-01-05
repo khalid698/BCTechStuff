@@ -59,7 +59,7 @@ angular.module('angularApp')
 
     self.deleteIdentity = function(){
       if(self.selected){
-        $log.debug('Deleting identity', self.selected)
+        $log.debug('Deleting identity', self.selected);
         Identity.delete(self.selected.email);
         self.selected = undefined;
       }

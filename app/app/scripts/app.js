@@ -20,6 +20,8 @@ angular
   .constant('pgp', window.openpgp)
   .constant('CryptoJS', window.CryptoJS)
   .constant('LightWallet', window.lightwallet)
+  .constant('asciiToHex', asciiToHex)
+  .constant('hexToAscii', hexToAscii)
   .constant('Config', {gethEndpoint: 'http://localhost:8545'})
   .config(function ($stateProvider, $urlRouterProvider){
      $urlRouterProvider.otherwise('/id/personal');
@@ -156,26 +158,28 @@ angular
       $log.info("Selected identity : ", $rootScope.selectedIdentity);
       // Notification.success("Selected identity : " + $rootScope.selectedIdentity.email);
       localStorageService.set('selectedIdentity', identity);
-    }
+    };
+
     $rootScope.selectBankIdentity = function(identity){
       $rootScope.bankIdentity = Identity.get(identity);
       $log.info("Selected bank identity : ", $rootScope.bankIdentity);
       // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
       localStorageService.set('bankIdentity', identity);
-    }
+    };
 
     $rootScope.selectAttestationIdentity = function(identity){
       $rootScope.attestationIdentity = Identity.get(identity);
       $log.info("Selected attestationIdentity identity : ", $rootScope.attestationIdentity);
       // Notification.success("Selected bank identity : " + $rootScope.bankIdentity.email);
       localStorageService.set('attestationIdentity', identity);
-    }
+    };
+
     $rootScope.logout = function(){
       $log.info("Logging out");
       localStorageService.set('selectedIdentity', undefined);
       $rootScope.selectedIdentity = undefined;
       $state.go('id.login');
-    }
+    };
 
     // Progress bar, global object...
     $rootScope.progressbar = {
@@ -227,7 +231,7 @@ angular
     if(!$rootScope.selectedIdentity){
       $log.debug('Not logged in, redirecting to login page');
       // $state.go("id.login");
-    };
+    }
 
   })
 

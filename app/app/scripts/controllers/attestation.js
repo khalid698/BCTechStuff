@@ -36,8 +36,7 @@ angular.module('angularApp')
         .then($rootScope.progressbar.bump)
         .then(function(){
           $scope.$apply();
-        })
+        });
     };
 
-
-  });
+});

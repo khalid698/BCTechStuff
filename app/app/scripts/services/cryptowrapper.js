@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('CryptoWrapper', function (CryptoJS) {
+  .service('CryptoWrapper', function (CryptoJS, hexToAscii, asciiToHex) {
 
     var self = this;
 

@@ -46,7 +46,7 @@ angular.module('angularApp')
         return self.request.assertionTypes.filter(isPresent);
       };
 
-      self.addMissingAssertions = function(params){
+      self.addMissingAssertions = function(){
         self.customDisplayAssertionTypes = self.missingAssertionTypes();
         self.postAssertionState = 'id.request';
         $state.go('id.personal');
@@ -58,7 +58,7 @@ angular.module('angularApp')
         if(!identity){
           $log.debug('Unknown identity');
           $scope.invalidCredentials = true;
-        } else if (identity && identity.passphrase == password){
+        } else if (identity && identity.passphrase === password){
           $scope.invalidCredentials = false;
           $rootScope.selectIdentity(email);
           $log.debug('Password correct, redirect to id.personal');
@@ -71,8 +71,8 @@ angular.module('angularApp')
       };
 
       self.grantRequest = function() {
-        $log.debug("Granting", self.request.assertionTypes,"to", grantee);
         var grantee = Identity.get(self.request.requestee);
+        $log.debug("Granting", self.request.assertionTypes,"to", grantee);
         $rootScope.progressbar.init(self.request.assertionTypes.length,'Granting access');
         IdentityContract.grant($rootScope.selectedIdentity, grantee, self.request.assertionTypes, self.request.description, $rootScope.progressbar.bump)
           .then(function(){
@@ -103,7 +103,7 @@ angular.module('angularApp')
           return {
             assertionId: assertionId,
             value: self.assertions[assertionId].toString()
-          }});
+          };});
         $rootScope.progressbar.init(assertions.length,'Storing assertions');
         IdentityContract.assert($rootScope.selectedIdentity, assertions, $rootScope.progressbar.bump).then(function(){
           self.init().then(function(){
@@ -113,7 +113,7 @@ angular.module('angularApp')
               $log.debug('Redirecting to',target);
               $state.go(target);
             }
-          })
+          });
         });
       };
 
@@ -142,10 +142,10 @@ angular.module('angularApp')
           IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
             self.grants = grants;
             // If there's only one grant, just select that one
-            if(self.grants.length == 1 ){
+            if(self.grants.length === 1 ){
               self.grant = self.grants[0];
-              $log.info('Only one grant present, selected', self.selectGrant(self.grants[0]))
-            };
+              $log.info('Only one grant present, selected', self.selectGrant(self.grants[0]));
+            }
             p.resolve();
           });
           self.attestations = IdentityContract.attestations($rootScope.selectedIdentity);
@@ -162,7 +162,7 @@ angular.module('angularApp')
         var keys = [];
         for(var k in self.changedAssertions){
           keys.push(k);
-        };
+        }
         return keys;
       };
 
@@ -188,7 +188,7 @@ angular.module('angularApp')
         var keys = [];
         for(var k in self.editingAssertions){
           keys.push(k);
-        };
+        }
         return keys;
       };
 
@@ -206,13 +206,15 @@ angular.module('angularApp')
       };
 
       self.displayAssertionTypes = function(){
-        var res = undefined;
+        var res;
         if(self.customDisplayAssertionTypes){
           res = self.customDisplayAssertionTypes;
         } else {
           res = $state.current.displayAssertionTypes;
         }
-        return res.map(function(id){return IdentityContract.assertionById(id)});
+        return res.map(function(id){
+          return IdentityContract.assertionById(id);
+        });
       };
 
       // Contract code

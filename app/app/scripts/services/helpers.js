@@ -54,8 +54,8 @@ angular.module('angularApp')
 
     self.getMyId = function () {
       var ethAddress = $rootScope.selectedIdentity.ethAddress();
-      return ethAddress
-    }
+      return ethAddress;
+    };
 
     self.exportKeys = function(identity) {
       //takes an identity object
@@ -66,9 +66,9 @@ angular.module('angularApp')
         console.error('No data');
         return;
       }
-
+      var data;
       if (typeof identity === 'object') {
-        var data = JSON.stringify(Exporter.identityObjToJSONKeys(identity), undefined, 2);
+        data = JSON.stringify(Exporter.identityObjToJSONKeys(identity), undefined, 2);
       }
 
       var blob = new Blob([data], {type: 'text/json'}),
