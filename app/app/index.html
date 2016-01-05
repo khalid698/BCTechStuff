@@ -30,7 +30,10 @@
       </ul>
     </div>
 
+    <div>
+      <!-- This div is required, angular will throw 'WARNING: Tried to load angular more than once.' errors if removed -->
       <ui-view/>
+    </div>
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -51,6 +54,7 @@
     <script src="bower_components/hex-strings/hex-strings.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -65,10 +69,11 @@
     <script src="scripts/controllers/bank.js"></script>
     <script src="scripts/services/identitycontract.js"></script>
     <script src="scripts/services/helpers.js"></script>
-    <script src="scripts/controllers/sign.js"></script>
     <script src="scripts/services/verify.js"></script>
     <script src="scripts/controllers/identities.js"></script>
     <script src="scripts/controllers/attestation.js"></script>
+    <script src="scripts/directives/jsonreader.js"></script>
+    <script src="scripts/services/exporter.js"></script>
     <!-- endbuild -->
 </body>
 </html>

@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentitiesCtrl', function ($log, $rootScope, Identity, Notification) {
+  .controller('IdentitiesCtrl', function ($log, $rootScope, Identity, Web3, Notification) {
     var self = this;
 
     self.selected = undefined;
@@ -54,6 +54,15 @@ angular.module('angularApp')
       $log.info("Creating new identity for "+self.email);
       Notification.primary("Creating new identity for "+self.email);
       Identity.generateIdentity(self.email, self.passphrase, callback);
+      self.init();
+    };
+
+    self.deleteIdentity = function(){
+      if(self.selected){
+        $log.debug('Deleting identity', self.selected)
+        Identity.delete(self.selected.email);
+        self.selected = undefined;
+      }
     };
 
   });

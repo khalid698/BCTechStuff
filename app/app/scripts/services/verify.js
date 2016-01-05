@@ -28,9 +28,9 @@ angular.module('angularApp')
     	.then(function(result) {
     		$log.info(result);
     		$log.info(result.signatures[0].valid)
-    		callback(result);	
+    		callback(result);
 		});
 	};
 
-    
+
   });

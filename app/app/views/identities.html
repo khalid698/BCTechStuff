@@ -27,6 +27,7 @@
                 ng-model="identities.selected"
                 ng-change="identities.selectIdentity()">
         </select>
+        <button class="btn btn-danger btn-sm" ng-if="identities.selected" ng-click="identities.deleteIdentity()">Delete</button>
     </div>
   </div>
 
@@ -53,4 +54,14 @@
         </select>
       </div>
   </div>
+  
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Upload Identity Keys
+      </div>
+      <div class="panel-body">
+        <input json-reader="fileContent" type="file" json-reader="fileContent" />
+      </div>
+  </div>
+  
 </div>

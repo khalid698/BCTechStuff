@@ -1,12 +1,14 @@
-<div ng-repeat="assertionType in identity.displayAssertionTypes()" class="assertion-row">
-  <div class="assertion" ng-class="{assertionedit: identity.isEditing(assertionType)}">
-
-    <div class="row" ng-if="!selectedIdentity.contractAddress">
+<div class="assertion-row" ng-if="!selectedIdentity.contractAddress">
+  <div class="row">
+    <div class="col-lg-12">
       <div class="alert alert-danger" role="alert">
         Please <a href="" ui-sref="id.settings">create a contract</a> before making assertions.
       </div>
     </div>
-
+  </div>
+</div>
+<div ng-repeat="assertionType in identity.displayAssertionTypes()" class="assertion-row">
+  <div class="assertion" ng-class="{assertionedit: identity.isEditing(assertionType)}">
     <!-- Assertion title -->
 
     <div class="row">

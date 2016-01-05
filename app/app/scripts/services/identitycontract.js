@@ -16,7 +16,7 @@
  *
  */
 angular.module('angularApp')
-  .service('IdentityContract', function ($log, pgp, CryptoWrapper, Web3, Notification) {
+  .service('IdentityContract', function ($q, $log, pgp, CryptoWrapper, Web3, Notification) {
 
     var self = this;
 
@@ -57,18 +57,6 @@ angular.module('angularApp')
       return Web3.getContract(identity, self.contractAbi, address);
     };
 
-    // Callbank function to resolve promise with web3 result.
-    self.web3PromiseResolver = function(promise){
-      return function(e,r){
-        if(e){
-          $log.error("got error from web3, rejecting promise",e);
-          promise.reject(e);
-        } else {
-          promise.resolve(r);
-        }
-      }
-    };
-
     // Contract creation / Deletion
     self.createContract = function(identity, name){
         $log.info("Creating contract for ", identity);
@@ -98,11 +86,11 @@ angular.module('angularApp')
 
     self.deleteContract = function(identity){
       $log.debug('Deleting contract for identity',identity);
-      var p = Promise.defer();
+      var p = $q.defer();
       var web3 = Web3.createSignedWeb3(identity);
       var batch = web3.createBatch();
       var identityClient = self.createIdentityClient(identity, identity.contractAddress)
-      var request = identityClient.kill.request(self.web3OptionsWithFrom(identity), self.web3PromiseResolver(p));
+      var request = identityClient.kill.request(self.web3OptionsWithFrom(identity), Web3.web3PromiseResolver(p));
       request.format = false;
       batch.add(request);
       batch.execute()
@@ -146,7 +134,7 @@ angular.module('angularApp')
       // Add call to batch
       var storeAssertion = function(encryptedPair){
             $log.debug("Creating batch operation with params ", encryptedPair.assertionType, encryptedPair.sessionKey, encryptedPair.encryptedAssertion);
-            var p = Promise.defer();
+            var p = $q.defer();
             batchTransactionPromises.push(p.promise);
 
             var request = self.createIdentityClient(identity, identity.contractAddress)
@@ -155,7 +143,7 @@ angular.module('angularApp')
                   encryptedPair.sessionKey,
                   encryptedPair.encryptedAssertion,
                   {from: identity.ethAddress(), gas: 3000000, gasPrice: Web3.gasPrice},
-                  self.web3PromiseResolver(p)
+                  Web3.web3PromiseResolver(p)
                 );
                 request.format = false;
             batch.add(request);
@@ -301,7 +289,7 @@ angular.module('angularApp')
 
       var storeEncryptedSessionKey = function(assertionType, encryptedSessionKey, encryptedDescription){
         $log.info("Storing encrypted session key for assertionType", assertionType);
-        var p = Promise.defer();
+        var p = $q.defer();
         grantPromises.push(p.promise);
         var request = self.createIdentityClient(identity, identity.contractAddress)
                   .grant.request(
@@ -310,7 +298,7 @@ angular.module('angularApp')
                       encryptedSessionKey,
                       encryptedDescription,
                       {from: identity.ethAddress(), gas: 3000000, gasPrice: Web3.gasPrice},
-                      self.web3PromiseResolver(p)
+                      Web3.web3PromiseResolver(p)
                       );
         request.format = false;
         batch.add(request);
@@ -374,41 +362,21 @@ angular.module('angularApp')
 
       var assertionIds = assertionTypes.map(function(at){return at.id;});
       $log.info("Attesting assertion ids ", assertionIds, " on ", target, "by", identity);
-      var p = Promise.defer();
+      var p = $q.defer();
 
-      self.createIdentityClient(identity, target.contractAddress).attest(assertionIds, self.web3OptionsWithFrom(identity), self.web3PromiseResolver(p));
+      self.createIdentityClient(identity, target.contractAddress).attest(assertionIds, self.web3OptionsWithFrom(identity), Web3.web3PromiseResolver(p));
       return p.promise.then(function(tx){
         return Web3.watchTransaction(identity, tx).then(function(){
           $log.debug("Attestation complete");
           return true;
         })
       });
-
-      // var createAttestation = function(assertionType){
-      //     var p = Promise.defer();
-      //     transactionPromises.push(p.promise);
-      //     var request =
-      //     request.format = false;
-      //     batch.add(request);
-      //     return Promise.resolve();
-      // };
-
-      // return Promise.all(assertionTypes.map(function(assertionType){
-      //   return createAttestation(assertionType)
-      // })).then(function(){
-      //   batch.execute();
-      //   return Promise.all(transactionPromises).then(function(txIds){
-      //     return Promise.all(txIds.map(function(tx){
-      //       return Web3.watchTransaction(identity, tx).then(function(){callback()});
-      //     }))
-      //   })
-      // })
     };
 
     self.revoke = function(identity, grantee){
       $log.info("Revoking access by",grantee);
-      var p = Promise.defer();
-      self.createIdentityClient(identity, identity.contractAddress).revoke(grantee.ethAddress(), self.web3Options, self.web3PromiseResolver(p));
+      var p = $q.defer();
+      self.createIdentityClient(identity, identity.contractAddress).revoke(grantee.ethAddress(), self.web3Options, Web3.web3PromiseResolver(p));
       return p.promise;
     };
 
