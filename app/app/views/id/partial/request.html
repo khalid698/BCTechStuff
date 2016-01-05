@@ -17,7 +17,7 @@
 
       <img src="/images/logo.png" alt="" class="logo">
 
-      <h3>Continue to Acro Bank as Patrick Wadden **HARD CODED** Needs updating </h3>
+      <h3>Continue to Acro Bank <span ng-if="identity.assertions[1]">as {{identity.assertions[1]}}</span></h3>
 
       <div class="profile-image" ng-if="!identity.assertions[7]">
         <img src="/images/no-user.png" alt="" class="">
