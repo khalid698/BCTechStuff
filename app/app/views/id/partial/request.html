@@ -8,15 +8,16 @@
   .rightpanel {
     width: 100% !important;
     background: transparent !important;
+    padding: 0;
   }
 </style>
 
 <div class="container" >
-  <div class="grant-access col-xs-6 col-xs-offset-3" >
+  <div class="grant-access" >
 
       <img src="/images/logo.png" alt="" class="logo">
 
-      <h3>Continue to Acro Bank as Patrick Wadden</h3>
+      <h3>Continue to Acro Bank as Patrick Wadden **HARD CODED** Needs updating </h3>
 
       <div class="profile-image" ng-if="!identity.assertions[7]">
         <img src="/images/no-user.png" alt="" class="">
@@ -32,27 +33,27 @@
         <span ng-repeat="item in identity.presentAssertionTypes()">{{helpers.assertionLabelById(item)}}</span>
       </div>
 
-      <!-- Missing -->
-      <div class="col-lg-12" ng-if="identity.missingAssertionTypes().length > 0">
-        <h5>The following assertions are requested, but not present on your identity:</h5>
-        <ul class="fa-ul">
-          <li ng-repeat="item in identity.missingAssertionTypes()">
-            <i class="fa-li fa fa-question warning"></i>
-            {{helpers.assertionLabelById(item)}}
-          </li>
-        </ul>
+       <!-- Missing -->
+      <div class="col-lg-12 assertions" ng-if="identity.missingAssertionTypes().length > 0">
+        <b>The following assertions are requested, but not present on your identity:<br></b>
+        <span ng-repeat="item in identity.missingAssertionTypes()">{{helpers.assertionLabelById(item)}}</span>
       </div>
 
       <div class="col-lg12 text-center">
         <button class="btn btn-primary btn-lg"
                 ng-click="identity.grantRequest()"
                 ng-if="!progressbar.active() && identity.missingAssertionTypes().length == 0">Continue</button>
-        <button class="btn btn-primary"
+        <button class="btn btn-primary btn-lg"
                 ng-click="identity.addMissingAssertions()"
                 ng-if="identity.missingAssertionTypes().length > 0">Add missing assertions</button>
-        <p><button class="btn btn-link" >Cancel</button></p>
+        <p><button class="btn btn-link btn-sm" >Cancel</button></p>
 
       </div>
+
+      <footer>
+        <span>Terms and Conditions</span>
+        <span>Privacy Policy</span>
+      </footer>
 
   </div>
 </div>

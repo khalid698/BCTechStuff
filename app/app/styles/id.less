@@ -93,6 +93,12 @@ body{
 
 			.link {
 
+				&.error {
+					padding: 20px 30px 20px 30px;
+					font-weight: bold;
+					text-align: center;
+				}
+
 				a {
 					transition: all (200ms);
 					display: block;
@@ -145,6 +151,7 @@ body{
 
 .section,
 .access-header,
+.settings,
 .assertion {
 	// margin-top: 2px;
 	// padding-bottom: 20px;
@@ -208,6 +215,12 @@ body{
 			float: right;
 			line-height: 31px;
 		}
+		.note {
+		    margin-top: -10px;
+		    margin-bottom: 20px;
+		    font-size: 12px;
+		    color: #9A9A9A;
+		}
 	}
 	h2 {
 		margin-top: 0;
@@ -217,11 +230,37 @@ body{
 	padding-left: 40px;
 	margin-top: 30px;
 }
-.modal {
-	margin: 50px auto 0 auto;
+.loading {
+	margin: 100px auto 0 auto;
 	width: 500px;
+	overflow: visible;
+	h4 {
+		text-align: center;
+	}
+	p {
+		margin-top: 20px;
+		text-align: center;
+		font-size: 32px;
+		font-weight: 200;
+		i {
+			font-size: 50px;
+			margin-top: 20px;
+		}
+	}
+	.modal-content {
+		border: none;
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+	}
+	.modal-body {
+		padding: 0;
+		padding-top: 20px;
+	}
 	.progress {
-		height: 40px;
+		height: 10px;
+		background: #efefef;
+		box-shadow: none;
+		margin-bottom: 0;
+		border-radius: 0 0 6px 6px;
 		// padding: 0 10px;
 		// text-align: center;
 		.progress-bar {
@@ -234,11 +273,13 @@ body{
 
 .grant-access {
 	position: relative;
-	z-index: 99999;
+	z-index: 1041;
 	background: #fff;
 	border-radius: 15px;
 	text-align: center;
-	padding: 30px 50px;
+	padding: 30px 50px 0px 50px;
+    width: 650px;
+    margin: 0 auto;
 	.logo {
 		width: 100px;
 		margin-bottom: 20px;
@@ -273,6 +314,24 @@ body{
 		padding: 12px 46px;
 		font-size: 14px;
 		font-weight: bold;
+	}
+	.btn-link {
+		margin-top: 10px;
+	}
+
+	footer {
+		margin-top: 20px;
+		background: @grey;
+		padding: 12px 0;
+		margin-left: -50px;
+		margin-right: -50px;
+		border-radius: 0 0 15px 15px;
+		span {
+			color: @blue;
+			margin: 0 10px;
+			font-weight: bold;
+			font-size: 12px;
+		}
 	}
 }
 

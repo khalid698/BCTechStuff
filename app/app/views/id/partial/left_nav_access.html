@@ -1,9 +1,9 @@
 <div ng-include src="'views/id/partial/id_image.html'"></div>
 
-<div class="row link" ng-if="identity.grants.length == 0">
-  <p>You haven't granted access to anyone!</p>
+<div class="row link error" ng-if="identity.grants.length == 0">
+  <p>No one currently has access to your information.</p>
 </div>
 
 <div class="row link" ng-repeat="grant in identity.grants" ng-class="{active: identity.grant == this.grant}">
-      <a href="" ng-click="identity.selectGrant(grant)">{{helpers.getRequesteeEmail(grant.requestee)}}</a>
+	<a href="" ng-click="identity.selectGrant(grant)">{{helpers.getRequesteeEmail(grant.requestee)}}</a>
 </div>

@@ -4,6 +4,7 @@
 	right: 0;
 	opacity: 0.2;
 	transition: opacity (200ms);
+	z-index: 9999999999;
 }
 .internal-nav:hover {
 	opacity: 1;

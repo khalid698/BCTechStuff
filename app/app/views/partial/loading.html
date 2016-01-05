@@ -6,21 +6,24 @@ Loading bar, takes a scope containing
 -->
 <div ng-if="progressbar.active()">
 
-	<div class="modal show">
+	<div class="modal show loading">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="modal-title">{{progressbar.title}}</h2>
+				<h4 class="modal-title">{{progressbar.title}}</h4>
 			</div>
+			<p>
+				Saving<br><i class="fa fa-spinner fa-pulse"></i>
+			</p>
 			<div class="modal-body">
 				<div class="progress">
-					<div class="progress-bar"
+					<div class="progress-bar progress-bar-striped active"
 						role="progressbar"
 						aria-valuenow="{{progressbar.percentage()}}"
-						aria-valuemin="0"
-						aria-valuemax="100"
+						aria-valuemin="10"
+						aria-valuemax="100"3
 						style="width: {{progressbar.percentage()}}%;"
 					>
-						{{progressbar.percentage()}}%
+						<!-- {{progressbar.percentage()}}% -->
 					</div>
 				</div>	
 			</div>
