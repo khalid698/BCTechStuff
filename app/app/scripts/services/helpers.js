@@ -10,7 +10,7 @@
  * helpers = angular.element(document.body).injector().get('Helpers')
  */
 angular.module('angularApp')
-  .service('Helpers', function (IdentityContract, Identity, Exporter) {
+  .service('Helpers', function (IdentityContract, Identity, Exporter, $rootScope) {
     var self=this;
 
     self.namesByAddress = {};
@@ -60,8 +60,13 @@ angular.module('angularApp')
       return shortened;
     };
 
+    self.getMyId = function () {
+      var ethAddress = $rootScope.selectedIdentity.ethAddress();
+      return ethAddress
+    }
+
     self.exportKeys = function(identity) {
-      //
+      //takes an identity object
       //get fingerprint for unique file names
       var fingerprint = identity.pgp.primaryKey.fingerprint;
 
