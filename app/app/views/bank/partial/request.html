@@ -10,7 +10,6 @@
       <li ng-repeat="assertion in bank.grantedAssertions" ng-switch on="helpers.assertionFormatById(assertion.assertionType)">
         <strong>{{helpers.assertionLabelById(assertion.assertionType)}}</strong>:
         <span ng-switch-when="text">{{assertion.value}}</span>
-        <span ng-switch-when="date">{{helpers.dateConverter(assertion.value) | date: helpers.getDateFormat()}}</span>
         <span ng-switch-when="number">{{assertion.value}}</span>
         <span ng-switch-when="multiline">{{assertion.value}}</span>
     </ul>

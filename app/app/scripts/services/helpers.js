@@ -32,14 +32,6 @@ angular.module('angularApp')
       return IdentityContract.assertionById(id).format;
     };
 
-    self.getDateFormat = function(){
-      return 'yyyy - MMMM - dd';
-    };
-
-    self.dateConverter = function(dateString){
-      return new Date(dateString);
-    };
-
     self.getRequesteeEmail = function(ethAddress){
       return Identity.getByAddress(ethAddress).email;
     };

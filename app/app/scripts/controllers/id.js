@@ -14,7 +14,6 @@ angular.module('angularApp')
       self.assertions = {};
       self.changedAssertions = {};
       self.editingAssertions = {};
-      self.assertionsPending = false;
 
       self.grants = [];
 
@@ -23,6 +22,7 @@ angular.module('angularApp')
       // Holds a small subset of assertions, used during request flow. overrides state given set.
       self.customDisplayAssertionTypes = undefined;
       self.postAssertionState = undefined;
+      self.grant = undefined;
 
       // Holds incoming grant request from bank
       self.request = {
@@ -82,17 +82,18 @@ angular.module('angularApp')
                 self.grant = self.grants[g];
               }
             }
-            $state.transitionTo('id.access');
+            $state.transitionTo('bank.request');
             $scope.$apply();
           });
       };
 
       self.revokeGrant = function(grant){
         $log.debug("Revoking grant", grant);
-        self.grantsPending = true;
+        $rootScope.progressbar.init(1, 'Revoking grant');
         var grantee = Identity.getByAddress(grant.requestee);
         IdentityContract.revoke($rootScope.selectedIdentity, grantee).then(function(){
-          self.grantsPending = false;
+          $rootScope.progressbar.bump();
+          self.init();
         });
       };
 
@@ -122,7 +123,7 @@ angular.module('angularApp')
           .then(function(decryptedAssertion){
               self.assertions[assertionType.id] = decryptedAssertion;
               delete self.changedAssertions[assertionType.id];
-              // $scope.$apply(); This seems to be causing some trouble on firefox
+              $scope.$apply(); // This seems to be causing some trouble on firefox
           });
       };
 
@@ -131,8 +132,8 @@ angular.module('angularApp')
         self.customDisplayAssertionTypes = undefined;
         self.assertions = {};
         self.editingAssertions = {};
-        self.assertionsPending = false;
         self.grants = [];
+        self.grant = undefined;
         self.attestations = [];
 
         var p = $q.defer();
@@ -284,10 +285,6 @@ angular.module('angularApp')
           }
           };
         Verify.verifyMessage(self.publicKey, self.signedMessage, callback);
-      };
-
-      self.dateConverter = function(dateString){
-        return new Date(dateString);
       };
 
       self.giveEther = function(){

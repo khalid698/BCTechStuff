@@ -35,7 +35,7 @@ angular.module('angularApp')
     // Default 'format' is text
     self.assertionTypes = [
       {id:1, label: 'Name', format: 'text'},
-      {id:2, label: 'Date of birth', format: 'date'}, // TODO : Date ?
+      {id:2, label: 'Date of birth', format: 'text'}, // TODO : Date ?
       {id:3, label: 'Telephone number', format: 'text'},
       {id:4, label: 'Passport number', format: 'text'},
       {id:5, label: 'Driver licence number', format: 'text'},
@@ -108,17 +108,29 @@ angular.module('angularApp')
 
       var batchTransactionPromises = [];
 
+      // Try to read from existing assertion or generate new random key
+      var getAssertionSessionKey = function(assertionType){
+        var p = $q.defer();
+        self.createIdentityClient(identity, identity.contractAddress).get.call(assertionType, Web3.web3PromiseResolver(p));
+        return p.promise.then(function(encryptedSessionKey){
+          if (encryptedSessionKey[0] != ""){
+            $log.debug("Using PGP encrypted existing session key for assertionType", assertionType);
+            return pgp.decryptMessage(identity.pgp, pgp.message.readArmored(encryptedSessionKey[0]))
+          } else {
+            $log.debug("Creating new session key for assertionType", assertionType);
+           return CryptoWrapper.randomKey();
+          }
+        });
+      };
+
       // Inner encryption layer
       var encryptAssertionWithRandomSessionKey = function(assertionType, assertionValue){
-        return new Promise(function(resolve, reject){
-          var sessionKey = CryptoWrapper.randomKey();
-          //Notification.info('Generated session Key: '+sessionKey);
+        return getAssertionSessionKey(assertionType).then(function(sessionKey){
+          $log.debug("Encrypting assertion value with session key ",sessionKey);
           var encryptedAssertion = CryptoWrapper.encryptValue(assertionValue, sessionKey);
-          $log.debug("Encrypted assertion value with random session key ",sessionKey);
-          resolve({
-            assertionType:assertionType,
+          return {assertionType:assertionType,
             sessionKey: sessionKey,
-            encryptedAssertion:encryptedAssertion});
+            encryptedAssertion:encryptedAssertion}
         });
       };
 
@@ -377,7 +389,7 @@ angular.module('angularApp')
       $log.info("Revoking access by",grantee);
       var p = $q.defer();
       self.createIdentityClient(identity, identity.contractAddress).revoke(grantee.ethAddress(), self.web3Options, Web3.web3PromiseResolver(p));
-      return p.promise;
+      return p.promise.then(function(tx){return Web3.watchTransaction(identity, tx)});
     };
 
     /**
