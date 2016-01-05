@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentityCtrl', function ($log, $rootScope, $scope, $state, IdentityContract, Identity, Notification, Ethereum, Verify) {
+  .controller('IdentityCtrl', function ($q, $log, $rootScope, $scope, $state, IdentityContract, Identity, Notification, Ethereum, Verify, Web3) {
       var self = this;
 
       self.assertions = {};
@@ -141,7 +141,7 @@ angular.module('angularApp')
         self.grants = [];
         self.attestations = [];
 
-        var p = Promise.defer();
+        var p = $q.defer();
         if($rootScope.selectedIdentity){
           $rootScope.assertionTypes.map(self.read);
           IdentityContract.grants($rootScope.selectedIdentity).then(function(grants){
@@ -296,6 +296,11 @@ angular.module('angularApp')
         return new Date(dateString);
       };
 
-
-
+      self.giveEther = function(){
+        $rootScope.progressbar.init(1, 'Transfering ether');
+        $log.info("Transfering ether to identity", $rootScope.selectedIdentity);
+        Web3.giveEther($rootScope.selectedIdentity).then(function(){
+            $rootScope.progressbar.bump();
+        });
+      };
   });

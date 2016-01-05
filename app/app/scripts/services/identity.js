@@ -108,6 +108,15 @@ angular.module('angularApp')
       return new Identity(storageHolder.email, storageHolder.passphrase, storageHolder.secretSeed,  storageHolder.pgp, storageHolder.eth, storageHolder.contractAddress );
     };
 
+    self.delete = function(email){
+      $log.info('Deleting identity', email)
+      localStorageService.remove(email);
+      var identities = localStorageService.get('identities');
+      identities = identities.filter(function(i){ return i !== email});
+      localStorageService.set('identities', identities);
+      self.init();
+    };
+
     self.getIdentities = function() {
       return localStorageService.get('identities');
     };

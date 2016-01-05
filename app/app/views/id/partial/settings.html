@@ -1,39 +1,38 @@
 <div class="container-fluid" ng-if="selectedIdentity">
-<div class="green">
-  <h4>PGP</h4>
-  <ul>
-    <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
-    <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
-  </ul>
+  <div class="green">
+    <h4>PGP</h4>
+    <ul>
+      <li>UserId : <strong>{{selectedIdentity.pgpUserId()}}</strong></li>
+      <li>Fingerprint : <strong>{{selectedIdentity.pgpFingerprint()}}</strong></li>
+    </ul>
 
-  <h4>Ethereum</h4>
-  <ul>
-    <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
-    <li>Balance: <strong>{{identity.balance()}}</strong></li>
-    <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
-  </ul>
-  <a class="btn btn-sm btn-primary" ng-click="helpers.exportKeys(selectedIdentity)">Export Keys</a>
+    <h4>Ethereum</h4>
+    <ul>
+      <li>Address: <strong>{{selectedIdentity.ethAddress()}}</strong></li>
+      <li>Balance: <strong>{{identity.balance()}}</strong></li>
+      <li ng-if="selectedIdentity.hasContract()">Contract: <strong>{{selectedIdentity.contractAddress}}</strong></li>
+    </ul>
+    <a class="btn btn-sm btn-primary" ng-click="helpers.exportKeys(selectedIdentity)">Export Keys</a>
 
-</div>
-
-  <h4>Contract actions</h4>
-  <div ng-if="!selectedIdentity.hasContract() && !progressbar.active()">
-    <button ng-disabled="identity.balance() == 0" class="btn btn-sm btn-primary" ng-click="identity.createContract()" >Create contract</button>
-    <div ng-if="identity.balance() == 0" class="alert alert-danger" role="alert">
-     This ethereum address has no funds, transfer funds to this address using the following commands :
-     <pre>
-      cd scripts
-      ./unlock.sh
-      ./transfer.sh {{selectedIdentity.ethAddress()}}
-      </pre>
+  </div>
+  <div>
+    <div class="row">
+      <h4>Contract actions</h4>
     </div>
-  </div>
+    <div class="row">
+      <div ng-if="!selectedIdentity.hasContract() && !progressbar.active()">
+        <button ng-disabled="identity.balance() == 0" class="btn btn-sm btn-primary" ng-click="identity.createContract()" >Create contract</button>
+      </div>
+    </div>
+    <div class="row">
+      <p ng-if="identity.balance() == 0">
+        This account has a 0 balance, the balance has to be increased before a contract can be created.
+      </p>
+      <button class="btn btn-primary btn-sm" ng-click="identity.giveEther()">Increase balance</button>
+    </div>
 
-  </div>
-
-  <div ng-if="selectedIdentity.hasContract() && !progressbar.active()">
-    <button class="btn btn-sm btn-danger" ng-click="identity.deleteContract()" >Delete contract</button>
-  </div>
-  </ul>
+    <div class="row" ng-if="selectedIdentity.hasContract() && !progressbar.active()">
+      <button class="btn btn-sm btn-danger" ng-click="identity.deleteContract()" >Delete contract</button>
+    </div>
 </div>
 

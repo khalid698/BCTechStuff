@@ -11,7 +11,7 @@
 var Web3 = require('web3');
 
 angular.module('angularApp')
-  .service('Web3', function ($log, $timeout, Config) {
+  .service('Web3', function ($q, $log, $timeout, Config) {
   var self = this;
   self.gasPrice = 200000;
 
@@ -46,6 +46,29 @@ angular.module('angularApp')
      gas: 3000000,
      gasPrice: self.gasPrice
     }, callback);
+  };
+
+  self.giveEther = function(identity){
+    var web3 = self.createWeb3();
+    var promise = $q.defer();
+    $log.debug("Transfering from",web3.eth.coinbase,"to",identity.ethAddress());
+    web3.eth.sendTransaction({from: web3.eth.coinbase, to: identity.ethAddress(), value: web3.toWei(1, "ether")},
+      self.web3PromiseResolver(promise));
+    return promise.promise.then(function(tx){
+        return self.watchTransaction(identity, tx);
+    });
+  };
+
+  // Callbank function to resolve promise with web3 result.
+  self.web3PromiseResolver = function(promise){
+    return function(e,r){
+      if(e){
+        $log.error("got error from web3, rejecting promise",e);
+        promise.reject(e);
+      } else {
+        promise.resolve(r);
+      }
+    }
   };
 
   /**
