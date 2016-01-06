@@ -46,9 +46,14 @@ angular.module('angularApp')
           .then(function(grants){
             return grants.map(function(grant){
               // Replace contract address with email, contract addresses are no longer valid after chain reset.
-              grant.requestee = Identity.getByAddress(grant.requestee).email;
-              return grant;
-            });
+              var grantedIdentity = Identity.getByAddress(grant.requestee)
+              if ( grantedIdentity ) {
+                grant.requestee = grantedIdentity.email;
+                return grant;
+              } else {
+                return undefined;
+              }
+            }).filter(function(grant){return grant !== undefined; });
           });
       };
 
