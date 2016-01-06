@@ -57,20 +57,27 @@ angular.module('angularApp')
           });
       };
 
+      var readAttestations = function(identity){
+        return IdentityContract.attestations(identity)
+      };
+
       var exportIdentity = function(identity){
           var identityObject = Identity.get(identity);
-          return Promise.all([readAssertions(identityObject), readGrants(identityObject)]).then(function(results){
-            //return {identity: identity, assertions: results[0]}
-             var id = {};
-             id.email = identityObject.email;
-             id.passphrase = identityObject.passphrase;
-             id.secretSeed = identityObject.secretSeed;
-             id.eth = JSON.parse(identityObject.eth.serialize()); // avoid nested json
-             id.pgp = identityObject.pgp.armor();
-             id.contractAddress = identityObject.contractAddress;
-             id.assertions = results[0];
-             id.grants = results[1];
-             return id;
+          return Promise.all(
+              [readAssertions(identityObject), readGrants(identityObject), readAttestations(identityObject)]
+              ).then(function(results){
+                  //return {identity: identity, assertions: results[0]}
+                   var id = {};
+                   id.email = identityObject.email;
+                   id.passphrase = identityObject.passphrase;
+                   id.secretSeed = identityObject.secretSeed;
+                   id.eth = JSON.parse(identityObject.eth.serialize()); // avoid nested json
+                   id.pgp = identityObject.pgp.armor();
+                   id.contractAddress = identityObject.contractAddress;
+                   id.assertions = results[0];
+                   id.grants = results[1];
+                   id.attestations = results[2];
+                   return id;
           });
       };
       return Promise.all(identities.map(exportIdentity))

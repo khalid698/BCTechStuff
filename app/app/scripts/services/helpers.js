@@ -10,7 +10,7 @@
  * helpers = angular.element(document.body).injector().get('Helpers')
  */
 angular.module('angularApp')
-  .service('Helpers', function (IdentityContract, Identity, Exporter, $rootScope) {
+  .service('Helpers', function (IdentityContract, Identity, Exporter, $rootScope, Web3) {
     var self=this;
 
     self.namesByAddress = {};
