@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IdentitiesCtrl', function ($log, $rootScope, Identity, Web3, Notification) {
+  .controller('IdentitiesCtrl', function ($log, $scope, $rootScope, Identity, Web3, Notification) {
     var self = this;
 
     self.selected = undefined;
@@ -65,9 +65,7 @@ angular.module('angularApp')
     };
 
     self.exportIdentities = function(){
-      Exporter.exportIdentities().then(function(foo){
-
-      })
+      Exporter.exportIdentities();
     };
 
     self.giveEther = function(identity){

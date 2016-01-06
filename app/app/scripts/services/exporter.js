@@ -10,9 +10,77 @@
  var exporter =  angular.element(document.body).injector().get('Exporter')
  */
 angular.module('angularApp')
-  .service('Exporter', function ($log, Identity, pgp, LightWallet, IdentityContract) {
+  .service('Exporter', function ($log, Identity, pgp, Web3, LightWallet, IdentityContract) {
 
     var self = this;
+
+    self.importIdentities = function(data){
+      $log.debug('Deleting identities');
+      Identity.getIdentities().map(Identity.delete);
+
+      var createIdentity = function(identity){
+        $log.debug("Importing", identity);
+        var eth = LightWallet.keystore.deserialize(JSON.stringify(identity.eth,identity.passphrase));
+        var pgpKey = pgp.key.readArmored(identity.pgp).keys[0];
+        pgpKey.decrypt(identity.passphrase);
+        // Create usable identity
+        var id = Identity.createIdentity(identity.email, identity.passphrase, identity.secretSeed, pgpKey, eth, identity.contractAddress);
+        Identity.store(id);
+        return Web3.giveEther(id) // Give Ether
+        .then(function(){ // Ensure contract present
+          if(IdentityContract.exists(id)){
+             $log.debug("Contract present for",id.email,"skipping creation");
+             return Promise.resolve(id);
+          } else {
+             return IdentityContract.createContract(id)
+               .then(function(contract){
+                 $log.debug("Updating contract address for",identity.email);
+                 id.contractAddress = contract.address;
+                 Identity.store(id);
+                 return id
+            })
+          }})
+        .then(function(id){ // Ensure assertions are setup
+           var assertions = [];
+           for(var assertion in identity.assertions){
+               assertions.push({ assertionId: assertion, value: identity.assertions[assertion] });
+           }
+           return IdentityContract.assert(id, assertions, function(){})
+        }).then(function(){
+          $log.info("Finished contract and assertion import of",id.email);
+          return {identity: id, attestations: identity.attestations}
+        });
+      }
+      var createAttestations = function(identities){
+          var createAttestationsForIdentity = function(identity){
+            $log.debug("Creating attestions for", identity);
+            var attestationsByAttestee = {};
+            for(var assertionType in identity.attestations){
+               for(var i=0; i < identity.attestations[assertionType].length; i++){
+                 var attesteeAddress = identity.attestations[assertionType][i];
+                 var attestee = Identity.getByAddress(attesteeAddress);
+                 if(attestee !== undefined){
+                   if(attestationsByAttestee[attesteeAddress] === undefined){
+                     attestationsByAttestee[attesteeAddress] = [];
+                   }
+                   attestationsByAttestee[attesteeAddress].push(assertionType);
+                  } // end if
+               } // end for
+            }  // end for
+            var attestationPromises = [];
+            for(var attesteeAddress in attestationsByAttestee){
+              var attestee = Identity.getByAddress(attesteeAddress);
+              var assertionTypes = attestationsByAttestee[attesteeAddress];
+              attestationPromises.push(IdentityContract.attest(attestee, identity.identity, assertionTypes.map(IdentityContract.assertionById)));
+            }
+            $log.debug("Awaiting", attestationPromises.length,"attestations");
+            return Promise.all(attestationPromises);
+          } // end function
+          return Promise.all(identities.map(createAttestationsForIdentity))
+      };
+      // Chain
+      return Promise.all(data.map(createIdentity)).then(createAttestations);
+    };
 
     self.exportIdentities = function(){
       var identities = Identity.getIdentities();
@@ -43,35 +111,11 @@ angular.module('angularApp')
 
       var readGrants = function(identity){
         return IdentityContract.grants(identity)
-          .then(function(grants){
-            return grants.map(function(grant){
-              // Replace contract address with email, contract addresses are no longer valid after chain reset.
-              var grantedIdentity = Identity.getByAddress(grant.requestee)
-              if ( grantedIdentity ) {
-                grant.requestee = grantedIdentity.email;
-                return grant;
-              } else {
-                return undefined;
-              }
-            }).filter(function(grant){return grant !== undefined; });
-          });
       };
 
       var readAttestations = function(identity){
         var attestations = IdentityContract.attestations(identity);
-        for(var k in attestations){
-          var a = attestations[k]
-          for(var i=0; i < a.length; i++){
-            var attestee = Identity.getByAddress(attestations[k][i])
-            if( attestee !== undefined){
-              attestations[k][i] = attestee.email
-            } else {
-              attestations[k][i] = undefined;
-            }
-            attestations[k] = attestations[k].filter(function(e){return e !== undefined});
-          }
-        }
-        return attestations;
+        return Promise.resolve(attestations);
       };
 
       var exportIdentity = function(identity){
@@ -97,17 +141,6 @@ angular.module('angularApp')
         .then(function(r){ return JSON.stringify(r);});
     };
 
-  	//take an identity object, return JSON
-  	self.identityObjToJSONKeys = function (identity){
-      var id = {};
-      id.email = identity.email;
-      id.passphrase = identity.passphrase;
-      id.secretSeed = identity.secretSeed;
-      id.eth = identity.eth.serialize();
-      id.pgp = identity.pgp.armor();
-      id.contractAddress = identity.contractAddress;
-      return id;
-  	};
 
   	//take an identity JSON, return an identity object
   	self.JSONKeysToIdentityObj = function (idJSON){

@@ -406,6 +406,10 @@ angular.module('angularApp')
       return p.promise.then(function(tx){return Web3.watchTransaction(identity, tx);});
     };
 
+    self.exists = function(identity){
+      return identity.contractAddress && Web3.createWeb3().eth.getCode(identity.contractAddress) !== "0x";
+    };
+
     /**
     * Returns
     * {

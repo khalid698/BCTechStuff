@@ -7,7 +7,7 @@
  * # jsonReader
  */
 angular.module('angularApp')
-  .directive('jsonReader', function (Identity, Exporter) {
+  .directive('jsonReader', function ($rootScope, Identity, Exporter) {
 	return {
 	    scope: {
 	      jsonReader:"="
@@ -22,9 +22,13 @@ angular.module('angularApp')
 	              //convert contents to JSON
 	              var data = JSON.parse(contents);
 	              //convert JSON to an identity object
-		          var identity = Exporter.JSONKeysToIdentityObj(data);
+                $rootScope.progressbar.init(1, 'Importing identities');
+		            var identity = Exporter.importIdentities(data).then(function(){
+                    $rootScope.progressbar.bump();
+                    scope.$apply();
+                })
 	              //store identity object in local storage
-	              Identity.store(identity);
+	              // Identity.store(identity);
 	          };
 	          r.readAsText(files[0]);
 	        }

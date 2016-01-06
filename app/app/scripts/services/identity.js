@@ -70,6 +70,7 @@ angular.module('angularApp')
     };
 
     self.store = function(identity){
+      $log.debug("Storing identity",identity);
       var storageHolder = {};
       storageHolder.email = identity.email;
       storageHolder.passphrase = identity.passphrase;

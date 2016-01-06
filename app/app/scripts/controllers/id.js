@@ -123,7 +123,7 @@ angular.module('angularApp')
           .then(function(decryptedAssertion){
               self.assertions[assertionType.id] = decryptedAssertion;
               delete self.changedAssertions[assertionType.id];
-              $scope.$apply(); // This seems to be causing some trouble on firefox
+              // $scope.$apply(); // This seems to be causing some trouble on firefox
           });
       };
 

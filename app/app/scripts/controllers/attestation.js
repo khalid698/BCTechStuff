@@ -35,7 +35,7 @@ angular.module('angularApp')
         .attest($rootScope.attestationIdentity, $rootScope.selectedIdentity, $scope.selection)
         .then($rootScope.progressbar.bump)
         .then(function(){
-          $scope.$apply();
+          // $scope.$apply();
         });
     };
 

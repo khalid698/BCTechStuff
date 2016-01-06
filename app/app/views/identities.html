@@ -40,7 +40,7 @@
                 ng-model="identities.bank"
                 ng-change="identities.selectBankIdentity()">
         </select>
-        <p ng-if="helpers.balance(bankIdentity) == 0">
+        <p ng-if="bankIdentity && helpers.balance(bankIdentity) == 0">
           This account has a 0 balance, the balance has to be increased before a contract can be created.
           <a href="" ng-click="identities.giveEther(bankIdentity)">Increase balance</a>
         </p>
@@ -57,7 +57,7 @@
                 ng-model="identities.attestation"
                 ng-change="identities.selectAttestationIdentity()">
         </select>
-        <p ng-if="helpers.balance(attestationIdentity) == 0">
+        <p ng-if="attestationIdentity && helpers.balance(attestationIdentity) == 0">
           This account has a 0 balance, the balance has to be increased before a contract can be created.
           <a href="" ng-click="identities.giveEther(attestationIdentity)">Increase balance</a>
         </p>
@@ -81,3 +81,6 @@
   </div>
 
 </div>
+
+<ng-include src="'views/partial/loading.html'"/>
+
