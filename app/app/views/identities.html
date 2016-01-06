@@ -57,10 +57,12 @@
 
   <div class="panel panel-default">
       <div class="panel-heading">
-        Upload Identity Keys
+        Import/Export Identity Keys
       </div>
       <div class="panel-body">
         <input json-reader="fileContent" type="file" json-reader="fileContent" />
+        <a class="btn btn-primary" ng-click="helpers.exportAllData()">Export Identities</a>
+
       </div>
   </div>
 

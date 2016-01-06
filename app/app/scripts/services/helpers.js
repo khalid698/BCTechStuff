@@ -83,6 +83,33 @@ angular.module('angularApp')
       a.dispatchEvent(e);
     };
 
+    self.exportAllData = function() {
+
+      var date = new Date().toISOString().slice(0, 19).replace(/:/g,"-")
+
+      Exporter.exportIdentities().then(function(identities){
+        if (!identities) {
+          console.error('No data');
+          return;
+        }
+        var data;
+        if (typeof identities === 'string') {
+          data = JSON.stringify(JSON.parse(identities), undefined, 2)
+        }
+
+        var blob = new Blob([data], {type: 'text/json'}),
+          e = document.createEvent('MouseEvents'),
+          a = document.createElement('a');
+
+        a.download = 'DIDkeys_'+date+'.json';
+        a.href = window.URL.createObjectURL(blob);
+        a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+        e.initMouseEvent('click', true, false, window,
+            0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        a.dispatchEvent(e);
+        });
+    };
+
     self.balance = function(identity){
       return Web3.getBalance(identity.ethAddress()).toString(10);
     };
