@@ -30,7 +30,6 @@ angular.module('angularApp')
       $rootScope.selectAttestationIdentity(self.attestation);
     };
 
-
     self.init = function() {
       if ( $rootScope.selectedIdentity){
         self.selected = $rootScope.selectedIdentity.email;
@@ -64,5 +63,20 @@ angular.module('angularApp')
         self.selected = undefined;
       }
     };
+
+    self.exportIdentities = function(){
+      Exporter.exportIdentities().then(function(foo){
+
+      })
+    };
+
+    self.giveEther = function(identity){
+      $rootScope.progressbar.init(1, 'Transfering ether');
+      $log.info("Transfering ether to identity", identity);
+      Web3.giveEther(identity).then(function(){
+          $rootScope.progressbar.bump();
+      });
+    };
+
 
   });
