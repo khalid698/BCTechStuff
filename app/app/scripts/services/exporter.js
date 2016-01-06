@@ -50,14 +50,14 @@ angular.module('angularApp')
              id.email = identityObject.email;
              id.passphrase = identityObject.passphrase;
              id.secretSeed = identityObject.secretSeed;
-             id.eth = identityObject.eth.serialize();
+             id.eth = JSON.parse(identityObject.eth.serialize());
              id.pgp = identityObject.pgp.armor();
              id.contractAddress = identityObject.contractAddress;
              id.assertions = results[0];
              return id;
           });
       };
-      return Promise.all(identities.map(exportIdentity));
+      return Promise.all(identities.map(exportIdentity)).then(function(r){ return JSON.stringify(r);});
     };
 
   	//take an identity object, return JSON
