@@ -58,7 +58,20 @@ angular.module('angularApp')
       };
 
       var readAttestations = function(identity){
-        return IdentityContract.attestations(identity)
+        var attestations = IdentityContract.attestations(identity);
+        for(var k in attestations){
+          var a = attestations[k]
+          for(var i=0; i < a.length; i++){
+            var attestee = Identity.getByAddress(attestations[k][i])
+            if( attestee !== undefined){
+              attestations[k][i] = attestee.email
+            } else {
+              attestations[k][i] = undefined;
+            }
+            attestations[k] = attestations[k].filter(function(e){return e !== undefined});
+          }
+        }
+        return attestations;
       };
 
       var exportIdentity = function(identity){
