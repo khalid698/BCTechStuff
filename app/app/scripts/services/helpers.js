@@ -85,7 +85,7 @@ angular.module('angularApp')
 
     self.exportAllData = function() {
 
-      var date = new Date().toISOString().slice(0, 19).replace(/:/g,"-")
+      var date = new Date().toISOString().slice(0, 19).replace(/:/g,"-");
 
       Exporter.exportIdentities().then(function(identities){
         if (!identities) {

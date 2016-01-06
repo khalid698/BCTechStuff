@@ -60,9 +60,14 @@
         Import/Export Identity Keys
       </div>
       <div class="panel-body">
-        <input json-reader="fileContent" type="file" json-reader="fileContent" />
-        <a class="btn btn-primary" ng-click="helpers.exportAllData()">Export Identities</a>
-
+        <div class="row">
+          <div class="col-lg-3">
+            <input json-reader="fileContent" type="file" json-reader="fileContent"  class="filestyle" data-input="false" />
+          </div>
+          <div class="col-lg-3">
+            <a class="btn btn-primary" ng-click="helpers.exportAllData()">Export Identities</a>
+          </div>
+        </div>
       </div>
   </div>
 
