@@ -6,11 +6,59 @@
  * @description
  * # exporter
  * Service in the angularApp.
+ var identity = angular.element(document.body).injector().get('Identity').get("test5")
+ var exporter =  angular.element(document.body).injector().get('Exporter')
  */
 angular.module('angularApp')
-  .service('Exporter', function (Identity, pgp, LightWallet) {
+  .service('Exporter', function ($log, Identity, pgp, LightWallet, IdentityContract) {
 
     var self = this;
+
+    self.exportIdentities = function(){
+      var identities = Identity.getIdentities();
+      $log.debug('Exporting', identities.length,"identities");
+
+      var readAssertions = function(identity){
+        if ( identity.contractAddress ){
+           return Promise.all(IdentityContract.assertionTypeIds.map(function(assertionType){
+             return IdentityContract.readAssertion(identity, identity.contractAddress, assertionType)
+               .then(function(assertionValue){
+                 return {assertionType: assertionType, value:assertionValue}
+               });
+          })).then(function(assertions){
+            return assertions.filter(function(a){
+              return a.value != undefined;
+            })
+           }).then(function(assertions){
+            var merged = {}
+            for(var i=0; i < assertions.length; i++){
+              merged[assertions[i].assertionType] = assertions[i].value;
+            }
+            return merged;
+           });
+         } else {
+          return Promise.resolve({});
+         }
+      };
+
+      var exportIdentity = function(identity){
+          var identityObject = Identity.get(identity);
+          var assertions =  readAssertions(identityObject);
+          return Promise.all([assertions]).then(function(results){
+            //return {identity: identity, assertions: results[0]}
+             var id = {};
+             id.email = identityObject.email;
+             id.passphrase = identityObject.passphrase;
+             id.secretSeed = identityObject.secretSeed;
+             id.eth = identityObject.eth.serialize();
+             id.pgp = identityObject.pgp.armor();
+             id.contractAddress = identityObject.contractAddress;
+             id.assertions = results[0];
+             return id;
+          });
+      };
+      return Promise.all(identities.map(exportIdentity));
+    };
 
   	//take an identity object, return JSON
   	self.identityObjToJSONKeys = function (identity){

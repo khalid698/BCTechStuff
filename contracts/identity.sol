@@ -30,16 +30,17 @@ contract Identity {
         }
     }
     
-    function assertAll(uint[] assertionTypes, string keys, string  values){
-        // for(var i=0; i < assertionTypes.length; i++){
-        //     assert(assertionTypes[i], keys[i], values[i]);
-        // }
+    function get(uint assertionType) returns (string  key, string value){
+        bytes memory b = bytes(assertions[assertionType]);
+        if(b.length > 0){
+            key = sessionKeys[msg.sender][assertionType];
+            value = assertions[assertionType]; 
+        } else {
+            key = 'undefined';
+            value = 'undefined';
+        }
     }
     
-    function get(uint assertionType) returns (string  key, string value){
-        key = sessionKeys[msg.sender][assertionType];
-        value = assertions[assertionType];
-    }
     mapping(address => string) granteeDescriptions;
     mapping(address => mapping(uint => string)) sessionKeys;
     mapping(address => uint[]) grantedAssertions;

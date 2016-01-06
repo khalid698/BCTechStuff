@@ -7,7 +7,7 @@
  * # jsonReader
  */
 angular.module('angularApp')
-  .directive('jsonReader', function ($, Identity, Exporter) {
+  .directive('jsonReader', function (Identity, Exporter) {
 	return {
 	    scope: {
 	      jsonReader:"="

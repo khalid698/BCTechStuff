@@ -83,4 +83,8 @@ angular.module('angularApp')
       a.dispatchEvent(e);
     };
 
+    self.balance = function(identity){
+      return Web3.getBalance(identity.ethAddress()).toString(10);
+    };
+
   });
