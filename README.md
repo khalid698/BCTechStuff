@@ -1,4 +1,4 @@
-# objectchain
+# Sovereign Identity
 Working repo for a new distributed identity system.
 
 Sovereign Identity aims to create a new, open, and interoperable standard for digital identity informed by the Windhover Principles.
