@@ -22,7 +22,8 @@ angular
   .constant('LightWallet', window.lightwallet)
   .constant('asciiToHex', asciiToHex)
   .constant('hexToAscii', hexToAscii)
-  .constant('Config', {gethEndpoint: 'http://localhost:8545'})
+  .constant('Config', {gethEndpoint: 'http://ntsboxvm1.centralus.cloudapp.azure.com:8545'})
+  //.constant('Config', {gethEndpoint: 'http://localhost:8545'})
   .config(function ($stateProvider, $urlRouterProvider){
      $urlRouterProvider.otherwise('/id/personal');
      $stateProvider.state('id', {

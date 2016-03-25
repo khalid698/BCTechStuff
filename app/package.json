@@ -30,9 +30,11 @@
     "jasmine-core": "^2.4.1",
     "jit-grunt": "^0.9.1",
     "jshint-stylish": "^1.0.0",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
+    "karma": "^0.13.22",
+    "karma-jasmine": "^0.3.8",
+    "karma-phantomjs-launcher": "^1.0.0",
     "phantomjs": "^1.9.19",
+    "phantomjs-prebuilt": "^2.1.6",
     "time-grunt": "^1.0.0"
   },
   "engines": {
@@ -41,5 +43,8 @@
   "dependencies": {
     "jit-grunt": "^0.9.1",
     "time-grunt": "^1.2.2"
+  },
+  "scripts": {
+    "test": "karma start test\\karma.conf.js"
   }
 }
